@@ -11,7 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Cache
+    - name: gradle cache
       uses: actions/cache@v3
       with:
         path: |
@@ -26,4 +26,15 @@ jobs:
         distribution: 'corretto'
         java-version: 19
 
-    - run: make build
+    - name: build
+      run: |
+        cd user-service
+        ./gradlew bootJar
+
+    - name: docker push
+      run: |
+        docker login --username ${{ secrets.DOCKER_USER }} --password-stdin <<< ${{ secrets.DOCKER_API_KEY }}
+        docker build --tag ${DOCKER_IMAGE_NAME} .
+        docker push ${DOCKER_IMAGE_NAME}
+      env:
+        DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_USER }}/ff-user:v1
