@@ -23,7 +23,7 @@ jobs:
 
     - uses: actions/setup-java@v3
       with:
-        distribution: 'corretto'
+        distribution: 'temurin'
         java-version: 19
 
     - name: build
@@ -34,7 +34,7 @@ jobs:
     - name: docker push
       run: |
         docker login --username ${{ secrets.DOCKER_USER }} --password-stdin <<< ${{ secrets.DOCKER_API_KEY }}
-        docker build --tag ${DOCKER_IMAGE_NAME} .
+        docker build --tag ${DOCKER_IMAGE_NAME} -f deploy/Dockerfile .
         docker push ${DOCKER_IMAGE_NAME}
       env:
         DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_USER }}/ff-user:v1
