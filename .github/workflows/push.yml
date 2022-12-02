@@ -4,6 +4,9 @@ on:
   push:
     branches: [ main ]
 
+env:
+        DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_USER }}/ff-user:v1
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -36,5 +39,12 @@ jobs:
         docker login --username ${{ secrets.DOCKER_USER }} --password-stdin <<< ${{ secrets.DOCKER_API_KEY }}
         docker build --tag ${DOCKER_IMAGE_NAME} -f deploy/Dockerfile .
         docker push ${DOCKER_IMAGE_NAME}
-      env:
-        DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_USER }}/ff-user:v1
+
+    - name: config credential
+      run: |
+        mkdir ~/.aws
+        base64 --decode <<< ${{ secrets.AWS_CRED }} > ~/.aws/credentials
+        base64 --decode <<< ${{ secrets.AWS_CONFIG }} > ~/.aws/config
+        aws eks update-kubeconfig --name findprofessional_cluster
+
+    - run: kubectl apply -f deploy

@@ -10,3 +10,7 @@
 - build jar in ci
 - build docker image and copy jar into it
 - push docker image
+
+# TODO
+
+- docker image use as env variable
