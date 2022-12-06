@@ -18,12 +18,8 @@ docker run --rm -p 8080:8080 docker.io/library/findprofessional:0.0.1-SNAPSHOT
 ```
 
 ## Deployment
-### Process
+### Production
+Spring boot using [GraalVM Native Image](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#native-image), it requires more memory (~400Mi for hello world) but compiling java using ahead-of-time. which reduces the startup loads.
 
-- build jar in ci
-- build docker image and copy jar into it
-- push docker image
+Can also use Dockerfile from [alpine](https://github.com/hulkdx/findprofessional-backend-user/blob/4fff3b93eef556a382eb807c6d9f49d40eaa8f64/deploy/Dockerfile)
 
-# TODO
-
-- docker image use as env variable
