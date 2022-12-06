@@ -32,12 +32,11 @@ jobs:
     - name: build
       run: |
         cd user-service
-        ./gradlew bootJar
+        ./gradlew bootBuildImage
 
     - name: docker push
       run: |
         docker login --username ${{ secrets.DOCKER_USER }} --password-stdin <<< ${{ secrets.DOCKER_API_KEY }}
-        docker build --tag ${DOCKER_IMAGE_NAME} -f deploy/Dockerfile .
         docker push ${DOCKER_IMAGE_NAME}
 
     - name: config credential

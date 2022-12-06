@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 plugins {
 	id("org.springframework.boot") version "3.0.0"
@@ -7,8 +8,9 @@ plugins {
 	kotlin("plugin.spring") version "1.7.21"
 }
 
-group = "com.hulkdx"
-version = "0.0.1-SNAPSHOT"
+val user = "hulkdx"
+group = "com.$user"
+version = "1"
 java.sourceCompatibility = JavaVersion.VERSION_19
 
 repositories {
@@ -22,6 +24,10 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+tasks.withType<BootBuildImage> {
+	imageName.set("$user/ff-user:v$version")
 }
 
 tasks.withType<KotlinCompile> {
