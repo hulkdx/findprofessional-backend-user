@@ -16,7 +16,7 @@ spec:
         image: hulkdx/ff-user:v1
         resources:
           limits:
-            memory: "128Mi"
+            memory: "400Mi"
             cpu: "500m"
         ports:
         - containerPort: 8080
