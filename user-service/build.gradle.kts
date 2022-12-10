@@ -27,7 +27,7 @@ dependencies {
 }
 
 tasks.withType<BootBuildImage> {
-	imageName.set("$user/ff-user:v$version")
+	imageName.set(System.getenv("DOCKER_IMAGE_NAME"))
 }
 
 tasks.withType<KotlinCompile> {
