@@ -1,0 +1,26 @@
+apiVersion: skaffold/v3
+kind: Config
+
+build:
+  artifacts:
+  - image: hulkdx/ff-user
+    context: ../user-service
+    custom:
+      buildCommand: |
+        ./gradlew build
+        cat <<EOF | docker build --tag=$IMAGE -f - "$BUILD_CONTEXT"
+            FROM eclipse-temurin:19.0.1_10-jre
+            COPY build/libs/*.jar app.jar
+            ENTRYPOINT [ "java", "-jar", "app.jar" ]
+        EOF
+      dependencies:
+        paths:
+          - build.gradle.kts
+          - settings.gradle.kts
+          - src/main/**
+
+manifests:
+  rawYaml:
+    - ../deploy/*
+deploy:
+  kubectl: {}

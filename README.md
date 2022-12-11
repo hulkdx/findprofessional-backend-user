@@ -4,19 +4,15 @@
 
 # User microservice
 
-## To run
+## Development
+Requirements
+- [Skaffold](https://skaffold.dev/docs/install/)
+- [Minikube](https://minikube.sigs.k8s.io/docs/start/) (or any other localhost kubernetes)
+- [Kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [Docker](https://docs.docker.com/get-docker/)
+- Java 19
 
-Locally
-```sh
-./gradlew bootRun
-```
-
-Docker 
-```sh
-./gradlew bootBuildImage
-docker run --rm -p 8080:8080 docker.io/library/findprofessional:0.0.1-SNAPSHOT
-```
-
+To start development, run `make dev`
 ## Deployment
 ### Production
 - Using [GraalVM Native Image](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#native-image)
