@@ -46,4 +46,4 @@ jobs:
         base64 --decode <<< ${{ secrets.AWS_CONFIG }} > ~/.aws/config
         aws eks update-kubeconfig --name findprofessional_cluster
 
-    - run: kubectl apply -f deploy
+    - run: kubectl apply -k deploy/dev
