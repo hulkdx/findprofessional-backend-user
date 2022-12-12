@@ -7,11 +7,11 @@ build:
     context: ../user-service
     custom:
       buildCommand: |
-        ./gradlew build -x test
+        ./gradlew bootJar
         cat <<EOF | docker build --tag=$IMAGE -f - "$BUILD_CONTEXT"
             FROM eclipse-temurin:19.0.1_10-jre
             COPY build/libs/*.jar app.jar
-            ENTRYPOINT [ "java", "-jar", "app.jar" ]
+            ENTRYPOINT [ "java", "-jar", "-Dspring.profiles.active=dev", "app.jar" ]
         EOF
       dependencies:
         paths:
