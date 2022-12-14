@@ -29,7 +29,12 @@ dependencies {
 	implementation("org.liquibase:liquibase-core")
 	runtimeOnly("org.postgresql:postgresql")
 	runtimeOnly("org.postgresql:r2dbc-postgresql")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	testImplementation("org.springframework.boot:spring-boot-starter-test:3.0.0")
+	testImplementation("org.testcontainers:junit-jupiter:1.17.6")
+	testImplementation("org.testcontainers:postgresql:1.17.6")
+	testImplementation("org.testcontainers:r2dbc:1.17.6")
+	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
 }
 
 tasks.withType<BootBuildImage> {
