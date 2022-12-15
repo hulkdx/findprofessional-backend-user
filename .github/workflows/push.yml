@@ -32,7 +32,7 @@ jobs:
     - name: build
       run: |
         cd user-service
-        ./gradlew bootBuildImage
+        ./gradlew bootBuildImage --imageName ${DOCKER_IMAGE_NAME}
 
     - name: docker push
       run: |
