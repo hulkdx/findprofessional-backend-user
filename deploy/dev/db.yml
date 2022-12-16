@@ -27,6 +27,13 @@ spec:
               value: postgres
             - name: POSTGRES_DB
               value: postgres
+          volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: test-volume
+      volumes:
+      - name: test-volume
+        hostPath:
+          path: psql_cache
 
 ---
 apiVersion: v1
