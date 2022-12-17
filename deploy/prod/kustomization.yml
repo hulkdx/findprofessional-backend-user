@@ -1,3 +1,7 @@
 namePrefix: prod-
+
 bases:
   - ../base
+
+patchesStrategicMerge:
+  - user-service.yml
