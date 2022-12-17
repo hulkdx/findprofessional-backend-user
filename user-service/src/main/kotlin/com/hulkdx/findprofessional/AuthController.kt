@@ -1,5 +1,6 @@
 package com.hulkdx.findprofessional
 
+import com.hulkdx.findprofessional.utils.toResponseEntity
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
@@ -19,12 +20,12 @@ class AuthController(
 ) {
 
     @PostMapping("/register")
-    suspend fun register(@RequestBody body: User): ResponseEntity<Any> {
+    suspend fun register(@RequestBody body: User): ResponseEntity<Void> {
         return try {
             userRepository.save(body)
-            ResponseEntity.status(HttpStatus.CREATED).build()
+            HttpStatus.CREATED.toResponseEntity()
         } catch (e: DataIntegrityViolationException) {
-            ResponseEntity.status(HttpStatus.CONFLICT).build()
+            HttpStatus.CONFLICT.toResponseEntity()
         }
     }
 }
