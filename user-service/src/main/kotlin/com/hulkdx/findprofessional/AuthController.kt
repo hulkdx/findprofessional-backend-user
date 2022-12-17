@@ -20,7 +20,10 @@ class AuthController(
     @PostMapping("/register")
     suspend fun register(@RequestBody body: User): ResponseEntity<*> {
         if (!Validator.isEmailValid(body.email)) {
-            return R.badRequest("Email is not valid")
+            return R.badRequest("Email not valid")
+        }
+        if (!Validator.isPasswordValid(body.password)) {
+            return R.badRequest("Password not valid")
         }
         return try {
             userRepository.save(body)

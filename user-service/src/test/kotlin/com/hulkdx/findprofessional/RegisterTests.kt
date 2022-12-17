@@ -71,6 +71,25 @@ class RegisterTests {
         }
     }
 
+    @Test
+    fun `when invalid password then bad request`() = runTest {
+        val invalidPassword = listOf(
+            "1",
+            "123a5v7",
+            "123456789",
+            "asdfghjkl",
+            "!@#$%^&*(",
+        )
+        for (password in invalidPassword) {
+            // Arrange
+            val user = User("__irrelevent__@email.com", password)
+            // Act
+            val response = sut.register(user)
+            // Assert
+            assertThat(response.statusCode, `is`(HttpStatus.BAD_REQUEST))
+        }
+    }
+
     // region helpers
 
     private suspend fun emailExists(user: User) {

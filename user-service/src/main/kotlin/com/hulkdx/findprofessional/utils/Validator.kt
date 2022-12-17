@@ -8,4 +8,16 @@ object Validator {
             .toRegex()
             .matches(email)
     }
+
+    fun isPasswordValid(password: String): Boolean {
+        if (password.length < 8) {
+            return false
+        }
+        val containsNumbers = "\\d+".toRegex().containsMatchIn(password)
+        val containsLetters = "[a-zA-Z]+".toRegex().containsMatchIn(password)
+        val containsSpecials = "[ !@#\$%^&*_+-]+".toRegex().containsMatchIn(password)
+        val security = listOf(containsNumbers, containsLetters, containsSpecials)
+            .sumOf { if (it) 1L else 0L }
+        return security > 1
+    }
 }
