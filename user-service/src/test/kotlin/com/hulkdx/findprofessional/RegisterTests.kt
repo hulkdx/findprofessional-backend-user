@@ -51,6 +51,25 @@ class RegisterTests {
         assertThat(response.statusCode, `is`(HttpStatus.CONFLICT))
     }
 
+    @Test
+    fun `when invalid email then bad request`() = runTest {
+        val invalidEmails = listOf(
+            "example.com",
+            "not",
+            "123",
+            "email@",
+            "email@exampl",
+        )
+        for (email in invalidEmails) {
+            // Arrange
+            val user = User(email, "__irrelevant__")
+            // Act
+            val response = sut.register(user)
+            // Assert
+            assertThat(response.statusCode, `is`(HttpStatus.BAD_REQUEST))
+        }
+    }
+
     // region helpers
 
     private suspend fun emailExists(user: User) {
