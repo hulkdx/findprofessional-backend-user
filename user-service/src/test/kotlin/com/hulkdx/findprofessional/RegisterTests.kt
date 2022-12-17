@@ -41,15 +41,21 @@ class RegisterTests {
     }
 
     @Test
-    fun `when email exists then error conflict`() = runTest {
+    fun `when email exists then conflict`() = runTest {
         // Arrange
-        val email = "test@email.com"
-        val password = "1234"
-        val user = User(email, password)
-        `when`(repository.save(user)).thenThrow(DataIntegrityViolationException(""))
+        val user = User("__irrelevent__@email.com", "__irrelevent__")
+        emailExists(user)
         // Act
         val response = sut.register(user)
         // Assert
         assertThat(response.statusCode, `is`(HttpStatus.CONFLICT))
     }
+
+    // region helpers
+
+    private suspend fun emailExists(user: User) {
+        `when`(repository.save(user)).thenThrow(DataIntegrityViolationException(""))
+    }
+
+    // endregion
 }
