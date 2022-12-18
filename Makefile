@@ -6,4 +6,4 @@ dev:
 .PHONY: clear-minikube-psql-cache
 clear-minikube-psql-cache:
 	eval $$(minikube docker-env); \
-	docker volume rm psql_cache
+	docker volume rm --force psql_cache

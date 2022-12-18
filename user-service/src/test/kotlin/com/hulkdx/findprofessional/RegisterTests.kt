@@ -1,5 +1,6 @@
 package com.hulkdx.findprofessional
 
+import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -44,7 +45,7 @@ class RegisterTests {
         // Arrange
         val email = "test@email.com"
         val password = "1234abdcx"
-        val user = User(email, password)
+        val user = RegisterRequest(email, password)
         // Act
         val response = sut.register(user)
         // Assert
@@ -55,7 +56,7 @@ class RegisterTests {
     @Test
     fun `when email exists then conflict`() = runTest {
         // Arrange
-        val user = createUser()
+        val user = createRegisterRequest()
         emailExists()
         // Act
         val response = sut.register(user)
@@ -74,7 +75,7 @@ class RegisterTests {
         )
         for (email in invalidEmails) {
             // Arrange
-            val user = createUser(email = email)
+            val user = createRegisterRequest(email = email)
             // Act
             val response = sut.register(user)
             // Assert
@@ -93,7 +94,7 @@ class RegisterTests {
         )
         for (password in invalidPassword) {
             // Arrange
-            val user = createUser(password = password)
+            val user = createRegisterRequest(password = password)
             // Act
             val response = sut.register(user)
             // Assert
@@ -102,20 +103,9 @@ class RegisterTests {
     }
 
     @Test
-    fun `when id in request then bad request`() = runTest {
-        // Arrange
-        val id = 12
-        val user = createUser(id = id)
-        // Act
-        val response = sut.register(user)
-        // Assert
-        assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
-    }
-
-    @Test
     fun `don't store raw password`() = runTest {
         // Arrange
-        val user = createUser()
+        val user = createRegisterRequest()
         // Act
         sut.register(user)
         // Assert
@@ -129,14 +119,12 @@ class RegisterTests {
 
     // region helpers
 
-    private fun createUser(
+    private fun createRegisterRequest(
         email: String = "test@email.com",
         password: String = "1234abdcx",
-        id: Int? = null,
-    ) = User(
+    ) = RegisterRequest(
         email,
         password,
-        id,
     )
 
     private suspend fun emailExists() {
