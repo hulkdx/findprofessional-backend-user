@@ -5,6 +5,8 @@ import com.hulkdx.findprofessional.utils.R
 import com.hulkdx.findprofessional.utils.Validator
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.ResponseEntity
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/auth")
 class AuthController(
     private val userRepository: UserRepository,
+    private val passwordEncoder: PasswordEncoder = BCryptPasswordEncoder(),
 ) {
 
     @PostMapping("/register")
@@ -26,7 +29,10 @@ class AuthController(
             return R.badRequest("Password not valid")
         }
         return try {
-            userRepository.save(body)
+            val user = body.copy(
+                password = passwordEncoder.encode(body.password),
+            )
+            userRepository.save(user)
             R.created()
         } catch (e: DataIntegrityViolationException) {
             R.conflict()

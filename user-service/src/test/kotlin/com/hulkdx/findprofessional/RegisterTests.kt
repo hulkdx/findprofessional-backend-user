@@ -1,19 +1,23 @@
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.models.User
+import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.MatcherAssert.assertThat
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.whenever
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
+import org.springframework.security.crypto.password.PasswordEncoder
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
@@ -24,9 +28,15 @@ class RegisterTests {
     @Mock
     private lateinit var repository: UserRepository
 
+    private val passwordEncoder: PasswordEncoder = TestPasswordEncoder()
+
     @BeforeEach
     fun setup() {
-        sut = AuthController(repository)
+
+        sut = AuthController(
+            repository,
+            passwordEncoder,
+        )
     }
 
     @Test
@@ -38,19 +48,19 @@ class RegisterTests {
         // Act
         val response = sut.register(user)
         // Assert
-        assertThat(response.statusCode, `is`(HttpStatus.CREATED))
-        verify(repository).save(user)
+        assertEquals(HttpStatus.CREATED, response.statusCode)
+        verify(repository).save(any())
     }
 
     @Test
     fun `when email exists then conflict`() = runTest {
         // Arrange
         val user = createUser()
-        emailExists(user)
+        emailExists()
         // Act
         val response = sut.register(user)
         // Assert
-        assertThat(response.statusCode, `is`(HttpStatus.CONFLICT))
+        assertEquals(HttpStatus.CONFLICT, response.statusCode)
     }
 
     @Test
@@ -68,7 +78,7 @@ class RegisterTests {
             // Act
             val response = sut.register(user)
             // Assert
-            assertThat(response.statusCode, `is`(HttpStatus.BAD_REQUEST))
+            assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
         }
     }
 
@@ -87,24 +97,41 @@ class RegisterTests {
             // Act
             val response = sut.register(user)
             // Assert
-            assertThat(response.statusCode, `is`(HttpStatus.BAD_REQUEST))
+            assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
         }
+    }
+
+    @Test
+    fun `don't store raw password`() = runTest {
+        // Arrange
+        val user = createUser()
+        // Act
+        sut.register(user)
+        // Assert
+        val ac = argumentCaptor<User>()
+        verify(repository).save(ac.capture())
+
+        val unexpected = user.password
+        val actual = ac.firstValue.password
+        assertNotEquals(unexpected, actual)
     }
 
     // region helpers
 
-    private suspend fun emailExists(user: User) {
-        whenever(repository.save(user))
-            .thenThrow(DataIntegrityViolationException(""))
-    }
-
     private fun createUser(
         email: String = "test@email.com",
-        password: String = "1234abdcx"
+        password: String = "1234abdcx",
+        id: Int? = null,
     ) = User(
         email,
         password,
+        id,
     )
+
+    private suspend fun emailExists() {
+        whenever(repository.save(any()))
+            .thenThrow(DataIntegrityViolationException(""))
+    }
 
     // endregion
 }
