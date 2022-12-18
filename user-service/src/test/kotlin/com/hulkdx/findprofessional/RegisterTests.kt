@@ -102,6 +102,17 @@ class RegisterTests {
     }
 
     @Test
+    fun `when id in request then bad request`() = runTest {
+        // Arrange
+        val id = 12
+        val user = createUser(id = id)
+        // Act
+        val response = sut.register(user)
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
+    }
+
+    @Test
     fun `don't store raw password`() = runTest {
         // Arrange
         val user = createUser()

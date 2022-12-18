@@ -28,6 +28,9 @@ class AuthController(
         if (!Validator.isPasswordValid(body.password)) {
             return R.badRequest("Password not valid")
         }
+        if (body.id != null) {
+            return R.badRequest("")
+        }
         return try {
             val user = body.copy(
                 password = passwordEncoder.encode(body.password),
