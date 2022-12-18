@@ -28,7 +28,7 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("org.postgresql:r2dbc-postgresql")
 
-    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.security:spring-security-crypto")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test:3.0.0")
     testImplementation("org.testcontainers:junit-jupiter:1.17.6")
