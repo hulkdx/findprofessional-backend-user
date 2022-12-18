@@ -4,13 +4,14 @@ import com.hulkdx.findprofessional.models.User
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.MatcherAssert.*
-import org.junit.jupiter.api.*
+import org.hamcrest.MatcherAssert.assertThat
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.whenever
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 
@@ -32,19 +33,19 @@ class RegisterTests {
     fun `valid cases`() = runTest {
         // Arrange
         val email = "test@email.com"
-        val password = "1234"
+        val password = "1234abdcx"
         val user = User(email, password)
         // Act
         val response = sut.register(user)
         // Assert
-        verify(repository).save(user)
         assertThat(response.statusCode, `is`(HttpStatus.CREATED))
+        verify(repository).save(user)
     }
 
     @Test
     fun `when email exists then conflict`() = runTest {
         // Arrange
-        val user = User("__irrelevent__@email.com", "__irrelevent__")
+        val user = createUser()
         emailExists(user)
         // Act
         val response = sut.register(user)
@@ -63,7 +64,7 @@ class RegisterTests {
         )
         for (email in invalidEmails) {
             // Arrange
-            val user = User(email, "__irrelevant__")
+            val user = createUser(email = email)
             // Act
             val response = sut.register(user)
             // Assert
@@ -82,7 +83,7 @@ class RegisterTests {
         )
         for (password in invalidPassword) {
             // Arrange
-            val user = User("__irrelevent__@email.com", password)
+            val user = createUser(password = password)
             // Act
             val response = sut.register(user)
             // Assert
@@ -93,8 +94,17 @@ class RegisterTests {
     // region helpers
 
     private suspend fun emailExists(user: User) {
-        `when`(repository.save(user)).thenThrow(DataIntegrityViolationException(""))
+        whenever(repository.save(user))
+            .thenThrow(DataIntegrityViolationException(""))
     }
+
+    private fun createUser(
+        email: String = "test@email.com",
+        password: String = "1234abdcx"
+    ) = User(
+        email,
+        password,
+    )
 
     // endregion
 }
