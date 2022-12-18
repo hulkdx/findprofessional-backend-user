@@ -5,3 +5,8 @@ bases:
 
 patchesStrategicMerge:
   - user-service.yml
+
+secretGenerator:
+- name: secrets-env
+  envs:
+  - .env

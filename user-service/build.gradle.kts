@@ -1,8 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val javaVersion = JavaVersion.VERSION_17
+
 group = "com.hulkdx"
 version = "1"
-java.sourceCompatibility = JavaVersion.VERSION_19
+java.sourceCompatibility = javaVersion
 
 plugins {
     id("org.springframework.boot") version "3.0.0"
@@ -43,7 +45,7 @@ tasks {
         builder.set("paketobuildpacks/builder:tiny")
         environment.set(
             mapOf(
-                "BP_NATIVE_IMAGE" to "true",
+                "BP_NATIVE_IMAGE" to "1",
             )
         )
     }
@@ -51,7 +53,7 @@ tasks {
     withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict")
-            jvmTarget = "18"
+            jvmTarget = javaVersion.toString()
         }
     }
 

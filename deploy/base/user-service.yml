@@ -16,6 +16,9 @@ spec:
           image: hulkdx/ff-user:v1
           ports:
             - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: secrets-env
 ---
 apiVersion: v1
 kind: Service

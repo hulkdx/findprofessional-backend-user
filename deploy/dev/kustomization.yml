@@ -3,3 +3,8 @@ bases:
 
 resources:
   - db.yml
+
+secretGenerator:
+- name: secrets-env
+  envs:
+  - .env
