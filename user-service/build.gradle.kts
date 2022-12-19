@@ -46,6 +46,7 @@ tasks {
         environment.set(
             mapOf(
                 "BP_NATIVE_IMAGE" to "1",
+                "BP_NATIVE_IMAGE_BUILD_ARGUMENTS" to "--initialize-at-build-time=io.netty"
             )
         )
     }
