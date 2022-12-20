@@ -66,4 +66,10 @@ tasks {
     test {
         useJUnitPlatform()
     }
+
+    graalvmNative {
+        metadataRepository {
+            enabled.set(true)
+        }
+    }
 }
