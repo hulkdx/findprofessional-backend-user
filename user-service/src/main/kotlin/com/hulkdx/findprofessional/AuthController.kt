@@ -5,6 +5,8 @@ import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.utils.R
 import com.hulkdx.findprofessional.utils.Validator
 import org.springframework.boot.context.properties.NestedConfigurationProperty
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing
 import org.springframework.http.ResponseEntity
@@ -21,8 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 @EnableR2dbcAuditing
 class AuthController(
     private val userRepository: UserRepository,
-    @NestedConfigurationProperty
-    private val passwordEncoder: PasswordEncoder = BCryptPasswordEncoder(),
+    private val passwordEncoder: PasswordEncoder,
 ) {
 
     @PostMapping("/register")
@@ -41,5 +42,13 @@ class AuthController(
         } catch (e: DataIntegrityViolationException) {
             R.conflict()
         }
+    }
+}
+
+@Configuration
+class config {
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        return BCryptPasswordEncoder()
     }
 }
