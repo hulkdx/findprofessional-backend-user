@@ -11,6 +11,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.0"
     kotlin("jvm") version "1.7.21"
     kotlin("plugin.spring") version "1.7.21"
+    id("org.graalvm.buildtools.native") version "0.9.19"
 }
 
 repositories {
@@ -42,13 +43,13 @@ dependencies {
 
 tasks {
     bootBuildImage {
-        builder.set("paketobuildpacks/builder:tiny")
-        environment.set(
-            mapOf(
-                "BP_NATIVE_IMAGE" to "1",
-                "BP_NATIVE_IMAGE_BUILD_ARGUMENTS" to "--initialize-at-run-time=io.netty"
-            )
-        )
+//        builder.set("paketobuildpacks/builder:tiny")
+//        environment.set(
+//            mapOf(
+//                "BP_NATIVE_IMAGE" to "1",
+//                "BP_NATIVE_IMAGE_BUILD_ARGUMENTS" to "--initialize-at-run-time=io.netty"
+//            )
+//        )
     }
 
     withType<KotlinCompile> {
