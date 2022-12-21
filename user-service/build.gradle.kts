@@ -19,19 +19,19 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+//    implementation("org.springframework.boot:spring-boot-starter-actuator")
+//    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-    implementation("org.liquibase:liquibase-core")
-    runtimeOnly("org.postgresql:postgresql")
-    runtimeOnly("org.postgresql:r2dbc-postgresql")
+//    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+//    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+//    implementation("org.jetbrains.kotlin:kotlin-reflect")
+//    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+//    implementation("org.liquibase:liquibase-core")
+//    runtimeOnly("org.postgresql:postgresql")
+//    runtimeOnly("org.postgresql:r2dbc-postgresql")
 
-    implementation("org.springframework.security:spring-security-crypto")
+//    implementation("org.springframework.security:spring-security-crypto")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test:3.0.0")
     testImplementation("org.testcontainers:junit-jupiter:1.17.6")
@@ -43,13 +43,13 @@ dependencies {
 
 tasks {
     bootBuildImage {
-//        builder.set("paketobuildpacks/builder:tiny")
-//        environment.set(
-//            mapOf(
-//                "BP_NATIVE_IMAGE" to "1",
+        builder.set("paketobuildpacks/builder:tiny")
+        environment.set(
+            mapOf(
+                "BP_NATIVE_IMAGE" to "1",
 //                "BP_NATIVE_IMAGE_BUILD_ARGUMENTS" to "--initialize-at-run-time=io.netty"
-//            )
-//        )
+            )
+        )
     }
 
     withType<KotlinCompile> {
