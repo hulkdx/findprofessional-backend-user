@@ -42,15 +42,15 @@ dependencies {
 }
 
 tasks {
-    bootBuildImage {
-        builder.set("paketobuildpacks/builder:tiny")
-        environment.set(
-            mapOf(
-                "BP_NATIVE_IMAGE" to "1",
+//    bootBuildImage {
+//        builder.set("paketobuildpacks/builder:base")
+//        environment.set(
+//            mapOf(
+//                "BP_NATIVE_IMAGE" to "true",
 //                "BP_NATIVE_IMAGE_BUILD_ARGUMENTS" to "--initialize-at-run-time=io.netty"
-            )
-        )
-    }
+//            )
+//        )
+//    }
 
     withType<KotlinCompile> {
         kotlinOptions {
@@ -60,7 +60,8 @@ tasks {
     }
 
     jar {
-        enabled = false
+//        TODO: enable it for native build:
+//        enabled = false
     }
 
     test {
