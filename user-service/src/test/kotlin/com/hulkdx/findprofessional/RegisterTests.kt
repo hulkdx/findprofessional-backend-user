@@ -3,6 +3,7 @@ package com.hulkdx.findprofessional
 import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
+import com.hulkdx.findprofessional.utils.createRegisterRequest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -117,14 +118,6 @@ class RegisterTests {
     }
 
     // region helpers
-
-    private fun createRegisterRequest(
-        email: String = "test@email.com",
-        password: String = "1234abdcx",
-    ) = RegisterRequest(
-        email,
-        password,
-    )
 
     private suspend fun emailExists() {
         whenever(repository.save(any()))
