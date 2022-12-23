@@ -33,7 +33,6 @@ class RegisterTests {
 
     @BeforeEach
     fun setup() {
-
         sut = AuthController(
             repository,
             passwordEncoder,

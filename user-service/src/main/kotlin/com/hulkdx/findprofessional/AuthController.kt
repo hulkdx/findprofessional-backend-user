@@ -4,6 +4,8 @@ import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.utils.R
 import com.hulkdx.findprofessional.utils.Validator
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing
 import org.springframework.http.ResponseEntity
@@ -36,5 +38,12 @@ class AuthController(
         } catch (e: DataIntegrityViolationException) {
             R.conflict()
         }
+    }
+
+    @PostMapping("/login")
+    suspend fun login(@RequestBody body: RegisterRequest): ResponseEntity<*> {
+        val user = userRepository.findByEmail(body.email) ?: return R.conflict()
+        // TODO:
+        return R.conflict()
     }
 }
