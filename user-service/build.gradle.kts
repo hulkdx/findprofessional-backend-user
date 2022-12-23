@@ -19,19 +19,22 @@ repositories {
 }
 
 dependencies {
-//    implementation("org.springframework.boot:spring-boot-starter-actuator")
-//    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-//    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-//    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
-//    implementation("org.jetbrains.kotlin:kotlin-reflect")
-//    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-//    implementation("org.liquibase:liquibase-core")
-//    runtimeOnly("org.postgresql:postgresql")
-//    runtimeOnly("org.postgresql:r2dbc-postgresql")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
-//    implementation("org.springframework.security:spring-security-crypto")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    
+    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+    runtimeOnly("org.postgresql:postgresql")
+    runtimeOnly("org.postgresql:r2dbc-postgresql")
+
+    implementation("org.springframework.security:spring-security-crypto")
+
+    implementation("org.liquibase:liquibase-core")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test:3.0.0")
     testImplementation("org.testcontainers:junit-jupiter:1.17.6")
@@ -42,26 +45,11 @@ dependencies {
 }
 
 tasks {
-//    bootBuildImage {
-//        builder.set("paketobuildpacks/builder:base")
-//        environment.set(
-//            mapOf(
-//                "BP_NATIVE_IMAGE" to "true",
-//                "BP_NATIVE_IMAGE_BUILD_ARGUMENTS" to "--initialize-at-run-time=io.netty"
-//            )
-//        )
-//    }
-
     withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict")
             jvmTarget = javaVersion.toString()
         }
-    }
-
-    jar {
-//        TODO: enable it for native build:
-//        enabled = false
     }
 
     test {
