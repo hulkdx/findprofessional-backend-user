@@ -44,7 +44,7 @@ dependencies {
 
     implementation("org.liquibase:liquibase-core")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test:3.0.0")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:junit-jupiter:1.17.6")
     testImplementation("org.testcontainers:postgresql:1.17.6")
     testImplementation("org.testcontainers:r2dbc:1.17.6")
