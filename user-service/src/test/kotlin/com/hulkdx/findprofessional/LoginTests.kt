@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.any
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 
@@ -27,12 +26,12 @@ class LoginTests {
 
     private val passwordEncoder: PasswordEncoder = TestPasswordEncoder()
 
+    private lateinit var service: AuthService
+
     @BeforeEach
     fun setup() {
-        sut = AuthController(
-            repository,
-            passwordEncoder,
-        )
+        service = AuthService(repository, passwordEncoder)
+        sut = AuthController(service)
     }
 
     @Test

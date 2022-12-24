@@ -4,6 +4,7 @@ import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createRegisterRequest
+import com.hulkdx.findprofessional.utils.errorMessage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -27,6 +28,8 @@ class RegisterTests {
 
     private lateinit var sut: AuthController
 
+    private lateinit var service: AuthService
+
     @Mock
     private lateinit var repository: UserRepository
 
@@ -34,10 +37,8 @@ class RegisterTests {
 
     @BeforeEach
     fun setup() {
-        sut = AuthController(
-            repository,
-            passwordEncoder,
-        )
+        service = AuthService(repository, passwordEncoder)
+        sut = AuthController(service)
     }
 
     @Test
@@ -62,6 +63,7 @@ class RegisterTests {
         val response = sut.register(user)
         // Assert
         assertEquals(HttpStatus.CONFLICT, response.statusCode)
+        assertEquals("email exists", response.errorMessage)
     }
 
     @Test
