@@ -8,6 +8,7 @@ build:
     custom:
       buildCommand: |
         ./gradlew bootJar -x jar
+        rm -rf build/libs/*-plain.jar
         cat <<EOF | docker build --tag=$IMAGE -f - "$BUILD_CONTEXT"
             FROM eclipse-temurin:19.0.1_10-jre
             COPY build/libs/*.jar app.jar
