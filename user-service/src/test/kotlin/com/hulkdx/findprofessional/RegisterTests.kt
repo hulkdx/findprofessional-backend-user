@@ -33,12 +33,15 @@ class RegisterTests {
     @Mock
     private lateinit var repository: UserRepository
 
+    @Mock
+    private lateinit var authTokenService: AuthTokenService
+
     private val passwordEncoder: PasswordEncoder = TestPasswordEncoder()
 
     @BeforeEach
     fun setup() {
         service = AuthService(repository, passwordEncoder)
-        sut = AuthController(service)
+        sut = AuthController(service, authTokenService)
     }
 
     @Test

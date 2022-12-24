@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
 object R {
-    fun ok() = ResponseEntity.status(HttpStatus.OK).build<Unit>()
+    fun <T> ok(body: T) = ResponseEntity.status(HttpStatus.OK)
+        .body(body)
     fun created() = ResponseEntity.status(HttpStatus.CREATED).build<Unit>()
     fun conflict() = ResponseEntity.status(HttpStatus.CONFLICT).build<Unit>()
     fun conflict(message: String) = ResponseEntity.status(HttpStatus.CONFLICT).body(ApiError(message))

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 @EnableR2dbcAuditing
 class AuthController(
     private val authService: AuthService,
+    private val authTokenService: AuthTokenService,
 ) {
     private val emailNotValid = "Email is not valid"
     private val passwordNotValid = "Password is not valid"
@@ -49,7 +50,7 @@ class AuthController(
         }
         val user = authService.login(body)
         return if (user != null) {
-            R.ok()
+            R.ok(body = authTokenService.createToken(user))
         } else {
             R.unauthorized()
         }

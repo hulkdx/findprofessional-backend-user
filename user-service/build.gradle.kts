@@ -39,7 +39,8 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("org.postgresql:r2dbc-postgresql")
 
-    implementation("org.springframework.security:spring-security-crypto")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.security:spring-security-oauth2-jose")
 
     implementation("org.liquibase:liquibase-core")
 

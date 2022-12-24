@@ -7,3 +7,8 @@ dev:
 clear-minikube-psql-cache:
 	eval $$(minikube docker-env); \
 	docker volume rm --force psql_cache
+
+.PHONY: clean
+clean:
+	cd user-service && ./gradlew clean
+

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -27,6 +28,9 @@ class LoginTests {
     @Mock
     private lateinit var repository: UserRepository
 
+    @Mock
+    private lateinit var authTokenService: AuthTokenService
+
     private val passwordEncoder: PasswordEncoder = TestPasswordEncoder()
 
     private lateinit var service: AuthService
@@ -34,7 +38,7 @@ class LoginTests {
     @BeforeEach
     fun setup() {
         service = AuthService(repository, passwordEncoder)
-        sut = AuthController(service)
+        sut = AuthController(service, authTokenService)
     }
 
     @Test
@@ -44,15 +48,18 @@ class LoginTests {
         val requestPassword = "1234abdcx"
         val dbEmail = "test@email.com"
         val dbPassword = passwordEncoder.encode(requestPassword)
+        val expectedBody = "Some JWT token"
 
         val user = User(dbEmail, dbPassword)
         val request = RegisterRequest(requestEmail, requestPassword)
         whenever(repository.findByEmail(requestEmail)).thenReturn(user)
+        whenever(authTokenService.createToken(anyOrNull())).thenReturn(expectedBody)
         // Act
         val response = sut.login(request)
         // Assert
         verify(repository).findByEmail(requestEmail)
         assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(expectedBody, response.body)
     }
 
     @Test
