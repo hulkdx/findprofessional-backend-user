@@ -47,3 +47,8 @@ jobs:
         aws eks update-kubeconfig --name findprofessional_cluster
 
     - run: kubectl apply -k deploy/dev
+
+    - name: cleanup
+      if: always()
+      run: |
+        rm -rf ~/.docker ~/.kube ~/.aws
