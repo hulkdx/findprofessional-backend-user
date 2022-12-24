@@ -2,7 +2,6 @@ package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.utils.R
-import com.hulkdx.findprofessional.utils.UserNotFoundException
 import com.hulkdx.findprofessional.utils.Validator
 import jakarta.validation.Valid
 import org.springframework.dao.DataIntegrityViolationException
@@ -48,11 +47,11 @@ class AuthController(
         if (!Validator.isEmailValid(body.email)) {
             return R.badRequest(emailNotValid)
         }
-        return try {
-            authService.login(body)
-            R.created()
-        } catch (e: UserNotFoundException) {
-            R.conflict()
+        val user = authService.login(body)
+        return if (user != null) {
+            R.ok()
+        } else {
+            R.unauthorized()
         }
     }
 }

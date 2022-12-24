@@ -2,9 +2,9 @@ package com.hulkdx.findprofessional
 
 
 import com.hulkdx.findprofessional.models.RegisterRequest
+import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createRegisterRequest
-import com.hulkdx.findprofessional.utils.errorMessage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 
@@ -37,7 +38,43 @@ class LoginTests {
     }
 
     @Test
-    fun `when user does not exists then conflict`() = runTest {
+    fun `valid password then ok`() = runTest {
+        // Arrange
+        val requestEmail = "test@email.com"
+        val requestPassword = "1234abdcx"
+        val dbEmail = "test@email.com"
+        val dbPassword = passwordEncoder.encode(requestPassword)
+
+        val user = User(dbEmail, dbPassword)
+        val request = RegisterRequest(requestEmail, requestPassword)
+        whenever(repository.findByEmail(requestEmail)).thenReturn(user)
+        // Act
+        val response = sut.login(request)
+        // Assert
+        verify(repository).findByEmail(requestEmail)
+        assertEquals(HttpStatus.OK, response.statusCode)
+    }
+
+    @Test
+    fun `invalid password then unauthorized`() = runTest {
+        // Arrange
+        val requestEmail = "test@email.com"
+        val requestPassword = "1234abdcx"
+        val dbEmail = "test@email.com"
+        val dbPassword = "some_invalid_password"
+
+        val user = User(dbEmail, dbPassword)
+        val request = RegisterRequest(requestEmail, requestPassword)
+        whenever(repository.findByEmail(requestEmail)).thenReturn(user)
+        // Act
+        val response = sut.login(request)
+        // Assert
+        verify(repository).findByEmail(requestEmail)
+        assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
+    }
+
+    @Test
+    fun `when user does not exists then unauthorized`() = runTest {
         // Arrange
         val email = "test@email.com"
         val password = "1234abdcx"
@@ -46,7 +83,7 @@ class LoginTests {
         val response = sut.login(request)
         // Assert
         verify(repository).findByEmail(email)
-        assertEquals(HttpStatus.CONFLICT, response.statusCode)
+        assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
     }
 
     @Test

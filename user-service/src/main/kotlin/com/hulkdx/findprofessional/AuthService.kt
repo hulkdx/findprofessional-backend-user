@@ -2,7 +2,6 @@ package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.models.User
-import com.hulkdx.findprofessional.utils.UserNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -17,7 +16,12 @@ class AuthService(
         userRepository.save(user)
     }
 
-    suspend fun login(body: RegisterRequest) {
-        val user = userRepository.findByEmail(body.email) ?: throw UserNotFoundException()
+    suspend fun login(body: RegisterRequest): User? {
+        val user = userRepository.findByEmail(body.email) ?: return null
+        val matches = passwordEncoder.matches(body.password, user.password)
+        if (!matches) {
+            return null
+        }
+        return user
     }
 }
