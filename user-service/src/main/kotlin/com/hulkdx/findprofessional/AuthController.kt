@@ -23,24 +23,31 @@ import org.springframework.web.bind.annotation.RestController
 class AuthController(
     private val authService: AuthService,
 ) {
+    private val emailNotValid = "Email is not valid"
+    private val passwordNotValid = "Password is not valid"
+    private val emailExists = "Email already exists"
+
     @PostMapping("/register")
     suspend fun register(@RequestBody @Valid body: RegisterRequest): ResponseEntity<*> {
         if (!Validator.isEmailValid(body.email)) {
-            return R.badRequest("Email not valid")
+            return R.badRequest(emailNotValid)
         }
         if (!Validator.isPasswordValid(body.password)) {
-            return R.badRequest("Password not valid")
+            return R.badRequest(passwordNotValid)
         }
         return try {
             authService.register(body)
             R.created()
         } catch (e: DataIntegrityViolationException) {
-            R.conflict("email exists")
+            R.conflict(emailExists)
         }
     }
 
     @PostMapping("/login")
     suspend fun login(@RequestBody @Valid body: RegisterRequest): ResponseEntity<*> {
+        if (!Validator.isEmailValid(body.email)) {
+            return R.badRequest(emailNotValid)
+        }
         return try {
             authService.login(body)
             R.created()

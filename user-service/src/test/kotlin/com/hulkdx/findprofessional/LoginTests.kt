@@ -3,6 +3,8 @@ package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
+import com.hulkdx.findprofessional.utils.createRegisterRequest
+import com.hulkdx.findprofessional.utils.errorMessage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -45,5 +47,24 @@ class LoginTests {
         // Assert
         verify(repository).findByEmail(email)
         assertEquals(HttpStatus.CONFLICT, response.statusCode)
+    }
+
+    @Test
+    fun `when invalid email then bad request`() = runTest {
+        val invalidEmails = listOf(
+            "example.com",
+            "not",
+            "123",
+            "email@",
+            "email@exampl",
+        )
+        for (email in invalidEmails) {
+            // Arrange
+            val user = createRegisterRequest(email = email)
+            // Act
+            val response = sut.login(user)
+            // Assert
+            assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
+        }
     }
 }
