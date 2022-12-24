@@ -28,25 +28,27 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: 19
+        cache: 'gradle'
 
     - name: build
       run: |
         cd user-service
+        base64 --decode <<< ${{ secrets.ENV }} >> src/main/resources/application.properties
         prod=true ./gradlew bootBuildImage --imageName ${DOCKER_IMAGE_NAME}
 
     - name: docker push
       run: |
-        docker login --username ${{ secrets.DOCKER_USER }} --password-stdin <<< ${{ secrets.DOCKER_API_KEY }}
-        docker push ${DOCKER_IMAGE_NAME}
+        docker login --username ${{ secrets.DOCKER_USER }} --password-stdin <<< ${{ secrets.DOCKER_API_KEY }} &> /dev/null
+        docker push ${DOCKER_IMAGE_NAME} &> /dev/null
 
     - name: config credential
       run: |
         mkdir ~/.aws
         base64 --decode <<< ${{ secrets.AWS_CRED }} > ~/.aws/credentials
         base64 --decode <<< ${{ secrets.AWS_CONFIG }} > ~/.aws/config
-        aws eks update-kubeconfig --name findprofessional_cluster
+        aws eks update-kubeconfig --name findprofessional_cluster &> /dev/null
 
-    - run: kubectl apply -k deploy/dev
+    - run: kubectl apply -k deploy/prod
 
     - name: cleanup
       if: always()

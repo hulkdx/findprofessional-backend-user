@@ -66,7 +66,7 @@ class RegisterTests {
         val response = sut.register(user)
         // Assert
         assertEquals(HttpStatus.CONFLICT, response.statusCode)
-        assertEquals("email exists", response.errorMessage)
+        assertEquals("Email already exists", response.errorMessage)
     }
 
     @Test
