@@ -30,10 +30,16 @@ jobs:
         java-version: 19
         cache: 'gradle'
 
+    - name: env
+      run: |
+        base64 --decode <<< ${{ secrets.ENV }} > .env
+
+    - id: dotenv
+      uses: ./.github/actions/dotenv-action
+
     - name: build
       run: |
         cd user-service
-        base64 --decode <<< ${{ secrets.ENV }} >> src/main/resources/application.properties
         prod=true ./gradlew bootBuildImage --imageName ${DOCKER_IMAGE_NAME}
 
     - name: docker push
