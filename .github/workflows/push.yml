@@ -30,17 +30,17 @@ jobs:
         java-version: 19
         cache: 'gradle'
 
-    - name: env
+    - name: setup build env
       run: |
-        base64 --decode <<< ${{ secrets.ENV }} > .env
-
-    - id: dotenv
-      uses: ./.github/actions/dotenv-action
+        base64 --decode <<< ${{ secrets.ENV }} > ./deploy/prod/.env
+        cat ./deploy/prod/.env >> $GITHUB_ENV
 
     - name: build
       run: |
         cd user-service
-        prod=true ./gradlew bootBuildImage --imageName ${DOCKER_IMAGE_NAME}
+        ./gradlew bootBuildImage --imageName ${DOCKER_IMAGE_NAME}
+      env:
+        prod: true
 
     - name: docker push
       run: |
@@ -59,4 +59,8 @@ jobs:
     - name: cleanup
       if: always()
       run: |
-        rm -rf ~/.docker ~/.kube ~/.aws
+        rm -rf ~/.docker \
+               ~/.kube   \
+               ~/.aws    \
+               ./deploy/prod/.env
+        echo "" > $GITHUB_ENV
