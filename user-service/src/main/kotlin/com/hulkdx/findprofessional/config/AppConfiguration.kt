@@ -33,18 +33,18 @@ class AppConfiguration {
     }
 
     @Bean
-    fun jwtEncoder(): JwtEncoder? {
+    fun jwtEncoder(): JwtEncoder {
         val jwk: RSAKey = RSAKey.Builder(rsaPublicKey).privateKey(rsaPrivateKey).build()
         val jwks = ImmutableJWKSet<SecurityContext>(JWKSet(jwk))
         return NimbusJwtEncoder(jwks)
     }
 
     @Bean
-    fun jwtDecoder() =
+    fun jwtDecoder(): ReactiveJwtDecoder =
         NimbusReactiveJwtDecoder.withPublicKey(rsaPublicKey).build()
 
     @Bean
-    fun springSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain? {
+    fun springSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
         return http.csrf { csrf -> csrf.disable() }.build()
     }
 }

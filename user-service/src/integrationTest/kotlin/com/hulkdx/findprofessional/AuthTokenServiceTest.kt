@@ -10,12 +10,15 @@ import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.Jwt
+import org.springframework.security.oauth2.jwt.JwtEncoder
+import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.test.context.ActiveProfiles
 
 @Suppress("FunctionName")
@@ -24,14 +27,33 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles("test")
 class AuthTokenServiceTest : IntegrationTest() {
 
-    @Autowired
-    private lateinit var sut: AuthTokenService
+    companion object {
+        private lateinit var passwordEncoder: PasswordEncoder
+        private lateinit var jwtEncoder: JwtEncoder
+        private lateinit var jwtDecoder: ReactiveJwtDecoder
 
-    @Autowired
-    private lateinit var passwordEncoder: PasswordEncoder
+        @BeforeAll
+        @JvmStatic
+        fun setup(
+            @Autowired passwordEncoder: PasswordEncoder,
+            @Autowired jwtEncoder: JwtEncoder,
+            @Autowired jwtDecoder: ReactiveJwtDecoder,
+        ) {
+            this.passwordEncoder = passwordEncoder
+            this.jwtEncoder = jwtEncoder
+            this.jwtDecoder = jwtDecoder
+        }
+    }
+
+    private lateinit var sut: AuthTokenService
 
     @BeforeEach
     fun setup() {
+        sut = AuthTokenService(
+            passwordEncoder,
+            jwtEncoder,
+            jwtDecoder,
+        )
     }
 
     @Test
