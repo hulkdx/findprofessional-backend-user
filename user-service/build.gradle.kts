@@ -20,6 +20,35 @@ if (System.getenv("prod").toBoolean()) {
     apply(from = "prod.gradle")
 }
 
+// region integrationTest
+
+sourceSets {
+    create("integrationTest") {
+        compileClasspath += sourceSets.main.get().output + sourceSets.test.get().compileClasspath
+        runtimeClasspath += sourceSets.main.get().output + sourceSets.test.get().runtimeClasspath
+    }
+}
+
+val integrationTestImplementation by configurations.getting {
+    extendsFrom(configurations.implementation.get())
+}
+
+task<Test>("integrationTest") {
+    testClassesDirs = sourceSets["integrationTest"].output.classesDirs
+    classpath = sourceSets["integrationTest"].runtimeClasspath
+
+    useJUnitPlatform()
+
+    testLogging {
+        events(
+            org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
+            org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
+        )
+    }
+}
+
+// endregion
+
 repositories {
     mavenCentral()
 }
@@ -34,7 +63,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    
+
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("org.postgresql:r2dbc-postgresql")
@@ -44,12 +73,19 @@ dependencies {
 
     implementation("org.liquibase:liquibase-core")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.testcontainers:junit-jupiter:1.17.6")
-    testImplementation("org.testcontainers:postgresql:1.17.6")
-    testImplementation("org.testcontainers:r2dbc:1.17.6")
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.mockito:mockito-junit-jupiter")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+
+    integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
+    integrationTestImplementation("org.testcontainers:junit-jupiter:1.17.6")
+    integrationTestImplementation("org.testcontainers:postgresql:1.17.6")
+    integrationTestImplementation("org.testcontainers:r2dbc:1.17.6")
+    integrationTestImplementation("org.junit.jupiter:junit-jupiter")
+    integrationTestImplementation("org.mockito:mockito-junit-jupiter")
+    integrationTestImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+    integrationTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
 }
 
 tasks {
@@ -62,5 +98,12 @@ tasks {
 
     test {
         useJUnitPlatform()
+
+        testLogging {
+            events(
+                org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
+                org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
+            )
+        }
     }
 }

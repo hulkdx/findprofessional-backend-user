@@ -1,5 +1,6 @@
-package com.hulkdx.findprofessional.it.base
+package com.hulkdx.findprofessional.base
 
+import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.DynamicPropertyRegistry
@@ -27,6 +28,5 @@ class IntegrationTest {
             registry.add("spring.liquibase.user", container::getUsername)
             registry.add("spring.liquibase.password", container::getPassword)
         }
-
     }
 }
