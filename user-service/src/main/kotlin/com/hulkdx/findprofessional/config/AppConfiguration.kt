@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
+import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder
+import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.security.web.server.SecurityWebFilterChain
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
@@ -32,10 +34,14 @@ class AppConfiguration {
 
     @Bean
     fun jwtEncoder(): JwtEncoder? {
-        val jwk: RSAKey = RSAKey.Builder(this.rsaPublicKey).privateKey(this.rsaPrivateKey).build()
+        val jwk: RSAKey = RSAKey.Builder(rsaPublicKey).privateKey(rsaPrivateKey).build()
         val jwks = ImmutableJWKSet<SecurityContext>(JWKSet(jwk))
         return NimbusJwtEncoder(jwks)
     }
+
+    @Bean
+    fun jwtDecoder() =
+        NimbusReactiveJwtDecoder.withPublicKey(rsaPublicKey).build()
 
     @Bean
     fun springSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain? {

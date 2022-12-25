@@ -75,6 +75,7 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.mockito:mockito-junit-jupiter")
+    testImplementation("org.hamcrest:hamcrest-core")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
 

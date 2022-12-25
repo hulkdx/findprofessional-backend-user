@@ -1,10 +1,13 @@
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.models.User
+import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.oauth2.jwt.BadJwtException
 import org.springframework.security.oauth2.jwt.JwtClaimsSet
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters
+import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -13,6 +16,7 @@ import java.time.temporal.ChronoUnit
 class AuthTokenService(
     private val passwordEncoder: PasswordEncoder,
     private val jwtEncoder: JwtEncoder,
+    private val jwtDecoder: ReactiveJwtDecoder,
 ) {
     fun createToken(user: User): String {
         val userId = passwordEncoder.encode("${user.id}")
@@ -26,5 +30,14 @@ class AuthTokenService(
             .claim("roles", "normal")
             .build()
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).tokenValue
+    }
+
+    suspend fun isTokenValid(token: String): Boolean {
+        val claims = try {
+            jwtDecoder.decode(token).awaitFirstOrNull()
+        } catch (e: BadJwtException) {
+            return false
+        }
+        return true
     }
 }
