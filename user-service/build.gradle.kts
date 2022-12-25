@@ -24,18 +24,19 @@ if (System.getenv("prod").toBoolean()) {
 
 sourceSets {
     create("integrationTest") {
-        compileClasspath += sourceSets.main.get().output + sourceSets.test.get().compileClasspath
-        runtimeClasspath += sourceSets.main.get().output + sourceSets.test.get().runtimeClasspath
+        compileClasspath += sourceSets.test.get().compileClasspath
+        runtimeClasspath += sourceSets.test.get().runtimeClasspath
     }
 }
 
-val integrationTestImplementation by configurations.getting {
-    extendsFrom(configurations.implementation.get())
+val integrationTestImplementation: Configuration by configurations.getting {
+    extendsFrom(configurations.testImplementation.get())
 }
 
 task<Test>("integrationTest") {
     testClassesDirs = sourceSets["integrationTest"].output.classesDirs
     classpath = sourceSets["integrationTest"].runtimeClasspath
+    shouldRunAfter("test")
 
     useJUnitPlatform()
 
@@ -99,6 +100,7 @@ tasks {
 
     test {
         useJUnitPlatform()
+        finalizedBy("integrationTest")
 
         testLogging {
             events(

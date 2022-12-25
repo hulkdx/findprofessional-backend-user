@@ -2,6 +2,11 @@ package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.base.IntegrationTest
 import com.hulkdx.findprofessional.models.User
+import com.nimbusds.jose.jwk.JWKSet
+import com.nimbusds.jose.jwk.RSAKey
+import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet
+import com.nimbusds.jose.proc.SecurityContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.`is`
@@ -18,6 +23,8 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.JwtEncoder
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
+import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.test.context.ActiveProfiles
 
@@ -32,6 +39,7 @@ class AuthTokenServiceTest : IntegrationTest() {
         private lateinit var jwtEncoder: JwtEncoder
         private lateinit var jwtDecoder: ReactiveJwtDecoder
 
+        @Suppress("unused")
         @BeforeAll
         @JvmStatic
         fun setup(
@@ -93,6 +101,32 @@ class AuthTokenServiceTest : IntegrationTest() {
         assertJwtEquals(user, jwt1!!, jwt2!!)
     }
 
+    @Test
+    fun `isTokenValid with invalid tokens`() = runTest {
+        // Arrange
+        val token = ""
+        // Act
+        val result = sut.isTokenValid(token)
+        // Asserts
+        assertThat(result, `is`(false))
+    }
+
+
+    @Test
+    fun `is not valid with a new decoder and encoder`() = runTest {
+        // Arrange
+        val user = User("email", "password")
+        val originalSut = createOriginal()
+        val newSut = createNew()
+        // Act
+        val token = newSut.createToken(user)
+        val isValid = originalSut.isTokenValid(token)
+        // Asserts
+        assertEquals(false, isValid)
+    }
+
+    // region helpers
+
     private fun assertJwtEquals(user: User, jwt1: Jwt, jwt2: Jwt) {
         val sub1 = jwt1.claims["sub"].toString()
         val sub2 = jwt2.claims["sub"].toString()
@@ -106,13 +140,18 @@ class AuthTokenServiceTest : IntegrationTest() {
         assertEquals(jwt1.headers, jwt2.headers)
     }
 
-    @Test
-    fun `isTokenValid with invalid tokens`() = runTest {
-        // Arrange
-        val token = ""
-        // Act
-        val result = sut.isTokenValid(token)
-        // Asserts
-        assertThat(result, `is`(false))
+    private fun createNew(): AuthTokenService {
+        val rsaKey = RSAKeyGenerator(2048).generate()
+        val privateKey = rsaKey.toRSAPrivateKey()
+        val publicKey = rsaKey.toRSAPublicKey()
+        val jwk: RSAKey = RSAKey.Builder(publicKey).privateKey(privateKey).build()
+        val jwks = ImmutableJWKSet<SecurityContext>(JWKSet(jwk))
+        val newEncoder = NimbusJwtEncoder(jwks)
+        val newDecoder = NimbusReactiveJwtDecoder.withPublicKey(publicKey).build()
+        return AuthTokenService(passwordEncoder, newEncoder, newDecoder)
     }
+
+    private fun createOriginal() = AuthTokenService(passwordEncoder, jwtEncoder, jwtDecoder)
+
+    // endregion helpers
 }
