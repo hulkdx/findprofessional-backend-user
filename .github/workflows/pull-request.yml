@@ -1,11 +1,11 @@
-name: deploy-to-kubernetes
+name: Pull-requests
 
 on:
   pull_request:
     branches: [ "main" ]
 
 jobs:
-  deploy:
+  tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,4 +28,4 @@ jobs:
         cache: 'gradle'
 
     - name: Run tests
-      run: ./gradlew test
+      run: cd user-service && ./gradlew test
