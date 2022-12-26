@@ -47,14 +47,14 @@ jobs:
         docker login --username ${{ secrets.DOCKER_USER }} --password-stdin <<< ${{ secrets.DOCKER_API_KEY }} &> /dev/null
         docker push ${DOCKER_IMAGE_NAME} &> /dev/null
 
-    - name: config credential
-      run: |
-        mkdir ~/.aws
-        base64 --decode <<< ${{ secrets.AWS_CRED }} > ~/.aws/credentials
-        base64 --decode <<< ${{ secrets.AWS_CONFIG }} > ~/.aws/config
-        aws eks update-kubeconfig --name findprofessional_cluster &> /dev/null
+    # - name: config credential
+    #   run: |
+    #     mkdir ~/.aws
+    #     base64 --decode <<< ${{ secrets.AWS_CRED }} > ~/.aws/credentials
+    #     base64 --decode <<< ${{ secrets.AWS_CONFIG }} > ~/.aws/config
+    #     aws eks update-kubeconfig --name findprofessional_cluster &> /dev/null
 
-    - run: kubectl apply -k deploy/prod
+    # - run: kubectl apply -k deploy/prod
 
     - name: cleanup
       if: always()
