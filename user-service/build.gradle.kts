@@ -86,6 +86,7 @@ dependencies {
     integrationTestImplementation("org.testcontainers:r2dbc:1.17.6")
     integrationTestImplementation("org.junit.jupiter:junit-jupiter")
     integrationTestImplementation("org.mockito:mockito-junit-jupiter")
+    integrationTestImplementation("org.mockito:mockito-inline")
     integrationTestImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
     integrationTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
 }

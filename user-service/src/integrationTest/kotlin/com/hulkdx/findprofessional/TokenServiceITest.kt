@@ -9,17 +9,19 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet
 import com.nimbusds.jose.proc.SecurityContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.Mockito.mockStatic
+import org.mockito.Mockito.spy
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -31,6 +33,7 @@ import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.test.context.ActiveProfiles
 import java.time.Clock
 import java.time.Instant
+
 
 @Suppress("FunctionName")
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -82,19 +85,15 @@ class TokenServiceITest : IntegrationTest() {
     @Test
     fun `createAccessToken decode tests`() = runTest {
         // Arrange
-        val expectedIssueAt = Instant.ofEpochMilli(1672063560000)
         val userId = 123
-        whenever(clock.instant()).thenReturn(expectedIssueAt)
         val user = User("email", "password", id = userId)
         // Act
         val token = sut.createAccessToken(user)
         // Asserts
         val decoded = sut.decodeJwt(token)
-
+        assertNotNull(decoded)
         val issuer = decoded?.claims?.get("iss") ?: ""
         assertEquals("com.hulkdx.findprofessional", issuer)
-        val issueAt = decoded?.claims?.get("iat") ?: ""
-        assertEquals(expectedIssueAt, issueAt)
         val subject = decoded?.claims?.get("sub") ?: ""
         assertEquals(userId.toString(), subject)
     }
@@ -148,6 +147,20 @@ class TokenServiceITest : IntegrationTest() {
         val isValid = originalSut.isTokenValid(token)
         // Asserts
         assertEquals(false, isValid)
+    }
+
+    @Test
+    fun `refreshToken decode tests`() = runTest {
+        // Arrange
+        val userId = 123
+        val user = User("email", "password", id = userId)
+        // Act
+        val token = sut.createRefreshToken(user)
+        // Asserts
+        val decoded = sut.decodeJwt(token)
+        assertNotNull(decoded)
+        val subject = decoded?.claims?.get("sub") ?: ""
+        assertEquals(userId.toString(), subject)
     }
 
     // region helpers

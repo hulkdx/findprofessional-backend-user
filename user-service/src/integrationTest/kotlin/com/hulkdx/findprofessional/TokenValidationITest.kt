@@ -17,6 +17,9 @@ import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.test.context.ActiveProfiles
 import java.time.Clock
 import java.time.Instant
+import java.time.temporal.ChronoUnit
+import java.time.temporal.ChronoUnit.DAYS
+import java.time.temporal.ChronoUnit.MINUTES
 
 @Suppress("FunctionName")
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -63,15 +66,27 @@ class TokenValidationITest : IntegrationTest() {
         // Act
         val token = sut.createToken(user).accessToken
         // Asserts
-        `10minutesPassed`()
+        timePassed(10, MINUTES)
+        val isValid = sut.isTokenValid(token)
+        assertEquals(false, isValid)
+    }
+
+    @Test
+    fun `refreshToken should not be valid after 30 days passed`() = runTest {
+        // Arrange
+        val user = User("email", "password")
+        // Act
+        val token = sut.createToken(user).refreshToken
+        // Asserts
+        timePassed(30, DAYS)
         val isValid = sut.isTokenValid(token)
         assertEquals(false, isValid)
     }
 
     // region helpers
 
-    private fun `10minutesPassed`() {
-        whenever(clock.instant()).thenReturn(Instant.now().plusSeconds(10 * 60))
+    private fun timePassed(time: Long, unit: ChronoUnit) {
+        whenever(clock.instant()).thenReturn(Instant.now().plus(time, unit))
     }
 
     // endregion helpers

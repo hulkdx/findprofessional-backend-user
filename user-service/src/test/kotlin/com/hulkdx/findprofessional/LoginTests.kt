@@ -49,7 +49,7 @@ class LoginTests {
         val requestPassword = "1234abdcx"
         val dbEmail = "test@email.com"
         val dbPassword = passwordEncoder.encode(requestPassword)
-        val expectedBody = TokenResponse(accessToken = "accessToken")
+        val expectedBody = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
 
         val user = User(dbEmail, dbPassword)
         val request = RegisterRequest(requestEmail, requestPassword)
