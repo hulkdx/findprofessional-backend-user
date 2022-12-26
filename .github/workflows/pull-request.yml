@@ -1,0 +1,31 @@
+name: deploy-to-kubernetes
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: gradle cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: 19
+        cache: 'gradle'
+
+    - name: Run tests
+      run: ./gradlew test
