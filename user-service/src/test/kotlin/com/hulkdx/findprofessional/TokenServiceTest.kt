@@ -19,6 +19,7 @@ import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import java.time.Clock
 import java.time.Instant
 
+@Suppress("SameParameterValue")
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 class TokenServiceTest {
@@ -67,6 +68,39 @@ class TokenServiceTest {
         assertThat(result, `is`(false))
     }
 
+    @Test
+    fun `isTokenValid expiredAt is after timeNow`() = runTest {
+        // Arrange
+        timeNow(10)
+        expiredAtTime(20)
+        // Act
+        val result = sut.isTokenValid("token")
+        // Asserts
+        assertThat(result, `is`(true))
+    }
+
+    @Test
+    fun `isTokenValid expiredAt is before timeNow`() = runTest {
+        // Arrange
+        timeNow(20)
+        expiredAtTime(10)
+        // Act
+        val result = sut.isTokenValid("token")
+        // Asserts
+        assertThat(result, `is`(false))
+    }
+
+    @Test
+    fun `isTokenValid expiredAt is same as timeNow`() = runTest {
+        // Arrange
+        timeNow(10)
+        expiredAtTime(10)
+        // Act
+        val result = sut.isTokenValid("token")
+        // Asserts
+        assertThat(result, `is`(false))
+    }
+
     // region helpers
 
     private fun jwtDecoderReturns(jwt: Jwt?) {
@@ -74,13 +108,29 @@ class TokenServiceTest {
             .thenReturn(mono { jwt })
     }
 
-    private fun createJwt(expiredAt: Instant?) = Jwt(
+    private fun createJwt(
+        expiredAt: Instant?,
+        issuedAt: Instant = Instant.now()
+    ) = Jwt(
         "123",
-        Instant.now(),
+        issuedAt,
         expiredAt,
         mapOf("" to ""),
         mapOf("" to "")
     )
+
+    private fun timeNow(epochMilli: Long) {
+        whenever(clock.instant()).thenReturn(Instant.ofEpochMilli(epochMilli))
+    }
+
+    private fun expiredAtTime(epochMilli: Long) {
+        jwtDecoderReturns(
+            createJwt(
+                issuedAt = Instant.ofEpochMilli(0),
+                expiredAt = Instant.ofEpochMilli(epochMilli),
+            )
+        )
+    }
 
     // endregion helpers
 }

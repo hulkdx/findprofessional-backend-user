@@ -2,6 +2,7 @@ package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.models.User
 import kotlinx.coroutines.reactive.awaitFirstOrNull
+import org.jetbrains.annotations.TestOnly
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.BadJwtException
 import org.springframework.security.oauth2.jwt.Jwt
@@ -35,11 +36,12 @@ class TokenService(
     }
 
     suspend fun isTokenValid(token: String): Boolean {
-        val jwt = decodeJwt(token) ?: return false
-        val expiredAt = jwt.expiresAt ?: return false
-        return true
+        val jwt = decodeJwt(token)
+        val expiredAt = jwt?.expiresAt ?: return false
+        return Instant.now(clock).isBefore(expiredAt)
     }
 
+    @TestOnly
     suspend fun decodeJwt(token: String): Jwt? {
         return try {
             jwtDecoder.decode(token).awaitFirstOrNull()
