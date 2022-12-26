@@ -27,6 +27,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.test.context.ActiveProfiles
+import java.time.Clock
 
 @Suppress("FunctionName")
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -61,6 +62,7 @@ class TokenServiceTest : IntegrationTest() {
             passwordEncoder,
             jwtEncoder,
             jwtDecoder,
+            Clock.systemDefaultZone(),
         )
     }
 
@@ -148,10 +150,20 @@ class TokenServiceTest : IntegrationTest() {
         val jwks = ImmutableJWKSet<SecurityContext>(JWKSet(jwk))
         val newEncoder = NimbusJwtEncoder(jwks)
         val newDecoder = NimbusReactiveJwtDecoder.withPublicKey(publicKey).build()
-        return TokenService(passwordEncoder, newEncoder, newDecoder)
+        return TokenService(
+            passwordEncoder,
+            newEncoder,
+            newDecoder,
+            Clock.systemDefaultZone()
+        )
     }
 
-    private fun createOriginal() = TokenService(passwordEncoder, jwtEncoder, jwtDecoder)
+    private fun createOriginal() = TokenService(
+        passwordEncoder,
+        jwtEncoder,
+        jwtDecoder,
+        Clock.systemDefaultZone()
+    )
 
     // endregion helpers
 }

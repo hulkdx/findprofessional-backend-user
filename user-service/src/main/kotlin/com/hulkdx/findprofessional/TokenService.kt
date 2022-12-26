@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.stereotype.Service
+import java.time.Clock
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
@@ -18,14 +19,15 @@ class TokenService(
     private val passwordEncoder: PasswordEncoder,
     private val jwtEncoder: JwtEncoder,
     private val jwtDecoder: ReactiveJwtDecoder,
+    private val clock: Clock,
 ) {
     fun createToken(user: User): String {
         val email = passwordEncoder.encode(user.email)
 
         val claims = JwtClaimsSet.builder()
             .issuer("com.hulkdx.findprofessional")
-            .issuedAt(Instant.now())
-            .expiresAt(Instant.now().plus(30, ChronoUnit.DAYS))
+            .issuedAt(Instant.now(clock))
+            .expiresAt(Instant.now(clock).plus(30, ChronoUnit.DAYS))
             .subject(email)
             .claim("roles", "normal")
             .build()

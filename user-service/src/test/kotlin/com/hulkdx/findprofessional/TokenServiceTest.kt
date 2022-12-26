@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
+import java.time.Clock
 import java.time.Instant
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -33,12 +34,16 @@ class TokenServiceTest {
     @Mock
     private lateinit var jwtDecoder: ReactiveJwtDecoder
 
+    @Mock
+    private lateinit var clock: Clock
+
     @BeforeEach
     fun setup() {
         sut = TokenService(
             passwordEncoder,
             jwtEncoder,
             jwtDecoder,
+            clock,
         )
     }
 

@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.security.web.server.SecurityWebFilterChain
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
+import java.time.Clock
 
 @Configuration
 class AppConfiguration {
@@ -47,4 +48,7 @@ class AppConfiguration {
     fun springSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
         return http.csrf { csrf -> csrf.disable() }.build()
     }
+
+    @Bean
+    fun clock(): Clock = Clock.systemDefaultZone()
 }
