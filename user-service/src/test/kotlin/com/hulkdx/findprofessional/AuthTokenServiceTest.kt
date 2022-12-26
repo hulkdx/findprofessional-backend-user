@@ -4,8 +4,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.reactor.mono
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.CoreMatchers.notNullValue
-import org.hamcrest.MatcherAssert.*
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -14,8 +13,10 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
+import java.time.Instant
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
@@ -42,13 +43,39 @@ class AuthTokenServiceTest {
     }
 
     @Test
-    fun `test createToken`() = runTest {
+    fun `isTokenValid when null mono then return false`() = runTest {
         // Arrange
-        whenever(jwtDecoder.decode(any()))
-            .thenReturn(mono { null })
+        jwtDecoderReturns(null)
         // Act
         val result = sut.isTokenValid("token")
         // Asserts
         assertThat(result, `is`(false))
     }
+
+    @Test
+    fun `isTokenValid when null expiredAt then return false`() = runTest {
+        // Arrange
+        jwtDecoderReturns(createJwt(expiredAt = null))
+        // Act
+        val result = sut.isTokenValid("token")
+        // Asserts
+        assertThat(result, `is`(false))
+    }
+
+    // region helpers
+
+    private fun jwtDecoderReturns(jwt: Jwt?) {
+        whenever(jwtDecoder.decode(any()))
+            .thenReturn(mono { jwt })
+    }
+
+    private fun createJwt(expiredAt: Instant?) = Jwt(
+        "123",
+        Instant.now(),
+        expiredAt,
+        mapOf("" to ""),
+        mapOf("" to "")
+    )
+
+    // endregion helpers
 }

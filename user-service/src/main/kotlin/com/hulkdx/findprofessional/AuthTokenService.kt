@@ -34,6 +34,7 @@ class AuthTokenService(
 
     suspend fun isTokenValid(token: String): Boolean {
         val jwt = decodeJwt(token) ?: return false
+        val expiredAt = jwt.expiresAt ?: return false
         return true
     }
 
