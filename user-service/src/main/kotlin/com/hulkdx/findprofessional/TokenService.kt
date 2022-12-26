@@ -22,16 +22,29 @@ class TokenService(
     private val clock: Clock,
 ) {
     fun createToken(user: User) = TokenResponse(
-        accessToken = createAccessToken(user)
+        accessToken = createAccessToken(user),
+        refreshToken = createRefreshToken(user),
     )
 
     fun createAccessToken(user: User): String {
-        val claims = JwtClaimsSet.builder()
-            .issuer("com.hulkdx.findprofessional")
-            .issuedAt(Instant.now(clock))
-            .expiresAt(Instant.now(clock).plus(10, ChronoUnit.MINUTES))
-            .subject(user.id.toString())
-            .build()
+        return jwt {
+            issuer("com.hulkdx.findprofessional")
+            issuedAt(Instant.now(clock))
+            expiresAt(Instant.now(clock).plus(10, ChronoUnit.MINUTES))
+            subject(user.id.toString())
+        }
+    }
+
+    fun createRefreshToken(user: User): String {
+        return jwt {
+            issuedAt(Instant.now(clock))
+            expiresAt(Instant.now(clock).plus(30, ChronoUnit.DAYS))
+            subject(user.id.toString())
+        }
+    }
+
+    private fun jwt(builder: JwtClaimsSet.Builder.() -> Unit): String {
+        val claims = JwtClaimsSet.builder().apply(builder).build()
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).tokenValue
     }
 
