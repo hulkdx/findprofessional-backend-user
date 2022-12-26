@@ -71,7 +71,7 @@ class TokenServiceTest : IntegrationTest() {
         // Arrange
         val user = User("email", "password")
         // Act
-        val result = sut.createToken(user)
+        val result = sut.createAccessToken(user)
         // Asserts
         assertThat(result, notNullValue())
     }
@@ -82,8 +82,8 @@ class TokenServiceTest : IntegrationTest() {
         val user1 = User("email1", "password1")
         val user2 = User("email2", "password2")
         // Act
-        val result1 = sut.createToken(user1)
-        val result2 = sut.createToken(user2)
+        val result1 = sut.createAccessToken(user1)
+        val result2 = sut.createAccessToken(user2)
         // Asserts
         assertThat(result1, not(result2))
     }
@@ -93,8 +93,8 @@ class TokenServiceTest : IntegrationTest() {
         // Arrange
         val user = User("email", "password")
         // Act
-        val result1 = sut.createToken(user)
-        val result2 = sut.createToken(user)
+        val result1 = sut.createAccessToken(user)
+        val result2 = sut.createAccessToken(user)
         // Asserts
         assertNotEquals(result1, result2)
 
@@ -121,7 +121,7 @@ class TokenServiceTest : IntegrationTest() {
         val originalSut = createOriginal()
         val newSut = createNew()
         // Act
-        val token = newSut.createToken(user)
+        val token = newSut.createAccessToken(user)
         val isValid = originalSut.isTokenValid(token)
         // Asserts
         assertEquals(false, isValid)

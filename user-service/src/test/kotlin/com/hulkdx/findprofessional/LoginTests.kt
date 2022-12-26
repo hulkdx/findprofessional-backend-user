@@ -2,6 +2,7 @@ package com.hulkdx.findprofessional
 
 
 import com.hulkdx.findprofessional.models.RegisterRequest
+import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createRegisterRequest
@@ -48,7 +49,7 @@ class LoginTests {
         val requestPassword = "1234abdcx"
         val dbEmail = "test@email.com"
         val dbPassword = passwordEncoder.encode(requestPassword)
-        val expectedBody = "Some JWT token"
+        val expectedBody = TokenResponse(accessToken = "accessToken")
 
         val user = User(dbEmail, dbPassword)
         val request = RegisterRequest(requestEmail, requestPassword)

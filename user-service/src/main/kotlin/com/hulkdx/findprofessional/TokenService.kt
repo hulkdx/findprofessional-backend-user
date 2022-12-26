@@ -1,5 +1,6 @@
 package com.hulkdx.findprofessional
 
+import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.models.User
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.jetbrains.annotations.TestOnly
@@ -22,7 +23,11 @@ class TokenService(
     private val jwtDecoder: ReactiveJwtDecoder,
     private val clock: Clock,
 ) {
-    fun createToken(user: User): String {
+    fun createToken(user: User) = TokenResponse(
+        accessToken = createAccessToken(user)
+    )
+
+    fun createAccessToken(user: User): String {
         val email = passwordEncoder.encode(user.email)
 
         val claims = JwtClaimsSet.builder()
