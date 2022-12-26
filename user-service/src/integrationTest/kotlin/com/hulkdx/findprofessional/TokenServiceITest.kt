@@ -33,7 +33,7 @@ import java.time.Clock
 @OptIn(ExperimentalCoroutinesApi::class)
 @SpringBootTest
 @ActiveProfiles("test")
-class TokenServiceTest : IntegrationTest() {
+class TokenServiceITest : IntegrationTest() {
 
     companion object {
         private lateinit var passwordEncoder: PasswordEncoder
