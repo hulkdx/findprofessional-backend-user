@@ -29,7 +29,7 @@ class TokenService(
         val claims = JwtClaimsSet.builder()
             .issuer("com.hulkdx.findprofessional")
             .issuedAt(Instant.now(clock))
-            .expiresAt(Instant.now(clock).plus(30, ChronoUnit.DAYS))
+            .expiresAt(Instant.now(clock).plus(10, ChronoUnit.MINUTES))
             .subject(user.id.toString())
             .claim("roles", "normal")
             .build()
