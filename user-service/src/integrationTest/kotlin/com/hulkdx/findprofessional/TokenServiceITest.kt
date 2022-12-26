@@ -9,6 +9,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet
 import com.nimbusds.jose.proc.SecurityContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.CoreMatchers.notNullValue
@@ -76,6 +77,26 @@ class TokenServiceITest : IntegrationTest() {
         val result = sut.createAccessToken(user)
         // Asserts
         assertThat(result, notNullValue())
+    }
+
+    @Test
+    fun `createAccessToken decode tests`() = runTest {
+        // Arrange
+        val expectedIssueAt = Instant.ofEpochMilli(1672063560000)
+        val userId = 123
+        whenever(clock.instant()).thenReturn(expectedIssueAt)
+        val user = User("email", "password", id = userId)
+        // Act
+        val token = sut.createAccessToken(user)
+        // Asserts
+        val decoded = sut.decodeJwt(token)
+
+        val issuer = decoded?.claims?.get("iss") ?: ""
+        assertEquals("com.hulkdx.findprofessional", issuer)
+        val issueAt = decoded?.claims?.get("iat") ?: ""
+        assertEquals(expectedIssueAt, issueAt)
+        val subject = decoded?.claims?.get("sub") ?: ""
+        assertEquals(userId.toString(), subject)
     }
 
     @Test
