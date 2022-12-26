@@ -18,9 +18,10 @@ import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mock
+import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
@@ -28,6 +29,7 @@ import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.test.context.ActiveProfiles
 import java.time.Clock
+import java.time.Instant
 
 @Suppress("FunctionName")
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -36,7 +38,6 @@ import java.time.Clock
 class TokenServiceITest : IntegrationTest() {
 
     companion object {
-        private lateinit var passwordEncoder: PasswordEncoder
         private lateinit var jwtEncoder: JwtEncoder
         private lateinit var jwtDecoder: ReactiveJwtDecoder
 
@@ -44,11 +45,9 @@ class TokenServiceITest : IntegrationTest() {
         @BeforeAll
         @JvmStatic
         fun setup(
-            @Autowired passwordEncoder: PasswordEncoder,
             @Autowired jwtEncoder: JwtEncoder,
             @Autowired jwtDecoder: ReactiveJwtDecoder,
         ) {
-            this.passwordEncoder = passwordEncoder
             this.jwtEncoder = jwtEncoder
             this.jwtDecoder = jwtDecoder
         }
@@ -56,13 +55,16 @@ class TokenServiceITest : IntegrationTest() {
 
     private lateinit var sut: TokenService
 
+    @Mock
+    private lateinit var clock: Clock
+
     @BeforeEach
     fun setup() {
+        whenever(clock.instant()).thenReturn(Instant.now())
         sut = TokenService(
-            passwordEncoder,
             jwtEncoder,
             jwtDecoder,
-            Clock.systemDefaultZone(),
+            clock,
         )
     }
 
@@ -79,8 +81,8 @@ class TokenServiceITest : IntegrationTest() {
     @Test
     fun `createToken is not the same for different users`() {
         // Arrange
-        val user1 = User("email1", "password1")
-        val user2 = User("email2", "password2")
+        val user1 = User("email1", "password1", id = 1)
+        val user2 = User("email2", "password2", id = 2)
         // Act
         val result1 = sut.createAccessToken(user1)
         val result2 = sut.createAccessToken(user2)
@@ -94,13 +96,14 @@ class TokenServiceITest : IntegrationTest() {
         val user = User("email", "password")
         // Act
         val result1 = sut.createAccessToken(user)
+        whenever(clock.instant()).thenReturn(Instant.now().plusSeconds(1000))
         val result2 = sut.createAccessToken(user)
         // Asserts
         assertNotEquals(result1, result2)
 
         val jwt1 = sut.decodeJwt(result1)
         val jwt2 = sut.decodeJwt(result2)
-        assertJwtEquals(user, jwt1!!, jwt2!!)
+        assertJwtEquals(jwt1!!, jwt2!!)
     }
 
     @Test
@@ -112,7 +115,6 @@ class TokenServiceITest : IntegrationTest() {
         // Asserts
         assertThat(result, `is`(false))
     }
-
 
     @Test
     fun `is not valid with a new decoder and encoder`() = runTest {
@@ -129,15 +131,9 @@ class TokenServiceITest : IntegrationTest() {
 
     // region helpers
 
-    private fun assertJwtEquals(user: User, jwt1: Jwt, jwt2: Jwt) {
-        val sub1 = jwt1.claims["sub"].toString()
-        val sub2 = jwt2.claims["sub"].toString()
-        val subDec1 = passwordEncoder.matches(user.email, sub1)
-        val subDec2 = passwordEncoder.matches(user.email, sub2)
-        assertEquals(subDec1, subDec2)
-
-        val claims1 = jwt1.claims.filter { it.key != "sub" }
-        val claims2 = jwt2.claims.filter { it.key != "sub" }
+    private fun assertJwtEquals(jwt1: Jwt, jwt2: Jwt) {
+        val claims1 = jwt1.claims.filter { it.key != "iat" }.filter { it.key != "exp" }
+        val claims2 = jwt2.claims.filter { it.key != "iat" }.filter { it.key != "exp" }
         assertEquals(claims1, claims2)
         assertEquals(jwt1.headers, jwt2.headers)
     }
@@ -151,18 +147,16 @@ class TokenServiceITest : IntegrationTest() {
         val newEncoder = NimbusJwtEncoder(jwks)
         val newDecoder = NimbusReactiveJwtDecoder.withPublicKey(publicKey).build()
         return TokenService(
-            passwordEncoder,
             newEncoder,
             newDecoder,
-            Clock.systemDefaultZone()
+            clock,
         )
     }
 
     private fun createOriginal() = TokenService(
-        passwordEncoder,
         jwtEncoder,
         jwtDecoder,
-        Clock.systemDefaultZone()
+        clock,
     )
 
     // endregion helpers

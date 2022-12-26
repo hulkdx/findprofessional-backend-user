@@ -12,7 +12,6 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
@@ -27,9 +26,6 @@ class TokenServiceTest {
     private lateinit var sut: TokenService
 
     @Mock
-    private lateinit var passwordEncoder: PasswordEncoder
-
-    @Mock
     private lateinit var jwtEncoder: JwtEncoder
 
     @Mock
@@ -41,7 +37,6 @@ class TokenServiceTest {
     @BeforeEach
     fun setup() {
         sut = TokenService(
-            passwordEncoder,
             jwtEncoder,
             jwtDecoder,
             clock,
@@ -110,7 +105,7 @@ class TokenServiceTest {
 
     private fun createJwt(
         expiredAt: Instant?,
-        issuedAt: Instant = Instant.now()
+        issuedAt: Instant = Instant.now(),
     ) = Jwt(
         "123",
         issuedAt,

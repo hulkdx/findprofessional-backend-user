@@ -4,7 +4,6 @@ import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.models.User
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.jetbrains.annotations.TestOnly
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.BadJwtException
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.JwtClaimsSet
@@ -18,7 +17,6 @@ import java.time.temporal.ChronoUnit
 
 @Service
 class TokenService(
-    private val passwordEncoder: PasswordEncoder,
     private val jwtEncoder: JwtEncoder,
     private val jwtDecoder: ReactiveJwtDecoder,
     private val clock: Clock,
@@ -28,13 +26,11 @@ class TokenService(
     )
 
     fun createAccessToken(user: User): String {
-        val email = passwordEncoder.encode(user.email)
-
         val claims = JwtClaimsSet.builder()
             .issuer("com.hulkdx.findprofessional")
             .issuedAt(Instant.now(clock))
             .expiresAt(Instant.now(clock).plus(30, ChronoUnit.DAYS))
-            .subject(email)
+            .subject(user.id.toString())
             .claim("roles", "normal")
             .build()
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).tokenValue
@@ -49,7 +45,7 @@ class TokenService(
     @TestOnly
     suspend fun decodeJwt(token: String): Jwt? {
         return try {
-            jwtDecoder.decode(token).awaitFirstOrNull()
+            return jwtDecoder.decode(token).awaitFirstOrNull()
         } catch (e: BadJwtException) {
             null
         }
