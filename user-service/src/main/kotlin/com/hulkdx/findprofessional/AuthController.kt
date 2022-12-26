@@ -64,6 +64,6 @@ class AuthController(
         @RequestHeader(HttpHeaders.AUTHORIZATION) auth: String,
         @RequestBody @Valid @Size(max = 50) refreshToken: String,
     ) {
-        TODO()
+        TODO("implement")
     }
 }
