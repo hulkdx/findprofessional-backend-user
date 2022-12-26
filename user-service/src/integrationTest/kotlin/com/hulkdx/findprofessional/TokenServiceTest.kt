@@ -32,7 +32,7 @@ import org.springframework.test.context.ActiveProfiles
 @OptIn(ExperimentalCoroutinesApi::class)
 @SpringBootTest
 @ActiveProfiles("test")
-class AuthTokenServiceTest : IntegrationTest() {
+class TokenServiceTest : IntegrationTest() {
 
     companion object {
         private lateinit var passwordEncoder: PasswordEncoder
@@ -53,11 +53,11 @@ class AuthTokenServiceTest : IntegrationTest() {
         }
     }
 
-    private lateinit var sut: AuthTokenService
+    private lateinit var sut: TokenService
 
     @BeforeEach
     fun setup() {
-        sut = AuthTokenService(
+        sut = TokenService(
             passwordEncoder,
             jwtEncoder,
             jwtDecoder,
@@ -140,7 +140,7 @@ class AuthTokenServiceTest : IntegrationTest() {
         assertEquals(jwt1.headers, jwt2.headers)
     }
 
-    private fun createNew(): AuthTokenService {
+    private fun createNew(): TokenService {
         val rsaKey = RSAKeyGenerator(2048).generate()
         val privateKey = rsaKey.toRSAPrivateKey()
         val publicKey = rsaKey.toRSAPublicKey()
@@ -148,10 +148,10 @@ class AuthTokenServiceTest : IntegrationTest() {
         val jwks = ImmutableJWKSet<SecurityContext>(JWKSet(jwk))
         val newEncoder = NimbusJwtEncoder(jwks)
         val newDecoder = NimbusReactiveJwtDecoder.withPublicKey(publicKey).build()
-        return AuthTokenService(passwordEncoder, newEncoder, newDecoder)
+        return TokenService(passwordEncoder, newEncoder, newDecoder)
     }
 
-    private fun createOriginal() = AuthTokenService(passwordEncoder, jwtEncoder, jwtDecoder)
+    private fun createOriginal() = TokenService(passwordEncoder, jwtEncoder, jwtDecoder)
 
     // endregion helpers
 }

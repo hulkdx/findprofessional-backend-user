@@ -29,7 +29,7 @@ class LoginTests {
     private lateinit var repository: UserRepository
 
     @Mock
-    private lateinit var authTokenService: AuthTokenService
+    private lateinit var tokenService: TokenService
 
     private val passwordEncoder: PasswordEncoder = TestPasswordEncoder()
 
@@ -38,7 +38,7 @@ class LoginTests {
     @BeforeEach
     fun setup() {
         service = AuthService(repository, passwordEncoder)
-        sut = AuthController(service, authTokenService)
+        sut = AuthController(service, tokenService)
     }
 
     @Test
@@ -53,7 +53,7 @@ class LoginTests {
         val user = User(dbEmail, dbPassword)
         val request = RegisterRequest(requestEmail, requestPassword)
         whenever(repository.findByEmail(requestEmail)).thenReturn(user)
-        whenever(authTokenService.createToken(anyOrNull())).thenReturn(expectedBody)
+        whenever(tokenService.createToken(anyOrNull())).thenReturn(expectedBody)
         // Act
         val response = sut.login(request)
         // Assert

@@ -14,7 +14,7 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 @Service
-class AuthTokenService(
+class TokenService(
     private val passwordEncoder: PasswordEncoder,
     private val jwtEncoder: JwtEncoder,
     private val jwtDecoder: ReactiveJwtDecoder,

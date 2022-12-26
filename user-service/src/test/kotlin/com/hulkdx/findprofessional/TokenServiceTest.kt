@@ -20,9 +20,9 @@ import java.time.Instant
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
-class AuthTokenServiceTest {
+class TokenServiceTest {
 
-    private lateinit var sut: AuthTokenService
+    private lateinit var sut: TokenService
 
     @Mock
     private lateinit var passwordEncoder: PasswordEncoder
@@ -35,7 +35,7 @@ class AuthTokenServiceTest {
 
     @BeforeEach
     fun setup() {
-        sut = AuthTokenService(
+        sut = TokenService(
             passwordEncoder,
             jwtEncoder,
             jwtDecoder,
