@@ -76,12 +76,11 @@ class AuthController(
             return R.badRequest(invalidTokenType)
         }
 
-//        val body = refreshService.refreshToken(accessToken, refreshToken)
-//        return if (body == null) {
-//            R.unauthorized()
-//        } else {
-//            R.ok(body)
-//        }
-        TODO()
+        val body = refreshService.refreshToken(accessToken, refreshToken)
+        return if (body == null) {
+            R.unauthorized()
+        } else {
+            R.ok(body)
+        }
     }
 }
