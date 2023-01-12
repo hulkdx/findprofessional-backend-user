@@ -7,10 +7,12 @@ class RefreshService(
     private val tokenService: TokenService,
 ) {
     suspend fun refreshToken(accessToken: String, refreshToken: String): Any? {
-        if (!tokenService.isTokenValid(accessToken)) {
+        val accessTokenJwt = tokenService.decodeJwt(accessToken)
+        val refreshTokenJwt = tokenService.decodeJwt(refreshToken)
+        if (!tokenService.isTokenValid(accessTokenJwt)) {
             return null
         }
-        if (!tokenService.isTokenValid(refreshToken)) {
+        if (!tokenService.isTokenValid(refreshTokenJwt)) {
             return null
         }
         // TODO: check if the user of accessToken is the same as refreshToken

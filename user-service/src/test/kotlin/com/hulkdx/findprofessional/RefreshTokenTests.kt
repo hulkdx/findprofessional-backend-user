@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
+import org.springframework.security.oauth2.jwt.Jwt
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
@@ -53,7 +54,7 @@ class RefreshTokenTests {
     fun `when invalid accessToken then unauthorized`() = runTest {
         // Arrange
         val accessToken = "some_invalid_accessToken"
-        whenever(tokenService.isTokenValid(accessToken)).thenReturn(false)
+        isTokenValid(accessToken, false)
         // Act
         val response = sut.refresh("Bearer $accessToken", "refreshToken")
         // Assert
@@ -64,9 +65,9 @@ class RefreshTokenTests {
     fun `when invalid refreshToken then unauthorized`() = runTest {
         // Arrange
         val refreshToken = "some_invalid_refreshToken"
-        whenever(tokenService.isTokenValid(refreshToken)).thenReturn(false)
+        isTokenValid(refreshToken, false)
         val accessToken = "accessToken"
-        whenever(tokenService.isTokenValid(accessToken)).thenReturn(true)
+        isTokenValid(accessToken, true)
         // Act
         val response = sut.refresh("Bearer $accessToken", refreshToken)
         // Assert
@@ -74,6 +75,14 @@ class RefreshTokenTests {
     }
 
     // region helpers
+
+    private suspend fun isTokenValid(token: String, isValid: Boolean) {
+        val mockJwt: Jwt = mock {}
+        whenever(tokenService.decodeJwt(token))
+            .thenReturn(mockJwt)
+        whenever(tokenService.isTokenValid(mockJwt))
+            .thenReturn(isValid)
+    }
 
     // endregion
 }
