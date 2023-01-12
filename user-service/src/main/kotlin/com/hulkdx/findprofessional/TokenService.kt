@@ -50,7 +50,17 @@ class TokenService(
 
     suspend fun isTokenValid(token: String): Boolean {
         val jwt = decodeJwt(token)
-        val expiredAt = jwt?.expiresAt ?: return false
+        return isTokenValid(jwt)
+    }
+
+    fun isTokenValid(jwt: Jwt?): Boolean {
+        if (jwt == null ||
+            jwt.expiresAt == null ||
+            jwt.subject == null
+        ) {
+            return false
+        }
+        val expiredAt = jwt.expiresAt
         return Instant.now(clock).isBefore(expiredAt)
     }
 

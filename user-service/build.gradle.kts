@@ -101,7 +101,6 @@ tasks {
 
     test {
         useJUnitPlatform()
-        finalizedBy("integrationTest")
 
         testLogging {
             events(

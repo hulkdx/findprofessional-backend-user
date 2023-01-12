@@ -17,10 +17,10 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
-import org.springframework.security.crypto.password.PasswordEncoder
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
@@ -28,20 +28,13 @@ class RegisterTests {
 
     private lateinit var sut: AuthController
 
-    private lateinit var service: AuthService
-
     @Mock
     private lateinit var repository: UserRepository
 
-    @Mock
-    private lateinit var tokenService: TokenService
-
-    private val passwordEncoder: PasswordEncoder = TestPasswordEncoder()
-
     @BeforeEach
     fun setup() {
-        service = AuthService(repository, passwordEncoder)
-        sut = AuthController(service, tokenService)
+        val service = AuthService(repository, TestPasswordEncoder())
+        sut = AuthController(service, mock {}, mock {})
     }
 
     @Test

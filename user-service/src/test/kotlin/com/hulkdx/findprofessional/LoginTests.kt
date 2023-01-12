@@ -16,6 +16,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -39,7 +40,7 @@ class LoginTests {
     @BeforeEach
     fun setup() {
         service = AuthService(repository, passwordEncoder)
-        sut = AuthController(service, tokenService)
+        sut = AuthController(service, tokenService, mock {})
     }
 
     @Test
