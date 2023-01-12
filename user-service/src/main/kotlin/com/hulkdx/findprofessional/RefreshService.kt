@@ -10,7 +10,9 @@ class RefreshService(
         if (!tokenService.isTokenValid(accessToken)) {
             return null
         }
-        // TODO: check if refreshToken is valid
+        if (!tokenService.isTokenValid(refreshToken)) {
+            return null
+        }
         // TODO: check if the user of accessToken is the same as refreshToken
         // TODO: if refreshToken is invalid unauth, logout the app
 

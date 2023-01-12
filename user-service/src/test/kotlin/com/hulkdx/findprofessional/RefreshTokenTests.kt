@@ -60,6 +60,19 @@ class RefreshTokenTests {
         assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
     }
 
+    @Test
+    fun `when invalid refreshToken then unauthorized`() = runTest {
+        // Arrange
+        val refreshToken = "some_invalid_refreshToken"
+        whenever(tokenService.isTokenValid(refreshToken)).thenReturn(false)
+        val accessToken = "accessToken"
+        whenever(tokenService.isTokenValid(accessToken)).thenReturn(true)
+        // Act
+        val response = sut.refresh("Bearer $accessToken", refreshToken)
+        // Assert
+        assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
+    }
+
     // region helpers
 
     // endregion
