@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.springframework.security.oauth2.jwt.Jwt
+import org.springframework.security.oauth2.jwt.JwtClaimNames
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import java.time.Clock
@@ -96,6 +97,16 @@ class TokenServiceTest {
         assertThat(result, `is`(false))
     }
 
+    @Test
+    fun `isTokenValid when null subject then return false`() = runTest {
+        // Arrange
+        jwtDecoderReturns(createJwt(subject = null))
+        // Act
+        val result = sut.isTokenValid("token")
+        // Asserts
+        assertThat(result, `is`(false))
+    }
+
     // region helpers
 
     private fun jwtDecoderReturns(jwt: Jwt?) {
@@ -104,14 +115,17 @@ class TokenServiceTest {
     }
 
     private fun createJwt(
-        expiredAt: Instant?,
+        expiredAt: Instant? = Instant.now().plusSeconds(10),
         issuedAt: Instant = Instant.now(),
+        subject: String? = "subject",
     ) = Jwt(
         "123",
         issuedAt,
         expiredAt,
         mapOf("" to ""),
-        mapOf("" to "")
+        mapOf(
+            JwtClaimNames.SUB to subject,
+        ),
     )
 
     private fun timeNow(epochMilli: Long) {
