@@ -1,5 +1,6 @@
 package com.hulkdx.findprofessional
 
+import com.hulkdx.findprofessional.utils.createJwt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.reactor.mono
 import kotlinx.coroutines.test.runTest
@@ -113,20 +114,6 @@ class TokenServiceTest {
         whenever(jwtDecoder.decode(any()))
             .thenReturn(mono { jwt })
     }
-
-    private fun createJwt(
-        expiredAt: Instant? = Instant.now().plusSeconds(10),
-        issuedAt: Instant = Instant.now(),
-        subject: String? = "subject",
-    ) = Jwt(
-        "123",
-        issuedAt,
-        expiredAt,
-        mapOf("" to ""),
-        mapOf(
-            JwtClaimNames.SUB to subject,
-        ),
-    )
 
     private fun timeNow(epochMilli: Long) {
         whenever(clock.instant()).thenReturn(Instant.ofEpochMilli(epochMilli))
