@@ -53,24 +53,13 @@ class RefreshTokenTests {
     }
 
     @Test
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    fun `when invalid accessToken then unauthorized`() = runTest {
-        // Arrange
-        val accessToken = "some_invalid_accessToken"
-        isTokenValid(accessToken, false)
-        // Act
-        val response = sut.refresh("Bearer $accessToken", "refreshToken")
-        // Assert
-        assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
-    }
-
-    @Test
     fun `when invalid refreshToken then unauthorized`() = runTest {
         // Arrange
         val refreshToken = "some_invalid_refreshToken"
         isTokenValid(refreshToken, false)
         val accessToken = "accessToken"
-        isTokenValid(accessToken, true)
+        // irrelevant:
+        decodeJwtSuccess(accessToken)
         // Act
         val response = sut.refresh("Bearer $accessToken", refreshToken)
         // Assert
@@ -78,6 +67,7 @@ class RefreshTokenTests {
     }
 
     @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
     fun `when accessToken user id is different than refreshToken user id then unauthorized`() = runTest {
         // Arrange
         val refreshToken = "refreshToken"
@@ -107,6 +97,10 @@ class RefreshTokenTests {
             .thenReturn(jwt)
         whenever(tokenService.isTokenValid(jwt))
             .thenReturn(true)
+    }
+
+    private suspend fun decodeJwtSuccess(accessToken: String) {
+        whenever(tokenService.decodeJwt(accessToken)).thenReturn(createJwt(subject = "subject"))
     }
 
     // endregion

@@ -12,8 +12,7 @@ class RefreshService(
         val accessTokenUserId = accessTokenJwt?.subject ?: return null
         val refreshTokenUserId = refreshTokenJwt?.subject ?: return null
 
-        if (!tokenService.isTokenValid(accessTokenJwt) ||
-            !tokenService.isTokenValid(refreshTokenJwt) ||
+        if (!tokenService.isTokenValid(refreshTokenJwt) ||
             accessTokenUserId != refreshTokenUserId
         ) {
             return null
