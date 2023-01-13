@@ -2,6 +2,7 @@ package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.utils.createJwt
+import com.hulkdx.findprofessional.utils.createUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -44,9 +45,12 @@ class RefreshTokenTests {
         val accessToken = "accessToken"
         val refreshToken = "refreshToken"
         val userId = "1"
+        val user: User = createUser(userId = userId.toInt())
 
         tokensAreValid(accessToken, refreshToken, userId)
-        TODO()
+        findUserByIdReturns(user, userId)
+        whenever(tokenService.createToken(user))
+            .thenReturn(mock {})
         // Act
         val response = sut.refresh("$authType $accessToken", refreshToken)
         // Assert
