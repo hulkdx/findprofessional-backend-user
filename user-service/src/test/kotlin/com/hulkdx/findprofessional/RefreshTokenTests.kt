@@ -24,12 +24,32 @@ class RefreshTokenTests {
     @Mock
     private lateinit var tokenService: TokenService
 
+    @Mock
+    private lateinit var userRepository: UserRepository
+
     @BeforeEach
     fun setup() {
         val refreshService = RefreshService(
             tokenService,
+            userRepository,
         )
         sut = AuthController(mock {}, mock {}, refreshService)
+    }
+
+    @Test
+    fun `valid cases`() = runTest {
+        // Arrange
+        val authType = "Bearer"
+        val accessToken = "accessToken"
+        val refreshToken = "refreshToken"
+        val userId = "1"
+
+        tokensAreValid(accessToken, refreshToken, userId)
+        TODO()
+        // Act
+        val response = sut.refresh("$authType $accessToken", refreshToken)
+        // Assert
+        assertEquals(HttpStatus.OK, response.statusCode)
     }
 
     @Test
@@ -56,10 +76,9 @@ class RefreshTokenTests {
     fun `when invalid refreshToken then unauthorized`() = runTest {
         // Arrange
         val refreshToken = "some_invalid_refreshToken"
-        isTokenValid(refreshToken, false)
+        refreshToken(isValid = false, refreshToken)
         val accessToken = "accessToken"
-        // irrelevant:
-        decodeJwtSuccess(accessToken)
+        accessTokenIsValid(accessToken)
         // Act
         val response = sut.refresh("Bearer $accessToken", refreshToken)
         // Assert
@@ -71,9 +90,9 @@ class RefreshTokenTests {
     fun `when accessToken user id is different than refreshToken user id then unauthorized`() = runTest {
         // Arrange
         val refreshToken = "refreshToken"
-        setUserId(refreshToken, 1)
+        mockUserId(refreshToken, 1)
         val accessToken = "accessToken"
-        setUserId(accessToken, 2)
+        mockUserId(accessToken, 2)
         // Act
         val response = sut.refresh("Bearer $accessToken", refreshToken)
         // Assert
@@ -82,15 +101,37 @@ class RefreshTokenTests {
 
     // region helpers
 
-    private suspend fun isTokenValid(token: String, isValid: Boolean) {
-        val jwt = createJwt(subject = "subject")
-        whenever(tokenService.decodeJwt(token))
+    private suspend fun tokensAreValid(
+        accessToken: String,
+        refreshToken: String,
+        userId: String
+    ) {
+        refreshToken(isValid = true, refreshToken, userId)
+        accessTokenIsValid(accessToken, userId)
+    }
+
+    private suspend fun refreshToken(
+        isValid: Boolean,
+        refreshToken: String,
+        subject: String = "subject",
+    ) {
+        val jwt = createJwt(subject = subject)
+        whenever(tokenService.decodeJwt(refreshToken))
             .thenReturn(jwt)
         whenever(tokenService.isTokenValid(jwt))
             .thenReturn(isValid)
     }
 
-    private suspend fun setUserId(token: String, userId: Int) {
+    private suspend fun accessTokenIsValid(
+        accessToken: String,
+        subject: String = "subject",
+    ) {
+        val jwt = createJwt(subject = subject)
+        whenever(tokenService.decodeJwt(accessToken))
+            .thenReturn(jwt)
+    }
+
+    private suspend fun mockUserId(token: String, userId: Int) {
         val jwt = createJwt(subject = userId.toString())
 
         whenever(tokenService.decodeJwt(token))
@@ -99,7 +140,7 @@ class RefreshTokenTests {
             .thenReturn(true)
     }
 
-    private suspend fun decodeJwtSuccess(accessToken: String) {
+    private suspend fun accessTokenIsValid(accessToken: String) {
         whenever(tokenService.decodeJwt(accessToken)).thenReturn(createJwt(subject = "subject"))
     }
 

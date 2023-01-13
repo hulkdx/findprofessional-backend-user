@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 @Service
 class RefreshService(
     private val tokenService: TokenService,
+    private val userRepository: UserRepository,
 ) {
     suspend fun refreshToken(accessToken: String, refreshToken: String): Any? {
         val accessTokenJwt = tokenService.decodeJwt(accessToken)
@@ -17,6 +18,8 @@ class RefreshService(
         ) {
             return null
         }
+        val user = userRepository.findById(id = refreshTokenUserId.toInt())
+        // TODO: check if user is null
         // TODO: generate a new accessToken
         // TODO: generate a new refreshToken
 
