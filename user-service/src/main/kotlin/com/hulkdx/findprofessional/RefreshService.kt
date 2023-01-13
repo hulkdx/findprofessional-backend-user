@@ -18,8 +18,7 @@ class RefreshService(
         ) {
             return null
         }
-        val user = userRepository.findById(id = refreshTokenUserId.toInt())
-        // TODO: check if user is null
+        val user = userRepository.findById(id = refreshTokenUserId.toInt()) ?: return null
         // TODO: generate a new accessToken
         // TODO: generate a new refreshToken
 

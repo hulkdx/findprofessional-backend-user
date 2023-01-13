@@ -1,5 +1,6 @@
 package com.hulkdx.findprofessional
 
+import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.utils.createJwt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -99,6 +100,20 @@ class RefreshTokenTests {
         assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
     }
 
+    @Test
+    fun `when tokens are valid but cannot find user in the database then unauthorized`() = runTest {
+        // Arrange
+        val accessToken = "accessToken"
+        val refreshToken = "refreshToken"
+        val userId = "1"
+        tokensAreValid(accessToken, refreshToken, userId)
+        findUserByIdReturns(null, userId)
+        // Act
+        val response = sut.refresh("Bearer $accessToken", refreshToken)
+        // Assert
+        assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
+    }
+
     // region helpers
 
     private suspend fun tokensAreValid(
@@ -142,6 +157,11 @@ class RefreshTokenTests {
 
     private suspend fun accessTokenIsValid(accessToken: String) {
         whenever(tokenService.decodeJwt(accessToken)).thenReturn(createJwt(subject = "subject"))
+    }
+
+    private suspend fun findUserByIdReturns(user: User?, userId: String) {
+        whenever(userRepository.findById(userId.toInt()))
+            .thenReturn(user)
     }
 
     // endregion
