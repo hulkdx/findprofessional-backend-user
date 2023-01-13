@@ -21,14 +21,17 @@ import org.springframework.web.bind.annotation.RestController
     consumes = ["application/json"],
     produces = ["application/json"],
 )
+// EnableR2dbcAuditing: required for createdAt and updatedAt
 @EnableR2dbcAuditing
 class AuthController(
     private val authService: AuthService,
     private val tokenService: TokenService,
+    private val refreshService: RefreshService,
 ) {
     private val emailNotValid = "Email is not valid"
     private val passwordNotValid = "Password is not valid"
     private val emailExists = "Email already exists"
+    private val invalidTokenType = "Invalid token type"
 
     @PostMapping("/register")
     suspend fun register(@RequestBody @Valid body: RegisterRequest): ResponseEntity<*> {
@@ -63,7 +66,21 @@ class AuthController(
     suspend fun refresh(
         @RequestHeader(HttpHeaders.AUTHORIZATION) auth: String,
         @RequestBody @Valid @Size(max = 50) refreshToken: String,
-    ) {
-        TODO()
+    ): ResponseEntity<*> {
+        val authSplit = auth.split(" ")
+        if (authSplit.size != 2) {
+            return R.badRequest(invalidTokenType)
+        }
+        val (authType, accessToken) = authSplit
+        if (authType != "Bearer") {
+            return R.badRequest(invalidTokenType)
+        }
+
+        val body = refreshService.refreshToken(accessToken, refreshToken)
+        return if (body == null) {
+            R.unauthorized()
+        } else {
+            R.ok(body)
+        }
     }
 }
