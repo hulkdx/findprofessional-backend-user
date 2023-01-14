@@ -25,5 +25,7 @@ class Hints : RuntimeHintsRegistrar {
             hints.reflection().registerType(it, *MemberCategory.values())
         }
         hints.resources().registerPattern("db/changelog/db.changelog-master.sql")
+        hints.resources().registerPattern("rsa.private.key")
+        hints.resources().registerPattern("rsa.public.key")
     }
 }
