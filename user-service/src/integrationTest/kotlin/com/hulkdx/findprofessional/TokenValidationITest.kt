@@ -21,10 +21,7 @@ import java.time.temporal.ChronoUnit
 import java.time.temporal.ChronoUnit.DAYS
 import java.time.temporal.ChronoUnit.MINUTES
 
-@Suppress("FunctionName")
 @OptIn(ExperimentalCoroutinesApi::class)
-@SpringBootTest
-@ActiveProfiles("test")
 class TokenValidationITest : IntegrationTest() {
 
     companion object {

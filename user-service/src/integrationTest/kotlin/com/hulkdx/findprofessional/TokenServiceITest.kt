@@ -35,10 +35,7 @@ import java.time.Clock
 import java.time.Instant
 
 
-@Suppress("FunctionName")
 @OptIn(ExperimentalCoroutinesApi::class)
-@SpringBootTest
-@ActiveProfiles("test")
 class TokenServiceITest : IntegrationTest() {
 
     companion object {
