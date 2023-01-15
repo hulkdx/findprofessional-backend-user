@@ -1,6 +1,6 @@
 package com.hulkdx.findprofessional
 
-import com.hulkdx.findprofessional.models.RegisterRequest
+import com.hulkdx.findprofessional.models.AuthRequest
 import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createRegisterRequest
@@ -42,7 +42,7 @@ class RegisterTests {
         // Arrange
         val email = "test@email.com"
         val password = "1234abdcx"
-        val user = RegisterRequest(email, password)
+        val user = AuthRequest(email, password)
         // Act
         val response = sut.register(user)
         // Assert

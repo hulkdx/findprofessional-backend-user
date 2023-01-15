@@ -1,7 +1,7 @@
 package com.hulkdx.findprofessional
 
 
-import com.hulkdx.findprofessional.models.RegisterRequest
+import com.hulkdx.findprofessional.models.AuthRequest
 import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
@@ -53,7 +53,7 @@ class LoginTests {
         val expectedBody = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
 
         val user = User(dbEmail, dbPassword)
-        val request = RegisterRequest(requestEmail, requestPassword)
+        val request = AuthRequest(requestEmail, requestPassword)
         whenever(repository.findByEmail(requestEmail)).thenReturn(user)
         whenever(tokenService.createToken(anyOrNull())).thenReturn(expectedBody)
         // Act
@@ -73,7 +73,7 @@ class LoginTests {
         val dbPassword = "some_invalid_password"
 
         val user = User(dbEmail, dbPassword)
-        val request = RegisterRequest(requestEmail, requestPassword)
+        val request = AuthRequest(requestEmail, requestPassword)
         whenever(repository.findByEmail(requestEmail)).thenReturn(user)
         // Act
         val response = sut.login(request)
@@ -87,7 +87,7 @@ class LoginTests {
         // Arrange
         val email = "test@email.com"
         val password = "1234abdcx"
-        val request = RegisterRequest(email, password)
+        val request = AuthRequest(email, password)
         // Act
         val response = sut.login(request)
         // Assert
