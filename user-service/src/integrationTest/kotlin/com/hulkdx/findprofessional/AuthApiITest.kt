@@ -10,6 +10,9 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import com.hulkdx.findprofessional.utils.body
 import com.hulkdx.findprofessional.utils.response
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.kotlin.whenever
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -18,20 +21,28 @@ import java.time.Clock
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-
-@Suppress("FunctionName")
 @AutoConfigureWebTestClient
+@OptIn(ExperimentalCoroutinesApi::class)
+@Suppress("FunctionName")
 class AuthApiITest : IntegrationTest() {
 
     @Autowired
     private lateinit var client: WebTestClient
 
+    @Autowired
+    private lateinit var userRepository: UserRepository
+
     @MockBean
     private lateinit var clock: Clock
 
     @BeforeEach
-    internal fun setUp() {
+    fun setUp() {
         whenever(clock.instant()).thenReturn(Instant.now())
+    }
+
+    @AfterEach
+    fun tearDown() = runTest {
+        userRepository.deleteAll()
     }
 
     @Test
