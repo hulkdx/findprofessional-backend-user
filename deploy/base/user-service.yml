@@ -19,6 +19,13 @@ spec:
           envFrom:
             - secretRef:
                 name: secrets-env
+          volumeMounts:
+          - mountPath: /config
+            name: config-files
+      volumes:
+      - name: config-files
+        secret:
+          secretName: config-files
 ---
 apiVersion: v1
 kind: Service
