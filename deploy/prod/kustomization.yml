@@ -11,3 +11,7 @@ secretGenerator:
   envs:
   - .env
 
+- name: config-files
+  files:
+  - rsa.private.key
+  - rsa.public.key

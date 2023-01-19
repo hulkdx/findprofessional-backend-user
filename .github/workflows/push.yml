@@ -52,6 +52,8 @@ jobs:
         mkdir ~/.aws
         base64 --decode <<< ${{ secrets.AWS_CRED }} > ~/.aws/credentials
         base64 --decode <<< ${{ secrets.AWS_CONFIG }} > ~/.aws/config
+        base64 --decode <<< ${{ secrets.RSA_PRIVATE_KEY }} > deploy/prod/rsa.private.key
+        base64 --decode <<< ${{ secrets.RSA_PUBLIC_KEY }} > deploy/prod/rsa.public.key
         aws eks update-kubeconfig --name findprofessional_cluster &> /dev/null
 
     - run: kubectl apply -k deploy/prod
@@ -62,5 +64,7 @@ jobs:
         rm -rf ~/.docker \
                ~/.kube   \
                ~/.aws    \
+               ./deploy/prod/rsa.private.key \
+               ./deploy/prod/rsa.public.key \
                ./deploy/prod/.env
         echo "" > $GITHUB_ENV
