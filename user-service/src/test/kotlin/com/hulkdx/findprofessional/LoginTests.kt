@@ -1,3 +1,5 @@
+@file:Suppress("UnnecessaryVariable")
+
 package com.hulkdx.findprofessional
 
 
@@ -48,14 +50,11 @@ class LoginTests {
         // Arrange
         val requestEmail = "test@email.com"
         val requestPassword = "1234abdcx"
-        val dbEmail = "test@email.com"
-        val dbPassword = passwordEncoder.encode(requestPassword)
+        val request = AuthRequest(requestEmail, requestPassword)
         val expectedBody = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
 
-        val user = User(dbEmail, dbPassword)
-        val request = AuthRequest(requestEmail, requestPassword)
-        whenever(repository.findByEmail(requestEmail)).thenReturn(user)
-        whenever(tokenService.createToken(anyOrNull())).thenReturn(expectedBody)
+        findByEmailReturnsValidUser(requestEmail, requestPassword)
+        createTokenReturns(expectedBody)
         // Act
         val response = sut.login(request)
         // Assert
@@ -113,4 +112,20 @@ class LoginTests {
             assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
         }
     }
+    // region helpers
+
+    private fun createTokenReturns(expectedBody: TokenResponse) {
+        whenever(tokenService.createToken(anyOrNull()))
+            .thenReturn(expectedBody)
+    }
+
+    private suspend fun findByEmailReturnsValidUser(requestEmail: String, requestPassword: String) {
+        val dbEmail = requestEmail
+        val dbPassword = passwordEncoder.encode(requestPassword)
+        val user = User(dbEmail, dbPassword)
+        whenever(repository.findByEmail(requestEmail))
+            .thenReturn(user)
+    }
+
+    // end region
 }

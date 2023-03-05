@@ -47,12 +47,12 @@ class RegisterTests {
         // Arrange
         val email = "test@email.com"
         val password = "1234abdcx"
-        val user = AuthRequest(email, password)
+        val request = AuthRequest(email, password)
         val expectedBody = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
 
         createTokenReturns(expectedBody)
         // Act
-        val response = sut.register(user)
+        val response = sut.register(request)
         // Assert
         assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(expectedBody, response.body)
