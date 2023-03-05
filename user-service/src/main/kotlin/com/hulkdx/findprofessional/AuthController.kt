@@ -42,8 +42,8 @@ class AuthController(
             return R.badRequest(passwordNotValid)
         }
         return try {
-            authService.register(body)
-            R.created()
+            val user = authService.register(body)
+            R.ok(body = tokenService.createToken(user))
         } catch (e: DataIntegrityViolationException) {
             R.conflict(emailExists)
         }

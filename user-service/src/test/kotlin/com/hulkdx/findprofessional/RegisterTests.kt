@@ -1,6 +1,7 @@
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.models.AuthRequest
+import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createRegisterRequest
@@ -16,6 +17,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -31,10 +33,13 @@ class RegisterTests {
     @Mock
     private lateinit var repository: UserRepository
 
+    @Mock
+    private lateinit var tokenService: TokenService
+
     @BeforeEach
     fun setup() {
         val service = AuthService(repository, TestPasswordEncoder())
-        sut = AuthController(service, mock {}, mock {})
+        sut = AuthController(service, tokenService, mock {})
     }
 
     @Test
@@ -43,10 +48,14 @@ class RegisterTests {
         val email = "test@email.com"
         val password = "1234abdcx"
         val user = AuthRequest(email, password)
+        val expectedBody = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
+
+        createTokenReturns(expectedBody)
         // Act
         val response = sut.register(user)
         // Assert
-        assertEquals(HttpStatus.CREATED, response.statusCode)
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(expectedBody, response.body)
         verify(repository).save(any())
     }
 
@@ -116,6 +125,11 @@ class RegisterTests {
     }
 
     // region helpers
+
+    private fun createTokenReturns(expectedBody: TokenResponse) {
+        whenever(tokenService.createToken(anyOrNull()))
+            .thenReturn(expectedBody)
+    }
 
     private suspend fun emailExists() {
         whenever(repository.save(any()))
