@@ -1,5 +1,6 @@
 package com.hulkdx.findprofessional
 
+import com.hulkdx.findprofessional.models.RefreshRequest
 import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.utils.createJwt
 import com.hulkdx.findprofessional.utils.createUser
@@ -52,7 +53,7 @@ class RefreshTokenTests {
         whenever(tokenService.createToken(user))
             .thenReturn(mock {})
         // Act
-        val response = sut.refresh("$authType $accessToken", refreshToken)
+        val response = sut.refresh("$authType $accessToken", RefreshRequest(refreshToken))
         // Assert
         assertEquals(HttpStatus.OK, response.statusCode)
     }
@@ -62,7 +63,7 @@ class RefreshTokenTests {
         // Arrange
         val authType = "SomethingRandom"
         // Act
-        val response = sut.refresh("$authType accessToken", "refreshToken")
+        val response = sut.refresh("$authType accessToken", RefreshRequest("refreshToken"))
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
     }
@@ -72,7 +73,7 @@ class RefreshTokenTests {
         // Arrange
         val auth = "INVALID_FORMAT_WITHOUT_SPACE"
         // Act
-        val response = sut.refresh(auth, "refreshToken")
+        val response = sut.refresh(auth, RefreshRequest("refreshToken"))
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
     }
@@ -85,7 +86,7 @@ class RefreshTokenTests {
         val accessToken = "accessToken"
         accessTokenIsValid(accessToken)
         // Act
-        val response = sut.refresh("Bearer $accessToken", refreshToken)
+        val response = sut.refresh("Bearer $accessToken", RefreshRequest(refreshToken))
         // Assert
         assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
     }
@@ -99,7 +100,7 @@ class RefreshTokenTests {
         val accessToken = "accessToken"
         mockUserId(accessToken, 2)
         // Act
-        val response = sut.refresh("Bearer $accessToken", refreshToken)
+        val response = sut.refresh("Bearer $accessToken", RefreshRequest(refreshToken))
         // Assert
         assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
     }
@@ -113,7 +114,7 @@ class RefreshTokenTests {
         tokensAreValid(accessToken, refreshToken, userId)
         findUserByIdReturns(null, userId)
         // Act
-        val response = sut.refresh("Bearer $accessToken", refreshToken)
+        val response = sut.refresh("Bearer $accessToken", RefreshRequest(refreshToken))
         // Assert
         assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
     }

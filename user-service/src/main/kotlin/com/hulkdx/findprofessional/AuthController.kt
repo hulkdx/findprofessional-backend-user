@@ -1,6 +1,7 @@
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.models.AuthRequest
+import com.hulkdx.findprofessional.models.RefreshRequest
 import com.hulkdx.findprofessional.utils.R
 import com.hulkdx.findprofessional.utils.Validator
 import jakarta.validation.Valid
@@ -65,7 +66,7 @@ class AuthController(
     @PostMapping("/refresh")
     suspend fun refresh(
         @RequestHeader(HttpHeaders.AUTHORIZATION) auth: String,
-        @RequestBody refreshToken: String,
+        @RequestBody @Valid request: RefreshRequest,
     ): ResponseEntity<*> {
         val authSplit = auth.split(" ")
         if (authSplit.size != 2) {
@@ -76,7 +77,7 @@ class AuthController(
             return R.badRequest(invalidTokenType)
         }
 
-        val body = refreshService.refreshToken(accessToken, refreshToken)
+        val body = refreshService.refreshToken(accessToken, request.refreshToken)
         return if (body == null) {
             R.unauthorized()
         } else {
