@@ -65,7 +65,7 @@ class AuthController(
     @PostMapping("/refresh")
     suspend fun refresh(
         @RequestHeader(HttpHeaders.AUTHORIZATION) auth: String,
-        @RequestBody @Valid @Size(max = 50) refreshToken: String,
+        @RequestBody refreshToken: String,
     ): ResponseEntity<*> {
         val authSplit = auth.split(" ")
         if (authSplit.size != 2) {

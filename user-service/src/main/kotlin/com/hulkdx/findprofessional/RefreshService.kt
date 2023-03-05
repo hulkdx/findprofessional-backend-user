@@ -1,5 +1,6 @@
 package com.hulkdx.findprofessional
 
+import com.hulkdx.findprofessional.models.TokenResponse
 import org.springframework.stereotype.Service
 
 @Service
@@ -7,7 +8,7 @@ class RefreshService(
     private val tokenService: TokenService,
     private val userRepository: UserRepository,
 ) {
-    suspend fun refreshToken(accessToken: String, refreshToken: String): Any? {
+    suspend fun refreshToken(accessToken: String, refreshToken: String): TokenResponse? {
         val accessTokenJwt = tokenService.decodeJwt(accessToken)
         val refreshTokenJwt = tokenService.decodeJwt(refreshToken)
         val accessTokenUserId = accessTokenJwt?.subject ?: return null
