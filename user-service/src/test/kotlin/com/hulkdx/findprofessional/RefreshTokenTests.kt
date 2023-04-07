@@ -59,6 +59,26 @@ class RefreshTokenTests {
     }
 
     @Test
+    fun `when accessToken is invalid and refreshToken is valid then ok`() = runTest {
+        // Arrange
+        val authType = "Bearer"
+        val accessToken = "accessToken"
+        val refreshToken = "refreshToken"
+        val userId = "1"
+        val user: User = createUser(userId = userId.toInt())
+
+        refreshToken(isValid = true, refreshToken, userId)
+        accessToken(isValid = false, accessToken)
+        findUserByIdReturns(user, userId)
+        whenever(tokenService.createToken(user))
+            .thenReturn(mock {})
+        // Act
+        val response = sut.refresh("$authType $accessToken", RefreshRequest(refreshToken))
+        // Assert
+        assertEquals(HttpStatus.OK, response.statusCode)
+    }
+
+    @Test
     fun `when authType is not Bearer then bad request`() = runTest {
         // Arrange
         val authType = "SomethingRandom"
