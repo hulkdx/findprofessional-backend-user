@@ -59,6 +59,26 @@ class RefreshTokenTests {
     }
 
     @Test
+    fun `when accessToken is expired (but valid) and refreshToken is valid then ok`() = runTest {
+        // Arrange
+        val authType = "Bearer"
+        val accessToken = "accessToken"
+        val refreshToken = "refreshToken"
+        val userId = "1"
+        val user: User = createUser(userId = userId.toInt())
+
+        refreshToken(isValid = true, refreshToken, userId)
+        accessToken(isExpired = true, accessToken, userId)
+        findUserByIdReturns(user, userId)
+        whenever(tokenService.createToken(user))
+            .thenReturn(mock {})
+        // Act
+        val response = sut.refresh("$authType $accessToken", RefreshRequest(refreshToken))
+        // Assert
+        assertEquals(HttpStatus.OK, response.statusCode)
+    }
+
+    @Test
     fun `when authType is not Bearer then bad request`() = runTest {
         // Arrange
         val authType = "SomethingRandom"
@@ -84,7 +104,7 @@ class RefreshTokenTests {
         val refreshToken = "some_invalid_refreshToken"
         refreshToken(isValid = false, refreshToken)
         val accessToken = "accessToken"
-        accessTokenIsValid(accessToken)
+        accessToken(isExpired = false, accessToken)
         // Act
         val response = sut.refresh("Bearer $accessToken", RefreshRequest(refreshToken))
         // Assert
@@ -127,7 +147,7 @@ class RefreshTokenTests {
         userId: String
     ) {
         refreshToken(isValid = true, refreshToken, userId)
-        accessTokenIsValid(accessToken, userId)
+        accessToken(isExpired = false, accessToken, userId)
     }
 
     private suspend fun refreshToken(
@@ -142,13 +162,14 @@ class RefreshTokenTests {
             .thenReturn(isValid)
     }
 
-    private suspend fun accessTokenIsValid(
+    private fun accessToken(
+        isExpired: Boolean,
         accessToken: String,
         subject: String = "subject",
     ) {
-        val jwt = createJwt(subject = subject)
-        whenever(tokenService.decodeJwt(accessToken))
-            .thenReturn(jwt)
+        // even if isExpired = true it should return subject ->
+        whenever(tokenService.getAccessTokenSubject(accessToken))
+            .thenReturn(subject)
     }
 
     private suspend fun mockUserId(token: String, userId: Int) {
@@ -158,10 +179,6 @@ class RefreshTokenTests {
             .thenReturn(jwt)
         whenever(tokenService.isTokenValid(jwt))
             .thenReturn(true)
-    }
-
-    private suspend fun accessTokenIsValid(accessToken: String) {
-        whenever(tokenService.decodeJwt(accessToken)).thenReturn(createJwt(subject = "subject"))
     }
 
     private suspend fun findUserByIdReturns(user: User?, userId: String) {

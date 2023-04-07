@@ -9,9 +9,8 @@ class RefreshService(
     private val userRepository: UserRepository,
 ) {
     suspend fun refreshToken(accessToken: String, refreshToken: String): TokenResponse? {
-        val accessTokenJwt = tokenService.decodeJwt(accessToken)
         val refreshTokenJwt = tokenService.decodeJwt(refreshToken)
-        val accessTokenUserId = accessTokenJwt?.subject ?: return null
+        val accessTokenUserId = tokenService.getAccessTokenSubject(accessToken) ?: return null
         val refreshTokenUserId = refreshTokenJwt?.subject ?: return null
 
         if (!tokenService.isTokenValid(refreshTokenJwt) ||
