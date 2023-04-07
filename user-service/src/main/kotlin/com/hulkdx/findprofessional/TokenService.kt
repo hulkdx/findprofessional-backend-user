@@ -64,7 +64,6 @@ class TokenService(
         return Instant.now(clock).isBefore(expiredAt)
     }
 
-    @TestOnly
     suspend fun decodeJwt(token: String): Jwt? {
         return try {
             return jwtDecoder.decode(token).awaitFirstOrNull()
