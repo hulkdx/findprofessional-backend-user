@@ -84,7 +84,7 @@ class RefreshTokenTests {
         val refreshToken = "some_invalid_refreshToken"
         refreshToken(isValid = false, refreshToken)
         val accessToken = "accessToken"
-        accessTokenIsValid(accessToken)
+        accessToken(isValid = true, accessToken)
         // Act
         val response = sut.refresh("Bearer $accessToken", RefreshRequest(refreshToken))
         // Assert
@@ -127,7 +127,7 @@ class RefreshTokenTests {
         userId: String
     ) {
         refreshToken(isValid = true, refreshToken, userId)
-        accessTokenIsValid(accessToken, userId)
+        accessToken(isValid = true, accessToken, userId)
     }
 
     private suspend fun refreshToken(
@@ -142,11 +142,12 @@ class RefreshTokenTests {
             .thenReturn(isValid)
     }
 
-    private suspend fun accessTokenIsValid(
+    private suspend fun accessToken(
+        isValid: Boolean,
         accessToken: String,
         subject: String = "subject",
     ) {
-        val jwt = createJwt(subject = subject)
+        val jwt = if (isValid) createJwt(subject = subject) else null
         whenever(tokenService.decodeJwt(accessToken))
             .thenReturn(jwt)
     }
