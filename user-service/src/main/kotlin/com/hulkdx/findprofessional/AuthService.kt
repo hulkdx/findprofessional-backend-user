@@ -10,10 +10,11 @@ class AuthService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
 ) {
-    suspend fun register(body: AuthRequest) {
+    suspend fun register(body: AuthRequest): User {
         val password = passwordEncoder.encode(body.password)
         val user = User(body.email, password)
         userRepository.save(user)
+        return user
     }
 
     suspend fun login(body: AuthRequest): User? {

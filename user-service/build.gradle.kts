@@ -7,13 +7,13 @@ version = "1"
 java.sourceCompatibility = javaVersion
 
 plugins {
-    id("org.springframework.boot") version "3.0.1"
+    id("org.springframework.boot") version "3.0.5"
     id("io.spring.dependency-management") version "1.1.0"
-    kotlin("jvm") version "1.8.0"
+    kotlin("jvm") version "1.8.10"
     kotlin("plugin.spring") version "1.8.10"
 
     // enabled in prod.gradle:
-    id("org.graalvm.buildtools.native") version "0.9.19" apply false
+    id("org.graalvm.buildtools.native") version "0.9.20" apply false
 }
 
 if (System.getenv("prod").toBoolean()) {
