@@ -59,7 +59,7 @@ class RefreshTokenTests {
     }
 
     @Test
-    fun `when accessToken is invalid and refreshToken is valid then ok`() = runTest {
+    fun `when accessToken is expired (but valid) and refreshToken is valid then ok`() = runTest {
         // Arrange
         val authType = "Bearer"
         val accessToken = "accessToken"
@@ -68,7 +68,7 @@ class RefreshTokenTests {
         val user: User = createUser(userId = userId.toInt())
 
         refreshToken(isValid = true, refreshToken, userId)
-        accessToken(isValid = false, accessToken)
+        accessToken(isExpired = true, accessToken, userId)
         findUserByIdReturns(user, userId)
         whenever(tokenService.createToken(user))
             .thenReturn(mock {})
@@ -104,7 +104,7 @@ class RefreshTokenTests {
         val refreshToken = "some_invalid_refreshToken"
         refreshToken(isValid = false, refreshToken)
         val accessToken = "accessToken"
-        accessToken(isValid = true, accessToken)
+        accessToken(isExpired = false, accessToken)
         // Act
         val response = sut.refresh("Bearer $accessToken", RefreshRequest(refreshToken))
         // Assert
@@ -147,7 +147,7 @@ class RefreshTokenTests {
         userId: String
     ) {
         refreshToken(isValid = true, refreshToken, userId)
-        accessToken(isValid = true, accessToken, userId)
+        accessToken(isExpired = false, accessToken, userId)
     }
 
     private suspend fun refreshToken(
@@ -162,14 +162,14 @@ class RefreshTokenTests {
             .thenReturn(isValid)
     }
 
-    private suspend fun accessToken(
-        isValid: Boolean,
+    private fun accessToken(
+        isExpired: Boolean,
         accessToken: String,
         subject: String = "subject",
     ) {
-        val jwt = if (isValid) createJwt(subject = subject) else null
-        whenever(tokenService.decodeJwt(accessToken))
-            .thenReturn(jwt)
+        // even if isExpired = true it should return subject ->
+        whenever(tokenService.getAccessTokenSubject(accessToken))
+            .thenReturn(subject)
     }
 
     private suspend fun mockUserId(token: String, userId: Int) {

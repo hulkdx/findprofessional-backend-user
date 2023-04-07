@@ -2,6 +2,7 @@ package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.models.User
+import com.nimbusds.jwt.JWTParser
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.jetbrains.annotations.TestOnly
 import org.springframework.security.oauth2.jwt.BadJwtException
@@ -68,6 +69,14 @@ class TokenService(
         return try {
             return jwtDecoder.decode(token).awaitFirstOrNull()
         } catch (e: BadJwtException) {
+            null
+        }
+    }
+
+    fun getAccessTokenSubject(accessToken: String): String? {
+        return try {
+            JWTParser.parse(accessToken)?.jwtClaimsSet?.subject
+        } catch (e: Exception) {
             null
         }
     }
