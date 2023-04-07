@@ -160,10 +160,6 @@ class RefreshTokenTests {
             .thenReturn(true)
     }
 
-    private suspend fun accessTokenIsValid(accessToken: String) {
-        whenever(tokenService.decodeJwt(accessToken)).thenReturn(createJwt(subject = "subject"))
-    }
-
     private suspend fun findUserByIdReturns(user: User?, userId: String) {
         whenever(userRepository.findById(userId.toInt()))
             .thenReturn(user)
