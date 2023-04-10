@@ -81,7 +81,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
 
     integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
-    integrationTestImplementation("org.testcontainers:junit-jupiter:1.17.6")
+    integrationTestImplementation("org.testcontainers:junit-jupiter:1.18.0")
     integrationTestImplementation("org.testcontainers:postgresql:1.17.6")
     integrationTestImplementation("org.testcontainers:r2dbc:1.17.6")
     integrationTestImplementation("org.junit.jupiter:junit-jupiter")
