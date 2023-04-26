@@ -4,6 +4,7 @@ package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.base.IntegrationTest
 import com.hulkdx.findprofessional.models.AuthRequest
+import com.hulkdx.findprofessional.models.RefreshRequest
 import com.hulkdx.findprofessional.models.TokenResponse
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -71,7 +72,7 @@ class AuthApiITest : IntegrationTest() {
             .uri("/auth/refresh")
             .header(HttpHeaders.AUTHORIZATION, "Bearer ${response.accessToken}")
             .contentType(MediaType.APPLICATION_JSON)
-            .body(response.refreshToken)
+            .body(RefreshRequest(response.refreshToken))
 
 
     private fun login(body: AuthRequest): TokenResponse {
@@ -86,7 +87,7 @@ class AuthApiITest : IntegrationTest() {
         client.post()
             .uri("/auth/register")
             .body(body)
-            .isCreated
+            .isOk
     }
 
     private fun timePassed(time: Long, unit: ChronoUnit) {
