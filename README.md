@@ -1,5 +1,6 @@
 ![Build](https://img.shields.io/github/actions/workflow/status/hulkdx/findprofessional-backend-user/push.yml?branch=main)
 [![Docker Status](https://badgen.net/docker/size/hulkdx/ff-user/v1/amd64?icon=docker&label=docker&url)](https://hub.docker.com/repository/docker/hulkdx/ff-user)
+[![kotlin](https://img.shields.io/badge/kotlin-1.8.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
 
 # User microservice
 
@@ -17,3 +18,10 @@ To start development, run `make dev`
 - Using [GraalVM Native Image](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#native-image)
   - Alternative can use [Dockerfile alpine](https://github.com/hulkdx/findprofessional-backend-user/blob/4fff3b93eef556a382eb807c6d9f49d40eaa8f64/deploy/Dockerfile)
 
+## Troubleshooting
+
+### Could not find a valid Docker environment
+If running integrationTest on MacOS, this would fix it:
+```sh
+sudo ln -s $HOME/.docker/run/docker.sock /var/run/docker.sock
+```
