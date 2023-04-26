@@ -9,8 +9,8 @@ java.sourceCompatibility = javaVersion
 plugins {
     id("org.springframework.boot") version "3.0.5"
     id("io.spring.dependency-management") version "1.1.0"
-    kotlin("jvm") version "1.8.10"
-    kotlin("plugin.spring") version "1.8.10"
+    kotlin("jvm") version "1.8.20"
+    kotlin("plugin.spring") version "1.8.20"
 
     // enabled in prod.gradle:
     id("org.graalvm.buildtools.native") version "0.9.20" apply false
@@ -73,20 +73,24 @@ dependencies {
 
     implementation("org.liquibase:liquibase-core")
 
+    val mockitoKotlinVersion = "4.1.0"
+    val testContainersVersion = "1.18.0"
+    val coroutinesTestVersion = "1.6.4"
+
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.mockito:mockito-junit-jupiter")
     testImplementation("org.hamcrest:hamcrest-core")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTestVersion")
 
     integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
-    integrationTestImplementation("org.testcontainers:junit-jupiter:1.17.6")
-    integrationTestImplementation("org.testcontainers:postgresql:1.17.6")
-    integrationTestImplementation("org.testcontainers:r2dbc:1.17.6")
+    integrationTestImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
+    integrationTestImplementation("org.testcontainers:postgresql:$testContainersVersion")
+    integrationTestImplementation("org.testcontainers:r2dbc:$testContainersVersion")
     integrationTestImplementation("org.junit.jupiter:junit-jupiter")
     integrationTestImplementation("org.mockito:mockito-junit-jupiter")
     integrationTestImplementation("org.mockito:mockito-inline")
-    integrationTestImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+    integrationTestImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
     integrationTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
 }
 
