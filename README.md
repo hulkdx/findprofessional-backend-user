@@ -17,3 +17,10 @@ To start development, run `make dev`
 - Using [GraalVM Native Image](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#native-image)
   - Alternative can use [Dockerfile alpine](https://github.com/hulkdx/findprofessional-backend-user/blob/4fff3b93eef556a382eb807c6d9f49d40eaa8f64/deploy/Dockerfile)
 
+## Troubleshooting
+
+### Could not find a valid Docker environment
+If running integrationTest on MacOS, this would fix it:
+```sh
+sudo ln -s $HOME/.docker/run/docker.sock /var/run/docker.sock
+```

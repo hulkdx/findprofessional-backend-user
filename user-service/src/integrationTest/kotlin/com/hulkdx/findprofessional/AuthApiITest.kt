@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName", "SameParameterValue")
+
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.base.IntegrationTest
@@ -23,7 +25,6 @@ import java.time.temporal.ChronoUnit
 
 @AutoConfigureWebTestClient
 @OptIn(ExperimentalCoroutinesApi::class)
-@Suppress("FunctionName")
 class AuthApiITest : IntegrationTest() {
 
     @Autowired

@@ -36,7 +36,6 @@ val integrationTestImplementation: Configuration by configurations.getting {
 task<Test>("integrationTest") {
     testClassesDirs = sourceSets["integrationTest"].output.classesDirs
     classpath = sourceSets["integrationTest"].runtimeClasspath
-    shouldRunAfter("test")
 
     useJUnitPlatform()
 
@@ -101,6 +100,7 @@ tasks {
 
     test {
         useJUnitPlatform()
+        dependsOn("integrationTest")
 
         testLogging {
             events(
