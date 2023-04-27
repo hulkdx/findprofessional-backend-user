@@ -9,8 +9,8 @@ java.sourceCompatibility = javaVersion
 plugins {
     id("org.springframework.boot") version "3.0.5"
     id("io.spring.dependency-management") version "1.1.0"
-    kotlin("jvm") version "1.8.20"
-    kotlin("plugin.spring") version "1.8.20"
+    kotlin("jvm") version "1.8.21"
+    kotlin("plugin.spring") version "1.8.21"
 
     // enabled in prod.gradle:
     id("org.graalvm.buildtools.native") version "0.9.20" apply false
@@ -72,6 +72,8 @@ dependencies {
     implementation("org.springframework.security:spring-security-oauth2-jose")
 
     implementation("org.liquibase:liquibase-core")
+
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.1.0")
 
     val mockitoKotlinVersion = "4.1.0"
     val testContainersVersion = "1.18.0"

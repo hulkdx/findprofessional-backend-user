@@ -7,6 +7,7 @@ build:
     context: ../user-service
     custom:
       buildCommand: |
+        set -e
         ./gradlew bootJar -x jar
         rm -rf build/libs/*-plain.jar
         cat <<EOF | docker build --tag=$IMAGE -f - "$BUILD_CONTEXT"

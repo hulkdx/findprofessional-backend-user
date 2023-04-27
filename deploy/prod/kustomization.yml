@@ -10,6 +10,7 @@ secretGenerator:
 - name: secrets-env
   envs:
   - .env
+  - .env.public
 
 - name: config-files
   files:
