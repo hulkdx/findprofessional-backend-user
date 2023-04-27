@@ -73,6 +73,8 @@ dependencies {
 
     implementation("org.liquibase:liquibase-core")
 
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.1.0")
+
     val mockitoKotlinVersion = "4.1.0"
     val testContainersVersion = "1.18.0"
     val coroutinesTestVersion = "1.6.4"
