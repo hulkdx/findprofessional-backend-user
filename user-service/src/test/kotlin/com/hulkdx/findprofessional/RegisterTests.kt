@@ -1,8 +1,10 @@
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.models.AuthRequest
+import com.hulkdx.findprofessional.models.AuthResponse
 import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.models.User
+import com.hulkdx.findprofessional.models.UserResponse
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createRegisterRequest
 import com.hulkdx.findprofessional.utils.errorMessage
@@ -48,9 +50,9 @@ class RegisterTests {
         val email = "test@email.com"
         val password = "1234abdcx"
         val request = AuthRequest(email, password)
-        val expectedBody = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
-
-        createTokenReturns(expectedBody)
+        val token = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
+        createTokenReturns(token)
+        val expectedBody = AuthResponse(token, UserResponse(email))
         // Act
         val response = sut.register(request)
         // Assert
@@ -113,6 +115,7 @@ class RegisterTests {
     fun `don't store raw password`() = runTest {
         // Arrange
         val user = createRegisterRequest()
+        createTokenSuccess()
         // Act
         sut.register(user)
         // Assert
@@ -125,6 +128,10 @@ class RegisterTests {
     }
 
     // region helpers
+
+    private fun createTokenSuccess() {
+        createTokenReturns(TokenResponse("", ""))
+    }
 
     private fun createTokenReturns(expectedBody: TokenResponse) {
         whenever(tokenService.createToken(anyOrNull()))

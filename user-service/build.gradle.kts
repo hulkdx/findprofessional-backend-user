@@ -106,7 +106,6 @@ tasks {
 
     test {
         useJUnitPlatform()
-        dependsOn("integrationTest")
 
         testLogging {
             events(

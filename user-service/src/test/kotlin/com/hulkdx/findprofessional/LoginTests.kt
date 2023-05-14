@@ -4,8 +4,10 @@ package com.hulkdx.findprofessional
 
 
 import com.hulkdx.findprofessional.models.AuthRequest
+import com.hulkdx.findprofessional.models.AuthResponse
 import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.models.User
+import com.hulkdx.findprofessional.models.UserResponse
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createRegisterRequest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -51,10 +53,12 @@ class LoginTests {
         val requestEmail = "test@email.com"
         val requestPassword = "1234abdcx"
         val request = AuthRequest(requestEmail, requestPassword)
-        val expectedBody = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
+        val token = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
 
         findByEmailReturnsValidUser(requestEmail, requestPassword)
-        createTokenReturns(expectedBody)
+        createTokenReturns(token)
+
+        val expectedBody = AuthResponse(token, UserResponse(requestEmail))
         // Act
         val response = sut.login(request)
         // Assert
