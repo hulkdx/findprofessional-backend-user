@@ -4,6 +4,7 @@ package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.base.IntegrationTest
 import com.hulkdx.findprofessional.models.AuthRequest
+import com.hulkdx.findprofessional.models.AuthResponse
 import com.hulkdx.findprofessional.models.RefreshRequest
 import com.hulkdx.findprofessional.models.TokenResponse
 import org.junit.jupiter.api.Test
@@ -59,7 +60,8 @@ class AuthApiITest : IntegrationTest() {
         val body = AuthRequest("test@gmail.com", "123AsdzxcvB!!")
 
         register(body)
-        val token = login(body)
+        val authResponse = login(body)
+        val token = authResponse.token
         refresh(token)
             .isOk
         timePassed(31, ChronoUnit.DAYS)
@@ -75,12 +77,12 @@ class AuthApiITest : IntegrationTest() {
             .body(RefreshRequest(response.refreshToken))
 
 
-    private fun login(body: AuthRequest): TokenResponse {
+    private fun login(body: AuthRequest): AuthResponse {
         return client.post()
             .uri("/auth/login")
             .body(body)
             .isOk
-            .response(TokenResponse::class.java)
+            .response(AuthResponse::class.java)
     }
 
     private fun register(body: AuthRequest) {

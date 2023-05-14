@@ -1,11 +1,12 @@
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.models.AuthRequest
+import com.hulkdx.findprofessional.models.AuthResponse
 import com.hulkdx.findprofessional.models.RefreshRequest
+import com.hulkdx.findprofessional.models.toUserResponse
 import com.hulkdx.findprofessional.utils.R
 import com.hulkdx.findprofessional.utils.Validator
 import jakarta.validation.Valid
-import jakarta.validation.constraints.Size
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing
 import org.springframework.http.HttpHeaders
@@ -44,7 +45,8 @@ class AuthController(
         }
         return try {
             val user = authService.register(body)
-            R.ok(body = tokenService.createToken(user))
+            val token = tokenService.createToken(user)
+            R.ok(body = AuthResponse(token, user.toUserResponse()))
         } catch (e: DataIntegrityViolationException) {
             R.conflict(emailExists)
         }
@@ -57,7 +59,8 @@ class AuthController(
         }
         val user = authService.login(body)
         return if (user != null) {
-            R.ok(body = tokenService.createToken(user))
+            val token = tokenService.createToken(user)
+            R.ok(body = AuthResponse(token, user.toUserResponse()))
         } else {
             R.unauthorized()
         }
