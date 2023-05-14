@@ -14,5 +14,4 @@ data class User(
     @Id val id: Int? = null,
     @CreatedDate val createdAt: LocalDateTime? = null,
     @LastModifiedDate val updatedAt: LocalDateTime? = null,
-    val role: UserRole = UserRole.Normal,
 )
