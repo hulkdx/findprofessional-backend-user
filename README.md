@@ -25,3 +25,6 @@ If running integrationTest on MacOS, this would fix it:
 ```sh
 sudo ln -s $HOME/.docker/run/docker.sock /var/run/docker.sock
 ```
+
+## TODO
+Currently all SQL migrations happen in this project for all microservices with `liquibase`, research how to do it properly.
