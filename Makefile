@@ -12,6 +12,7 @@ clear-minikube-psql-cache:
 clean:
 	cd user-service && ./gradlew clean
 
+.PHONY: test
 test:
 	cd user-service && ./gradlew test integrationTest
 
