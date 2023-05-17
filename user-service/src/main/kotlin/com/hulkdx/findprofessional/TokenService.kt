@@ -31,7 +31,7 @@ class TokenService(
         return jwt {
             issuer("com.hulkdx.findprofessional")
             issuedAt(Instant.now(clock))
-            expiresAt(Instant.now(clock).plus(10, ChronoUnit.MINUTES))
+            expiresAt(Instant.now(clock).plus(1, ChronoUnit.HOURS))
             subject(user.id.toString())
         }
     }
