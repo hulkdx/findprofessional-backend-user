@@ -34,6 +34,7 @@ jobs:
       run: |
         base64 --decode <<< ${{ secrets.ENV }} > ./deploy/prod/.env
         cat ./deploy/prod/.env >> $GITHUB_ENV
+        cat ./deploy/prod/.env.public >> $GITHUB_ENV
 
     - name: build
       run: |
