@@ -13,7 +13,7 @@ plugins {
     kotlin("plugin.spring") version "1.8.21"
 
     // enabled in prod.gradle:
-    id("org.graalvm.buildtools.native") version "0.9.20" apply false
+    id("org.graalvm.buildtools.native") version "0.9.22" apply false
 }
 
 if (System.getenv("prod").toBoolean()) {
