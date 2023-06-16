@@ -10,7 +10,8 @@ import java.time.LocalDateTime
 data class User(
     val email: String,
     val password: String,
-
+    val firstName: String? = null,
+    val lastName: String? = null,
     @Id val id: Int? = null,
     @CreatedDate val createdAt: LocalDateTime? = null,
     @LastModifiedDate val updatedAt: LocalDateTime? = null,
