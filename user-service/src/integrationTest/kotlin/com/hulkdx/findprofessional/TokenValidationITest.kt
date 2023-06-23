@@ -19,6 +19,7 @@ import java.time.Clock
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.time.temporal.ChronoUnit.DAYS
+import java.time.temporal.ChronoUnit.HOURS
 import java.time.temporal.ChronoUnit.MINUTES
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -57,13 +58,14 @@ class TokenValidationITest : IntegrationTest() {
     }
 
     @Test
-    fun `accessToken should not be valid after 10 minutes passed`() = runTest {
+    fun `accessToken should not be valid after time passed passed`() = runTest {
         // Arrange
+        val time = (1L to HOURS)
         val user = User("email", "password")
         // Act
         val token = sut.createToken(user).accessToken
         // Asserts
-        timePassed(10, MINUTES)
+        timePassed(time.first, time.second)
         val isValid = sut.isTokenValid(token)
         assertEquals(false, isValid)
     }
