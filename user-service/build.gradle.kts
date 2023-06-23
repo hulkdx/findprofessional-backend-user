@@ -7,10 +7,12 @@ version = "1"
 java.sourceCompatibility = javaVersion
 
 plugins {
-    id("org.springframework.boot") version "3.0.6"
+    val kotlinVersion = "1.8.22"
+
+    id("org.springframework.boot") version "3.1.0"
     id("io.spring.dependency-management") version "1.1.0"
-    kotlin("jvm") version "1.8.21"
-    kotlin("plugin.spring") version "1.8.21"
+    kotlin("jvm") version kotlinVersion
+    kotlin("plugin.spring") version kotlinVersion
 
     // enabled in prod.gradle:
     id("org.graalvm.buildtools.native") version "0.9.22" apply false
@@ -75,8 +77,8 @@ dependencies {
 
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.1.0")
 
-    val mockitoKotlinVersion = "4.1.0"
-    val testContainersVersion = "1.18.0"
+    val mockitoKotlinVersion = "5.0.0"
+    val testContainersVersion = "1.18.3"
     val coroutinesTestVersion = "1.7.1"
 
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -91,7 +93,7 @@ dependencies {
     integrationTestImplementation("org.testcontainers:r2dbc:$testContainersVersion")
     integrationTestImplementation("org.junit.jupiter:junit-jupiter")
     integrationTestImplementation("org.mockito:mockito-junit-jupiter")
-    integrationTestImplementation("org.mockito:mockito-inline")
+    integrationTestImplementation("org.mockito:mockito-inline:$mockitoKotlinVersion")
     integrationTestImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
     integrationTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
 }
