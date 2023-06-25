@@ -6,12 +6,19 @@ Currently it is used:
 
 ## Ingress development
 Using minikube
-1. enable ingress controller
+- enable ingress controller
 ```sh
 minikube addons enable ingress
 ```
-1. apply ingress (remember to rename the service)
+- apply ingress (remember to rename the service)
 ```
 kubectl apply -f https://github.com/hulkdx/findprofessional-infra/blob/main/k8s/deploy/prod/ingress.yml
 ```
-1. minikube tunnel
+- minikube tunnel
+
+### Android
+For android develeopment to android localhost to works with machine localhost run this
+```sh
+adb reverse tcp:80 tcp:8080
+```
+This means to map machine localhost:80 to android localhost:8080
