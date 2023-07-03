@@ -79,7 +79,7 @@ dependencies {
 
     val mockitoKotlinVersion = "5.0.0"
     val testContainersVersion = "1.18.3"
-    val coroutinesTestVersion = "1.7.1"
+    val coroutinesTestVersion = "1.7.2"
 
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.mockito:mockito-junit-jupiter")
