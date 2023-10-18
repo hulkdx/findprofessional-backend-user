@@ -7,6 +7,19 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USERNAME: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
     - uses: actions/checkout@v3
@@ -21,11 +34,22 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    - uses: actions/setup-java@v3
+    - uses: graalvm/setup-graalvm@v1
       with:
-        distribution: 'temurin'
-        java-version: 19
-        cache: 'gradle'
+        java-version: '21'
+        distribution: 'graalvm'
+
+    # - name: Set up JDK
+    #   uses: graalvm/setup-graalvm@v1
+    #   with:
+    #     version: '22.3.1'
+    #     java-version: '19'
 
     - name: Run tests
-      run: make test
+      run: cd user-service && ./gradlew nativeIntegrationTest
+      env:
+        prod: true
+        postgres_username: postgres
+        postgres_password: postgres
+        postgres_url: postgresql://postgresdb/postgres
+        r2dbc_postgres_password: ${postgres_password}

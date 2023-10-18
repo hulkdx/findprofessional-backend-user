@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledInNativeImage
 import org.mockito.Mock
 import org.mockito.Mockito.mockStatic
 import org.mockito.Mockito.spy
@@ -36,6 +37,7 @@ import java.time.Instant
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
+@DisabledInNativeImage
 class TokenServiceITest : IntegrationTest() {
 
     companion object {

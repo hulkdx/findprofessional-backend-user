@@ -9,17 +9,13 @@ java.sourceCompatibility = javaVersion
 plugins {
     val kotlinVersion = "1.8.22"
 
-    id("org.springframework.boot") version "3.1.0"
-    id("io.spring.dependency-management") version "1.1.0"
+    id("org.springframework.boot") version "3.1.5"
+    id("io.spring.dependency-management") version "1.1.3"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
 
     // enabled in prod.gradle:
-    id("org.graalvm.buildtools.native") version "0.9.22" apply false
-}
-
-if (System.getenv("prod").toBoolean()) {
-    apply(from = "prod.gradle")
+    id("org.graalvm.buildtools.native") version "0.9.27" apply true
 }
 
 // region integrationTest
@@ -51,6 +47,24 @@ task<Test>("integrationTest") {
 
 // endregion
 
+if (System.getenv("prod").toBoolean()) {
+    graalvmNative {
+        metadataRepository {
+            enabled.set(true)
+        }
+        registerTestBinary("integrationTest") {
+            usingSourceSet(sourceSets.getByName("integrationTest"))
+            forTestTask(tasks.named<Test>("integrationTest"))
+        }
+
+        binaries {
+            all {
+                buildArgs.add("-H:+ReportExceptionStackTraces")
+            }
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }
@@ -73,19 +87,25 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.security:spring-security-oauth2-jose")
 
-    implementation("org.liquibase:liquibase-core")
+    implementation("org.liquibase:liquibase-core:4.23.0")
 
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.1.0")
 
     val mockitoKotlinVersion = "5.0.0"
-    val testContainersVersion = "1.18.3"
+    val testContainersVersion = "1.17.6"
     val coroutinesTestVersion = "1.7.1"
 
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.mockito:mockito-junit-jupiter")
     testImplementation("org.hamcrest:hamcrest-core")
     testImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTestVersion")
+    testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
+    testImplementation("org.testcontainers:postgresql:$testContainersVersion")
+    testImplementation("org.testcontainers:r2dbc:$testContainersVersion")
+    testImplementation("com.fasterxml.jackson.core:jackson-annotations")
+    testImplementation("com.fasterxml.jackson.core:jackson-databind")
 
     integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
     integrationTestImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
@@ -96,6 +116,8 @@ dependencies {
     integrationTestImplementation("org.mockito:mockito-inline:$mockitoKotlinVersion")
     integrationTestImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
     integrationTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
+    integrationTestImplementation("com.fasterxml.jackson.core:jackson-annotations")
+    integrationTestImplementation("com.fasterxml.jackson.core:jackson-databind")
 }
 
 tasks {

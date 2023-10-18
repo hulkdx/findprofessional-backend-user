@@ -4,4 +4,8 @@ graalvmNative {
     metadataRepository {
         enabled = true
     }
+    registerTestBinary("integrationTest") {
+        usingSourceSet(sourceSets.integrationTest)
+        forTestTask(tasks.named("integrationTest", Test))
+    }
 }

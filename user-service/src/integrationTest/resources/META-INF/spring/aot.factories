@@ -1,0 +1,2 @@
+org.springframework.test.context.aot.TestRuntimeHintsRegistrar=\
+com.hulkdx.findprofessional.base.TestRuntimeHints
