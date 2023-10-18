@@ -14,5 +14,5 @@ clean:
 
 .PHONY: test
 test:
-	cd user-service && ./gradlew test integrationTest
+	cd user-service && ./gradlew test integrationTest nativeIntegrationTest
 

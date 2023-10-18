@@ -10,6 +10,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: prod
 
     steps:
     - uses: actions/checkout@v3
@@ -30,18 +31,17 @@ jobs:
         java-version: 19
         cache: 'gradle'
 
-    - name: setup build env
-      run: |
-        base64 --decode <<< ${{ secrets.ENV }} > ./deploy/prod/.env
-        cat ./deploy/prod/.env >> $GITHUB_ENV
-        cat ./deploy/prod/.env.public >> $GITHUB_ENV
-
     - name: build
+      working-directory: user-service
       run: |
-        cd user-service
         ./gradlew bootBuildImage --imageName ${DOCKER_IMAGE_NAME}
       env:
         prod: true
+        docs_enabled: false
+        postgres_username: postgres
+        postgres_password: postgres
+        postgres_url: postgresql://postgresdb/postgres
+        r2dbc_postgres_password: ${postgres_password}
 
     - name: docker push
       run: |
@@ -57,7 +57,13 @@ jobs:
         base64 --decode <<< ${{ secrets.RSA_PUBLIC_KEY }} > deploy/prod/rsa.public.key
         aws eks update-kubeconfig --name findprofessional_cluster &> /dev/null
 
-    - run: kubectl apply -k deploy/prod
+    - name: prod deploy
+      run: |
+        echo postgres_username=${{ secrets.postgres_username }} >> ./deploy/prod/.env
+        echo postgres_password=${{ secrets.postgres_password }} >> ./deploy/prod/.env
+        echo postgres_url=${{ secrets.postgres_url }} >> ./deploy/prod/.env
+        echo r2dbc_postgres_password=${{ secrets.r2dbc_postgres_password }} >> ./deploy/prod/.env
+        kubectl apply -k deploy/prod
 
     - name: cleanup
       if: always()
@@ -68,4 +74,3 @@ jobs:
                ./deploy/prod/rsa.private.key \
                ./deploy/prod/rsa.public.key \
                ./deploy/prod/.env
-        echo "" > $GITHUB_ENV

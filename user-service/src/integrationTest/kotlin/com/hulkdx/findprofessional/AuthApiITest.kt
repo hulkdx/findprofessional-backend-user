@@ -18,6 +18,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.condition.DisabledInNativeImage
 import org.mockito.kotlin.whenever
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
@@ -26,6 +27,7 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 @AutoConfigureWebTestClient
+@DisabledInNativeImage
 @OptIn(ExperimentalCoroutinesApi::class)
 class AuthApiITest : IntegrationTest() {
 
