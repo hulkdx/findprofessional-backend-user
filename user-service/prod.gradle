@@ -5,3 +5,7 @@ graalvmNative {
         enabled = true
     }
 }
+
+bootBuildImage {
+    environment = ['BP_NATIVE_IMAGE_BUILD_ARGUMENTS': '-march=compatibility']
+}
