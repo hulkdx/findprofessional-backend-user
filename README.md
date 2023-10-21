@@ -1,6 +1,6 @@
 ![Build](https://img.shields.io/github/actions/workflow/status/hulkdx/findprofessional-backend-user/push.yml?branch=main)
 [![Docker Status](https://badgen.net/docker/size/hulkdx/ff-user/v1/amd64?icon=docker&label=docker&url)](https://hub.docker.com/repository/docker/hulkdx/ff-user)
-[![kotlin](https://img.shields.io/badge/kotlin-1.8.22-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![kotlin](https://img.shields.io/badge/kotlin-1.9.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
 
 # User microservice
 
