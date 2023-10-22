@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 val javaVersion = JavaVersion.VERSION_17
 
@@ -14,12 +15,13 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
 
-    // enabled in prod.gradle:
-    id("org.graalvm.buildtools.native") version "0.9.27" apply false
+    id("org.graalvm.buildtools.native") version "0.9.27"
 }
 
-if (System.getenv("prod").toBoolean()) {
-    apply(from = "prod.gradle")
+graalvmNative {
+    metadataRepository {
+        enabled.set(true)
+    }
 }
 
 // region integrationTest
@@ -81,11 +83,17 @@ dependencies {
     val testContainersVersion = "1.18.3"
     val coroutinesTestVersion = "1.7.3"
 
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.mockito:mockito-junit-jupiter")
     testImplementation("org.hamcrest:hamcrest-core")
     testImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTestVersion")
+    testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
+    testImplementation("org.testcontainers:postgresql:$testContainersVersion")
+    testImplementation("org.testcontainers:r2dbc:$testContainersVersion")
+    testImplementation("com.fasterxml.jackson.core:jackson-annotations")
+    testImplementation("com.fasterxml.jackson.core:jackson-databind")
 
     integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
     integrationTestImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
@@ -115,5 +123,10 @@ tasks {
                 org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
             )
         }
+    }
+
+    withType<BootBuildImage> {
+        // Related to this issue: https://github.com/spring-projects/spring-boot/issues/36576
+        environment.put("BP_NATIVE_IMAGE_BUILD_ARGUMENTS", "-march=compatibility")
     }
 }

@@ -11,16 +11,13 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
-import org.springframework.test.context.ActiveProfiles
 import java.time.Clock
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.time.temporal.ChronoUnit.DAYS
 import java.time.temporal.ChronoUnit.HOURS
-import java.time.temporal.ChronoUnit.MINUTES
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TokenValidationITest : IntegrationTest() {
