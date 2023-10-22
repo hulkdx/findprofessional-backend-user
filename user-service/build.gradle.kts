@@ -81,6 +81,7 @@ dependencies {
     val testContainersVersion = "1.18.3"
     val coroutinesTestVersion = "1.7.3"
 
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.mockito:mockito-junit-jupiter")
     testImplementation("org.hamcrest:hamcrest-core")
