@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 val javaVersion = JavaVersion.VERSION_17
 
@@ -14,8 +15,13 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
 
-    // enabled in prod.gradle:
-    id("org.graalvm.buildtools.native") version "0.9.27" apply true
+    id("org.graalvm.buildtools.native") version "0.9.27"
+}
+
+graalvmNative {
+    metadataRepository {
+        enabled.set(true)
+    }
 }
 
 // region integrationTest
@@ -47,24 +53,6 @@ task<Test>("integrationTest") {
 
 // endregion
 
-if (System.getenv("prod").toBoolean()) {
-    graalvmNative {
-        metadataRepository {
-            enabled.set(true)
-        }
-        registerTestBinary("integrationTest") {
-            usingSourceSet(sourceSets.getByName("integrationTest"))
-            forTestTask(tasks.named<Test>("integrationTest"))
-        }
-
-        binaries {
-            all {
-                buildArgs.add("-H:+ReportExceptionStackTraces")
-            }
-        }
-    }
-}
-
 repositories {
     mavenCentral()
 }
@@ -92,8 +80,8 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.1.0")
 
     val mockitoKotlinVersion = "5.0.0"
-    val testContainersVersion = "1.17.6"
-    val coroutinesTestVersion = "1.7.1"
+    val testContainersVersion = "1.18.3"
+    val coroutinesTestVersion = "1.7.3"
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -116,8 +104,6 @@ dependencies {
     integrationTestImplementation("org.mockito:mockito-inline:$mockitoKotlinVersion")
     integrationTestImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
     integrationTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
-    integrationTestImplementation("com.fasterxml.jackson.core:jackson-annotations")
-    integrationTestImplementation("com.fasterxml.jackson.core:jackson-databind")
 }
 
 tasks {
@@ -137,5 +123,10 @@ tasks {
                 org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
             )
         }
+    }
+
+    withType<BootBuildImage> {
+        // Related to this issue: https://github.com/spring-projects/spring-boot/issues/36576
+        environment.put("BP_NATIVE_IMAGE_BUILD_ARGUMENTS", "-march=compatibility")
     }
 }
