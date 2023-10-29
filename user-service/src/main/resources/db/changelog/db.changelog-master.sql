@@ -39,3 +39,12 @@ ALTER TABLE "professional_rating" ADD FOREIGN KEY ("user_id") REFERENCES "users"
 
 ALTER TABLE "professional_rating" ADD FOREIGN KEY ("professional_id") REFERENCES "professionals" ("id");
 
+CREATE TABLE "professional_availability" (
+  "id" BIGSERIAL PRIMARY KEY,
+  "professional_id" BIGINT NOT NULL,
+  "date" DATE NOT NULL,
+  "from" TIME NOT NULL,
+  "to" TIME NOT NULL
+);
+
+ALTER TABLE "professional_availability" ADD FOREIGN KEY ("professional_id") REFERENCES "professionals" ("id");
