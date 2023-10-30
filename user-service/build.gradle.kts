@@ -18,6 +18,10 @@ plugins {
     id("org.graalvm.buildtools.native") version "0.9.27"
 }
 
+tasks.processAot {
+    isEnabled = System.getenv("prod").toBoolean()
+}
+
 graalvmNative {
     metadataRepository {
         enabled.set(true)
@@ -75,7 +79,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.security:spring-security-oauth2-jose")
 
-    implementation("org.liquibase:liquibase-core:4.23.0")
+    implementation("org.liquibase:liquibase-core:4.24.0")
 
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.1.0")
 
