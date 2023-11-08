@@ -2,6 +2,7 @@ package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.models.AuthRequest
 import com.hulkdx.findprofessional.models.User
+import com.hulkdx.findprofessional.models.toUser
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -12,7 +13,7 @@ class AuthService(
 ) {
     suspend fun register(body: AuthRequest): User {
         val password = passwordEncoder.encode(body.password)
-        val user = User(body.email, password)
+        val user = body.toUser(password)
         userRepository.save(user)
         return user
     }

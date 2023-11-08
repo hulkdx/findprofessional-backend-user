@@ -48,7 +48,7 @@ class RefreshTokenTests {
         val accessToken = "accessToken"
         val refreshToken = "refreshToken"
         val userId = "1"
-        val user: User = createUser(userId = userId.toInt())
+        val user: User = createUser(id = userId.toInt())
 
         tokensAreValid(accessToken, refreshToken, userId)
         findUserByIdReturns(user, userId)
@@ -67,7 +67,7 @@ class RefreshTokenTests {
         val accessToken = "accessToken"
         val refreshToken = "refreshToken"
         val userId = "1"
-        val user: User = createUser(userId = userId.toInt())
+        val user: User = createUser(id = userId.toInt())
 
         refreshToken(isValid = true, refreshToken, userId)
         accessToken(isExpired = true, accessToken, userId)

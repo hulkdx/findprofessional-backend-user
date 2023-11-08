@@ -2,6 +2,7 @@ package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.base.IntegrationTest
 import com.hulkdx.findprofessional.models.User
+import com.hulkdx.findprofessional.utils.createUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -58,7 +59,7 @@ class TokenValidationITest : IntegrationTest() {
     fun `accessToken should not be valid after time passed passed`() = runTest {
         // Arrange
         val time = (1L to HOURS)
-        val user = User("email", "password")
+        val user = createUser(email = "email", password = "password")
         // Act
         val token = sut.createToken(user).accessToken
         // Asserts
@@ -70,7 +71,7 @@ class TokenValidationITest : IntegrationTest() {
     @Test
     fun `refreshToken should not be valid after 30 days passed`() = runTest {
         // Arrange
-        val user = User("email", "password")
+        val user = createUser(email = "email", password = "password")
         // Act
         val token = sut.createToken(user).refreshToken
         // Asserts
