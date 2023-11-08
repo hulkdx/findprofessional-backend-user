@@ -27,4 +27,5 @@ sudo ln -s $HOME/.docker/run/docker.sock /var/run/docker.sock
 ```
 
 ## TODO
-Currently all SQL migrations happen in this project for all microservices with `liquibase`, research how to do it properly.
+- Currently all SQL migrations happen in this project for all microservices with `liquibase`, research how to do it properly.
+- Host swagger docs to some url
