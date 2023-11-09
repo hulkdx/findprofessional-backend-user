@@ -37,11 +37,11 @@ CREATE TABLE "professional_review" (
   "updated_at" timestamp NOT NULL
 );
 
-CREATE UNIQUE INDEX ON "professional_rating" ("user_id", "professional_id");
+CREATE UNIQUE INDEX ON "professional_review" ("user_id", "professional_id");
 
-ALTER TABLE "professional_rating" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+ALTER TABLE "professional_review" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 
-ALTER TABLE "professional_rating" ADD FOREIGN KEY ("professional_id") REFERENCES "professionals" ("id");
+ALTER TABLE "professional_review" ADD FOREIGN KEY ("professional_id") REFERENCES "professionals" ("id");
 
 CREATE TABLE "professional_availability" (
   "id" BIGSERIAL PRIMARY KEY,
