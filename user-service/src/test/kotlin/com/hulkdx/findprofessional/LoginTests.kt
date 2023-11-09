@@ -9,7 +9,9 @@ import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.models.UserResponse
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
+import com.hulkdx.findprofessional.utils.createAuthRequest
 import com.hulkdx.findprofessional.utils.createRegisterRequest
+import com.hulkdx.findprofessional.utils.createUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -54,7 +56,7 @@ class LoginTests {
         // Arrange
         val requestEmail = "test@email.com"
         val requestPassword = "1234abdcx"
-        val request = AuthRequest(requestEmail, requestPassword)
+        val request = createAuthRequest(requestEmail, requestPassword)
         val token = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
 
         findByEmailReturnsValidUser(requestEmail, requestPassword)
@@ -77,8 +79,8 @@ class LoginTests {
         val dbEmail = "test@email.com"
         val dbPassword = "some_invalid_password"
 
-        val user = User(dbEmail, dbPassword)
-        val request = AuthRequest(requestEmail, requestPassword)
+        val user = createUser(email = dbEmail, password = dbPassword)
+        val request = createAuthRequest(requestEmail, requestPassword)
         whenever(repository.findByEmail(requestEmail)).thenReturn(user)
         // Act
         val response = sut.login(request)
@@ -92,7 +94,7 @@ class LoginTests {
         // Arrange
         val email = "test@email.com"
         val password = "1234abdcx"
-        val request = AuthRequest(email, password)
+        val request = createAuthRequest(email, password)
         // Act
         val response = sut.login(request)
         // Assert
@@ -128,7 +130,7 @@ class LoginTests {
     private suspend fun findByEmailReturnsValidUser(requestEmail: String, requestPassword: String) {
         val dbEmail = requestEmail
         val dbPassword = passwordEncoder.encode(requestPassword)
-        val user = User(dbEmail, dbPassword)
+        val user = createUser(email = dbEmail, password = dbPassword)
         whenever(repository.findByEmail(requestEmail))
             .thenReturn(user)
     }

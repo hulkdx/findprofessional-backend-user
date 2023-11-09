@@ -8,6 +8,7 @@ import com.hulkdx.findprofessional.models.AuthResponse
 import com.hulkdx.findprofessional.models.RefreshRequest
 import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.utils.body
+import com.hulkdx.findprofessional.utils.createAuthRequest
 import com.hulkdx.findprofessional.utils.response
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -50,14 +51,14 @@ class AuthApiITest : IntegrationTest() {
 
     @Test
     fun `register then can login`() {
-        val body = AuthRequest("test@gmail.com", "123AsdzxcvB!!")
+        val body = createAuthRequest("test@gmail.com", "123AsdzxcvB!!")
         register(body)
         login(body)
     }
 
     @Test
     fun `refreshToken test cases`() {
-        val body = AuthRequest("test@gmail.com", "123AsdzxcvB!!")
+        val body = createAuthRequest("test@gmail.com", "123AsdzxcvB!!")
 
         register(body)
         val authResponse = login(body)

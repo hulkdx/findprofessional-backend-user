@@ -5,8 +5,9 @@ CREATE TABLE "users" (
   "id"  BIGSERIAL PRIMARY KEY,
   "email" VARCHAR(255) UNIQUE NOT NULL,
   "password" VARCHAR(255) NOT NULL,
-  "first_name" VARCHAR(255),
-  "last_name" VARCHAR(255),
+  "first_name" VARCHAR(255) NOT NULL,
+  "last_name" VARCHAR(255) NOT NULL,
+  "profile_image" VARCHAR(255),
   "created_at" timestamp,
   "updated_at" timestamp
 );
@@ -30,7 +31,10 @@ CREATE TABLE "professional_rating" (
   "id" BIGSERIAL PRIMARY KEY,
   "user_id" BIGINT NOT NULL,
   "professional_id" BIGINT NOT NULL,
-  "rate" INT NOT NULL
+  "rate" INT NOT NULL,
+  "content_text" VARCHAR(255),
+  "created_at" timestamp NOT NULL,
+  "updated_at" timestamp NOT NULL
 );
 
 CREATE UNIQUE INDEX ON "professional_rating" ("user_id", "professional_id");
@@ -44,7 +48,9 @@ CREATE TABLE "professional_availability" (
   "professional_id" BIGINT NOT NULL,
   "date" DATE NOT NULL,
   "from" TIME NOT NULL,
-  "to" TIME NOT NULL
+  "to" TIME NOT NULL,
+  "created_at" timestamp NOT NULL,
+  "updated_at" timestamp NOT NULL
 );
 
 ALTER TABLE "professional_availability" ADD FOREIGN KEY ("professional_id") REFERENCES "professionals" ("id");

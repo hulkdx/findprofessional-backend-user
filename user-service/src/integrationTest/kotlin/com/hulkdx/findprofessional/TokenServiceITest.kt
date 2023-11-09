@@ -2,6 +2,7 @@ package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.base.IntegrationTest
 import com.hulkdx.findprofessional.models.User
+import com.hulkdx.findprofessional.utils.createUser
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
@@ -67,7 +68,7 @@ class TokenServiceITest : IntegrationTest() {
     @Test
     fun `createToken result it not null`() {
         // Arrange
-        val user = User("email", "password")
+        val user = createUser(email = "email", password = "password")
         // Act
         val result = sut.createAccessToken(user)
         // Asserts
@@ -78,7 +79,7 @@ class TokenServiceITest : IntegrationTest() {
     fun `createAccessToken decode tests`() = runTest {
         // Arrange
         val userId = 123
-        val user = User("email", "password", id = userId)
+        val user = createUser(email = "email", password = "password", id = userId)
         // Act
         val token = sut.createAccessToken(user)
         // Asserts
@@ -93,8 +94,8 @@ class TokenServiceITest : IntegrationTest() {
     @Test
     fun `createToken is not the same for different users`() {
         // Arrange
-        val user1 = User("email1", "password1", id = 1)
-        val user2 = User("email2", "password2", id = 2)
+        val user1 = createUser(email = "email1", password = "password1", id = 1)
+        val user2 = createUser(email = "email2", password = "password2", id = 2)
         // Act
         val result1 = sut.createAccessToken(user1)
         val result2 = sut.createAccessToken(user2)
@@ -105,7 +106,7 @@ class TokenServiceITest : IntegrationTest() {
     @Test
     fun `createToken is not the same for same users`() = runTest {
         // Arrange
-        val user = User("email", "password")
+        val user = createUser(email = "email", password = "password")
         // Act
         val result1 = sut.createAccessToken(user)
         whenever(clock.instant()).thenReturn(Instant.now().plusSeconds(1000))
@@ -131,7 +132,7 @@ class TokenServiceITest : IntegrationTest() {
     @Test
     fun `is not valid with a new decoder and encoder`() = runTest {
         // Arrange
-        val user = User("email", "password")
+        val user = createUser(email = "email", password = "password")
         val originalSut = createOriginal()
         val newSut = createNew()
         // Act
@@ -145,7 +146,7 @@ class TokenServiceITest : IntegrationTest() {
     fun `refreshToken decode tests`() = runTest {
         // Arrange
         val userId = 123
-        val user = User("email", "password", id = userId)
+        val user = createUser(email = "email", password = "password", id = userId)
         // Act
         val token = sut.createRefreshToken(user)
         // Asserts
