@@ -27,7 +27,7 @@ CREATE TABLE "professionals" (
   "updated_at" timestamp NOT NULL
 );
 
-CREATE TABLE "professional_rating" (
+CREATE TABLE "professional_review" (
   "id" BIGSERIAL PRIMARY KEY,
   "user_id" BIGINT NOT NULL,
   "professional_id" BIGINT NOT NULL,
