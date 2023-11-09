@@ -23,8 +23,8 @@ CREATE TABLE "professionals" (
   "price_currency" VARCHAR(255) NOT NULL,
   "profile_image_url" VARCHAR(255),
   "description" VARCHAR(255),
-  "created_at" timestamp,
-  "updated_at" timestamp
+  "created_at" timestamp NOT NULL,
+  "updated_at" timestamp NOT NULL
 );
 
 CREATE TABLE "professional_rating" (
