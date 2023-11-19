@@ -2,6 +2,7 @@ package com.hulkdx.findprofessional.utils
 
 import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.models.User
+import com.hulkdx.findprofessional.models.UserResponse
 
 
 fun createUser(
@@ -29,4 +30,11 @@ fun createRegisterRequest(
     firstName = firstName,
     lastName = lastName,
     profileImage = null,
+)
+
+fun RegisterRequest.toUserResponse() = UserResponse(
+    email = email,
+    firstName = firstName,
+    lastName = lastName,
+    profileImage = profileImage
 )

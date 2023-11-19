@@ -6,7 +6,9 @@ package com.hulkdx.findprofessional
 import com.hulkdx.findprofessional.models.AuthResponse
 import com.hulkdx.findprofessional.models.LoginRequest
 import com.hulkdx.findprofessional.models.TokenResponse
+import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.models.UserResponse
+import com.hulkdx.findprofessional.models.toUserResponse
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createRegisterRequest
 import com.hulkdx.findprofessional.utils.createUser
@@ -57,10 +59,10 @@ class LoginTests {
         val request = LoginRequest(requestEmail, requestPassword)
         val token = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
 
-        findByEmailReturnsValidUser(requestEmail, requestPassword)
+        val user = findByEmailReturnsValidUser(requestEmail, requestPassword)
         createTokenReturns(token)
 
-        val expectedBody = AuthResponse(token, UserResponse(requestEmail))
+        val expectedBody = AuthResponse(token, user.toUserResponse())
         // Act
         val response = sut.login(request)
         // Assert
@@ -125,12 +127,13 @@ class LoginTests {
             .thenReturn(expectedBody)
     }
 
-    private suspend fun findByEmailReturnsValidUser(requestEmail: String, requestPassword: String) {
+    private suspend fun findByEmailReturnsValidUser(requestEmail: String, requestPassword: String): User {
         val dbEmail = requestEmail
         val dbPassword = passwordEncoder.encode(requestPassword)
         val user = createUser(email = dbEmail, password = dbPassword)
         whenever(repository.findByEmail(requestEmail))
             .thenReturn(user)
+        return user
     }
 
     // end region

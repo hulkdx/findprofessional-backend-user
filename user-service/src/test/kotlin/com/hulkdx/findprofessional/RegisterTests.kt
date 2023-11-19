@@ -7,6 +7,7 @@ import com.hulkdx.findprofessional.models.UserResponse
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createRegisterRequest
 import com.hulkdx.findprofessional.utils.errorMessage
+import com.hulkdx.findprofessional.utils.toUserResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -53,7 +54,7 @@ class RegisterTests {
         val request = createRegisterRequest(email = email, password = password)
         val token = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
         createTokenReturns(token)
-        val expectedBody = AuthResponse(token, UserResponse(email))
+        val expectedBody = AuthResponse(token, request.toUserResponse())
         // Act
         val response = sut.register(request)
         // Assert
