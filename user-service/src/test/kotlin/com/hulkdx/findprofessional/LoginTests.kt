@@ -3,13 +3,13 @@
 package com.hulkdx.findprofessional
 
 
-import com.hulkdx.findprofessional.models.AuthRequest
 import com.hulkdx.findprofessional.models.AuthResponse
+import com.hulkdx.findprofessional.models.LoginRequest
 import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.models.UserResponse
+import com.hulkdx.findprofessional.models.toUserResponse
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
-import com.hulkdx.findprofessional.utils.createAuthRequest
 import com.hulkdx.findprofessional.utils.createRegisterRequest
 import com.hulkdx.findprofessional.utils.createUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -56,13 +56,13 @@ class LoginTests {
         // Arrange
         val requestEmail = "test@email.com"
         val requestPassword = "1234abdcx"
-        val request = createAuthRequest(requestEmail, requestPassword)
+        val request = LoginRequest(requestEmail, requestPassword)
         val token = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
 
-        findByEmailReturnsValidUser(requestEmail, requestPassword)
+        val user = findByEmailReturnsValidUser(requestEmail, requestPassword)
         createTokenReturns(token)
 
-        val expectedBody = AuthResponse(token, UserResponse(requestEmail))
+        val expectedBody = AuthResponse(token, user.toUserResponse())
         // Act
         val response = sut.login(request)
         // Assert
@@ -80,7 +80,7 @@ class LoginTests {
         val dbPassword = "some_invalid_password"
 
         val user = createUser(email = dbEmail, password = dbPassword)
-        val request = createAuthRequest(requestEmail, requestPassword)
+        val request = LoginRequest(requestEmail, requestPassword)
         whenever(repository.findByEmail(requestEmail)).thenReturn(user)
         // Act
         val response = sut.login(request)
@@ -94,7 +94,7 @@ class LoginTests {
         // Arrange
         val email = "test@email.com"
         val password = "1234abdcx"
-        val request = createAuthRequest(email, password)
+        val request = LoginRequest(email, password)
         // Act
         val response = sut.login(request)
         // Assert
@@ -113,7 +113,7 @@ class LoginTests {
         )
         for (email in invalidEmails) {
             // Arrange
-            val user = createRegisterRequest(email = email)
+            val user = LoginRequest(email = email, password = "1234abdcx")
             // Act
             val response = sut.login(user)
             // Assert
@@ -127,12 +127,13 @@ class LoginTests {
             .thenReturn(expectedBody)
     }
 
-    private suspend fun findByEmailReturnsValidUser(requestEmail: String, requestPassword: String) {
+    private suspend fun findByEmailReturnsValidUser(requestEmail: String, requestPassword: String): User {
         val dbEmail = requestEmail
         val dbPassword = passwordEncoder.encode(requestPassword)
         val user = createUser(email = dbEmail, password = dbPassword)
         whenever(repository.findByEmail(requestEmail))
             .thenReturn(user)
+        return user
     }
 
     // end region

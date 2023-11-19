@@ -1,7 +1,6 @@
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.base.IntegrationTest
-import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.utils.createUser
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
@@ -32,7 +31,7 @@ import java.time.Clock
 import java.time.Instant
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class TokenServiceITest : IntegrationTest() {
+class TokenServiceIntegrationTest : IntegrationTest() {
 
     companion object {
         private lateinit var jwtEncoder: JwtEncoder

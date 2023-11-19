@@ -1,7 +1,8 @@
 package com.hulkdx.findprofessional.utils
 
-import com.hulkdx.findprofessional.models.AuthRequest
+import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.models.User
+import com.hulkdx.findprofessional.models.UserResponse
 
 
 fun createUser(
@@ -18,15 +19,22 @@ fun createUser(
     lastName = lastName,
 )
 
-fun createAuthRequest(
+fun createRegisterRequest(
     email: String = "kristopher.cleveland@example.com",
-    password: String = "sit",
+    password: String = "1234abdcx",
     firstName: String = "Audra Freeman",
     lastName: String = "Genaro McKee"
-) = AuthRequest(
+) = RegisterRequest(
     email = email,
     password = password,
     firstName = firstName,
     lastName = lastName,
     profileImage = null,
+)
+
+fun RegisterRequest.toUserResponse() = UserResponse(
+    email = email,
+    firstName = firstName,
+    lastName = lastName,
+    profileImage = profileImage
 )
