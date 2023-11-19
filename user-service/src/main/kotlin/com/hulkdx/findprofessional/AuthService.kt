@@ -1,5 +1,6 @@
 package com.hulkdx.findprofessional
 
+import com.hulkdx.findprofessional.models.LoginRequest
 import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.models.toUser
@@ -18,7 +19,7 @@ class AuthService(
         return user
     }
 
-    suspend fun login(body: RegisterRequest): User? {
+    suspend fun login(body: LoginRequest): User? {
         val user = userRepository.findByEmail(body.email) ?: return null
         val matches = passwordEncoder.matches(body.password, user.password)
         if (!matches) {

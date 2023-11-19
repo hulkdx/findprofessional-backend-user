@@ -4,6 +4,7 @@ package com.hulkdx.findprofessional
 
 
 import com.hulkdx.findprofessional.models.AuthResponse
+import com.hulkdx.findprofessional.models.LoginRequest
 import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.models.UserResponse
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
@@ -53,7 +54,7 @@ class LoginTests {
         // Arrange
         val requestEmail = "test@email.com"
         val requestPassword = "1234abdcx"
-        val request = createRegisterRequest(requestEmail, requestPassword)
+        val request = LoginRequest(requestEmail, requestPassword)
         val token = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
 
         findByEmailReturnsValidUser(requestEmail, requestPassword)
@@ -77,7 +78,7 @@ class LoginTests {
         val dbPassword = "some_invalid_password"
 
         val user = createUser(email = dbEmail, password = dbPassword)
-        val request = createRegisterRequest(requestEmail, requestPassword)
+        val request = LoginRequest(requestEmail, requestPassword)
         whenever(repository.findByEmail(requestEmail)).thenReturn(user)
         // Act
         val response = sut.login(request)
@@ -91,7 +92,7 @@ class LoginTests {
         // Arrange
         val email = "test@email.com"
         val password = "1234abdcx"
-        val request = createRegisterRequest(email, password)
+        val request = LoginRequest(email, password)
         // Act
         val response = sut.login(request)
         // Assert
@@ -110,7 +111,7 @@ class LoginTests {
         )
         for (email in invalidEmails) {
             // Arrange
-            val user = createRegisterRequest(email = email)
+            val user = LoginRequest(email = email, password = "1234abdcx")
             // Act
             val response = sut.login(user)
             // Assert

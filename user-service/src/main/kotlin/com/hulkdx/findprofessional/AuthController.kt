@@ -2,6 +2,7 @@ package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.models.AuthResponse
+import com.hulkdx.findprofessional.models.LoginRequest
 import com.hulkdx.findprofessional.models.RefreshRequest
 import com.hulkdx.findprofessional.models.toUserResponse
 import com.hulkdx.findprofessional.utils.R
@@ -53,7 +54,7 @@ class AuthController(
     }
 
     @PostMapping("/login")
-    suspend fun login(@RequestBody @Valid body: RegisterRequest): ResponseEntity<*> {
+    suspend fun login(@RequestBody @Valid body: LoginRequest): ResponseEntity<*> {
         if (!Validator.isEmailValid(body.email)) {
             return R.badRequest(emailNotValid)
         }
