@@ -1,7 +1,6 @@
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.base.IntegrationTest
-import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.utils.createUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -21,7 +20,7 @@ import java.time.temporal.ChronoUnit.DAYS
 import java.time.temporal.ChronoUnit.HOURS
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class TokenValidationITest : IntegrationTest() {
+class TokenValidationIntegrationTest : IntegrationTest() {
 
     companion object {
         private lateinit var jwtEncoder: JwtEncoder

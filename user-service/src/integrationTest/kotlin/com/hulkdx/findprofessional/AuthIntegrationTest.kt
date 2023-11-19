@@ -28,7 +28,7 @@ import java.time.temporal.ChronoUnit
 
 @AutoConfigureWebTestClient
 @OptIn(ExperimentalCoroutinesApi::class)
-class AuthApiITest : IntegrationTest() {
+class AuthIntegrationTest : IntegrationTest() {
 
     @Autowired
     private lateinit var client: WebTestClient
