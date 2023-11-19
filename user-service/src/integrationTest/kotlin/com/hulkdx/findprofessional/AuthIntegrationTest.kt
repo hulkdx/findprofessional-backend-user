@@ -58,15 +58,13 @@ class AuthIntegrationTest : IntegrationTest() {
 
     @Test
     fun `refreshToken test cases`() {
-        val body = createRegisterRequest("test@gmail.com", "123AsdzxcvB!!")
+        val response = loginWithRandomUser()
 
-        register(body)
-        val authResponse = login(body)
-        val token = authResponse.token
-        refresh(token)
+        refresh(response.token)
             .isOk
+
         timePassed(31, ChronoUnit.DAYS)
-        refresh(token)
+        refresh(response.token)
             .isUnauthorized
     }
 
@@ -95,5 +93,11 @@ class AuthIntegrationTest : IntegrationTest() {
 
     private fun timePassed(time: Long, unit: ChronoUnit) {
         whenever(clock.instant()).thenReturn(Instant.now().plus(time, unit))
+    }
+
+    private fun loginWithRandomUser(): AuthResponse {
+        val body = createRegisterRequest("test@gmail.com", "123AsdzxcvB!!")
+        register(body)
+        return login(body)
     }
 }
