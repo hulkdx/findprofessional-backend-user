@@ -15,7 +15,7 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
 
-    id("org.graalvm.buildtools.native") version "0.9.27"
+    id("org.graalvm.buildtools.native") version "0.9.28"
 }
 
 tasks.processAot {
