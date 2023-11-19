@@ -3,12 +3,12 @@
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.base.IntegrationTest
-import com.hulkdx.findprofessional.models.AuthRequest
+import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.models.AuthResponse
 import com.hulkdx.findprofessional.models.RefreshRequest
 import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.utils.body
-import com.hulkdx.findprofessional.utils.createAuthRequest
+import com.hulkdx.findprofessional.utils.createRegisterRequest
 import com.hulkdx.findprofessional.utils.response
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -51,14 +51,14 @@ class AuthIntegrationTest : IntegrationTest() {
 
     @Test
     fun `register then can login`() {
-        val body = createAuthRequest("test@gmail.com", "123AsdzxcvB!!")
+        val body = createRegisterRequest("test@gmail.com", "123AsdzxcvB!!")
         register(body)
         login(body)
     }
 
     @Test
     fun `refreshToken test cases`() {
-        val body = createAuthRequest("test@gmail.com", "123AsdzxcvB!!")
+        val body = createRegisterRequest("test@gmail.com", "123AsdzxcvB!!")
 
         register(body)
         val authResponse = login(body)
@@ -78,7 +78,7 @@ class AuthIntegrationTest : IntegrationTest() {
             .body(RefreshRequest(response.refreshToken))
 
 
-    private fun login(body: AuthRequest): AuthResponse {
+    private fun login(body: RegisterRequest): AuthResponse {
         return client.post()
             .uri("/auth/login")
             .body(body)
@@ -86,7 +86,7 @@ class AuthIntegrationTest : IntegrationTest() {
             .response(AuthResponse::class.java)
     }
 
-    private fun register(body: AuthRequest) {
+    private fun register(body: RegisterRequest) {
         client.post()
             .uri("/auth/register")
             .body(body)

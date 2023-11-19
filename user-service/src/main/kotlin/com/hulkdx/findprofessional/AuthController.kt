@@ -1,6 +1,6 @@
 package com.hulkdx.findprofessional
 
-import com.hulkdx.findprofessional.models.AuthRequest
+import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.models.AuthResponse
 import com.hulkdx.findprofessional.models.RefreshRequest
 import com.hulkdx.findprofessional.models.toUserResponse
@@ -36,7 +36,7 @@ class AuthController(
     private val invalidTokenType = "Invalid token type"
 
     @PostMapping("/register")
-    suspend fun register(@RequestBody @Valid body: AuthRequest): ResponseEntity<*> {
+    suspend fun register(@RequestBody @Valid body: RegisterRequest): ResponseEntity<*> {
         if (!Validator.isEmailValid(body.email)) {
             return R.badRequest(emailNotValid)
         }
@@ -53,7 +53,7 @@ class AuthController(
     }
 
     @PostMapping("/login")
-    suspend fun login(@RequestBody @Valid body: AuthRequest): ResponseEntity<*> {
+    suspend fun login(@RequestBody @Valid body: RegisterRequest): ResponseEntity<*> {
         if (!Validator.isEmailValid(body.email)) {
             return R.badRequest(emailNotValid)
         }

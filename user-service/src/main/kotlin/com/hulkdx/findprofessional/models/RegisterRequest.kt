@@ -2,7 +2,7 @@ package com.hulkdx.findprofessional.models
 
 import jakarta.validation.constraints.Size
 
-data class AuthRequest(
+data class RegisterRequest(
     @field:Size(max = 50)
     val email: String,
     @field:Size(max = 50)
@@ -15,7 +15,7 @@ data class AuthRequest(
     val profileImage: String?,
 )
 
-fun AuthRequest.toUser(password: String): User {
+fun RegisterRequest.toUser(password: String): User {
     return User(
         email = email,
         password = password,

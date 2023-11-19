@@ -3,13 +3,10 @@
 package com.hulkdx.findprofessional
 
 
-import com.hulkdx.findprofessional.models.AuthRequest
 import com.hulkdx.findprofessional.models.AuthResponse
 import com.hulkdx.findprofessional.models.TokenResponse
-import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.models.UserResponse
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
-import com.hulkdx.findprofessional.utils.createAuthRequest
 import com.hulkdx.findprofessional.utils.createRegisterRequest
 import com.hulkdx.findprofessional.utils.createUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -56,7 +53,7 @@ class LoginTests {
         // Arrange
         val requestEmail = "test@email.com"
         val requestPassword = "1234abdcx"
-        val request = createAuthRequest(requestEmail, requestPassword)
+        val request = createRegisterRequest(requestEmail, requestPassword)
         val token = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
 
         findByEmailReturnsValidUser(requestEmail, requestPassword)
@@ -80,7 +77,7 @@ class LoginTests {
         val dbPassword = "some_invalid_password"
 
         val user = createUser(email = dbEmail, password = dbPassword)
-        val request = createAuthRequest(requestEmail, requestPassword)
+        val request = createRegisterRequest(requestEmail, requestPassword)
         whenever(repository.findByEmail(requestEmail)).thenReturn(user)
         // Act
         val response = sut.login(request)
@@ -94,7 +91,7 @@ class LoginTests {
         // Arrange
         val email = "test@email.com"
         val password = "1234abdcx"
-        val request = createAuthRequest(email, password)
+        val request = createRegisterRequest(email, password)
         // Act
         val response = sut.login(request)
         // Assert

@@ -5,7 +5,6 @@ import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.models.UserResponse
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
-import com.hulkdx.findprofessional.utils.createAuthRequest
 import com.hulkdx.findprofessional.utils.createRegisterRequest
 import com.hulkdx.findprofessional.utils.errorMessage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -51,7 +50,7 @@ class RegisterTests {
         // Arrange
         val email = "test@email.com"
         val password = "1234abdcx"
-        val request = createAuthRequest(email = email, password = password)
+        val request = createRegisterRequest(email = email, password = password)
         val token = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
         createTokenReturns(token)
         val expectedBody = AuthResponse(token, UserResponse(email))
