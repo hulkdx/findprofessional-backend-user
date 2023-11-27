@@ -84,7 +84,7 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0")
 
     val mockitoKotlinVersion = "5.1.0"
-    val testContainersVersion = "1.19.2"
+    val testContainersVersion = "1.19.3"
     val coroutinesTestVersion = "1.7.3"
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
