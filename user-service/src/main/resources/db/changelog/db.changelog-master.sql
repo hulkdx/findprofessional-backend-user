@@ -8,8 +8,8 @@ CREATE TABLE "users" (
   "first_name" VARCHAR(255) NOT NULL,
   "last_name" VARCHAR(255) NOT NULL,
   "profile_image" VARCHAR(255),
-  "created_at" timestamp,
-  "updated_at" timestamp
+  "created_at" timestamptz NOT NULL,
+  "updated_at" timestamptz NOT NULL
 );
 
 CREATE TABLE "professionals" (
@@ -23,8 +23,8 @@ CREATE TABLE "professionals" (
   "price_currency" VARCHAR(255) NOT NULL,
   "profile_image_url" VARCHAR(255),
   "description" VARCHAR(255),
-  "created_at" timestamp NOT NULL,
-  "updated_at" timestamp NOT NULL
+  "created_at" timestamptz NOT NULL,
+  "updated_at" timestamptz NOT NULL
 );
 
 CREATE TABLE "professional_review" (
@@ -33,8 +33,8 @@ CREATE TABLE "professional_review" (
   "professional_id" BIGINT NOT NULL,
   "rate" INT NOT NULL,
   "content_text" VARCHAR(255),
-  "created_at" timestamp NOT NULL,
-  "updated_at" timestamp NOT NULL
+  "created_at" timestamptz NOT NULL,
+  "updated_at" timestamptz NOT NULL
 );
 
 CREATE UNIQUE INDEX ON "professional_review" ("user_id", "professional_id");
@@ -49,8 +49,8 @@ CREATE TABLE "professional_availability" (
   "date" DATE NOT NULL,
   "from" TIME NOT NULL,
   "to" TIME NOT NULL,
-  "created_at" timestamp NOT NULL,
-  "updated_at" timestamp NOT NULL
+  "created_at" timestamptz NOT NULL,
+  "updated_at" timestamptz NOT NULL
 );
 
 ALTER TABLE "professional_availability" ADD FOREIGN KEY ("professional_id") REFERENCES "professionals" ("id");
