@@ -7,10 +7,8 @@ import com.hulkdx.findprofessional.models.AuthResponse
 import com.hulkdx.findprofessional.models.LoginRequest
 import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.models.User
-import com.hulkdx.findprofessional.models.UserResponse
 import com.hulkdx.findprofessional.models.toUserResponse
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
-import com.hulkdx.findprofessional.utils.createRegisterRequest
 import com.hulkdx.findprofessional.utils.createUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -58,17 +56,20 @@ class LoginTests {
         val requestPassword = "1234abdcx"
         val request = LoginRequest(requestEmail, requestPassword)
         val token = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
+        val skypeId = "some skype id"
 
-        val user = findByEmailReturnsValidUser(requestEmail, requestPassword)
+        findByEmailReturnsValidUser(requestEmail, requestPassword, skypeId)
         createTokenReturns(token)
-
-        val expectedBody = AuthResponse(token, user.toUserResponse())
         // Act
         val response = sut.login(request)
         // Assert
         verify(repository).findByEmail(requestEmail)
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(expectedBody, response.body)
+
+        val responseBody = (response.body as AuthResponse)
+        assertEquals(token, responseBody.token)
+        assertEquals(requestEmail, responseBody.user.email)
+        assertEquals(skypeId, responseBody.user.skypeId)
     }
 
     @Test
@@ -127,10 +128,14 @@ class LoginTests {
             .thenReturn(expectedBody)
     }
 
-    private suspend fun findByEmailReturnsValidUser(requestEmail: String, requestPassword: String): User {
+    private suspend fun findByEmailReturnsValidUser(
+        requestEmail: String,
+        requestPassword: String,
+        skypeId: String
+    ): User {
         val dbEmail = requestEmail
         val dbPassword = passwordEncoder.encode(requestPassword)
-        val user = createUser(email = dbEmail, password = dbPassword)
+        val user = createUser(email = dbEmail, password = dbPassword, skypeId = skypeId)
         whenever(repository.findByEmail(requestEmail))
             .thenReturn(user)
         return user

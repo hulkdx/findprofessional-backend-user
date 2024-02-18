@@ -5,6 +5,7 @@ data class UserResponse(
     val firstName: String,
     val lastName: String,
     val profileImage: String?,
+    val skypeId: String?,
 )
 
 fun User.toUserResponse(): UserResponse {
@@ -13,5 +14,6 @@ fun User.toUserResponse(): UserResponse {
         firstName,
         lastName,
         profileImage,
+        skypeId,
     )
 }

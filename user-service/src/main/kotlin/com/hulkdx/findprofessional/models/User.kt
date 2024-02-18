@@ -13,6 +13,7 @@ data class User(
     val firstName: String,
     val lastName: String,
     val profileImage: String? = null,
+    val skypeId: String? = null,
     @Id val id: Int? = null,
     @CreatedDate val createdAt: LocalDateTime? = null,
     @LastModifiedDate val updatedAt: LocalDateTime? = null,

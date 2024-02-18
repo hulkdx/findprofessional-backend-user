@@ -22,11 +22,13 @@ fun createRegisterRequest(
     email: String = "kristopher.cleveland@example.com",
     password: String = "sit",
     firstName: String = "Audra Freeman",
-    lastName: String = "Genaro McKee"
+    lastName: String = "Genaro McKee",
+    skypeId: String? = null,
 ) = RegisterRequest(
     email = email,
     password = password,
     firstName = firstName,
     lastName = lastName,
     profileImage = null,
+    skypeId = skypeId,
 )

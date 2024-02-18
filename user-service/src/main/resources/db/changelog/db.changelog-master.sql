@@ -8,6 +8,7 @@ CREATE TABLE "users" (
   "first_name" VARCHAR(255) NOT NULL,
   "last_name" VARCHAR(255) NOT NULL,
   "profile_image" VARCHAR(255),
+  "skype_id" VARCHAR(255),
   "created_at" timestamptz NOT NULL,
   "updated_at" timestamptz NOT NULL
 );
@@ -23,6 +24,7 @@ CREATE TABLE "professionals" (
   "price_currency" VARCHAR(255) NOT NULL,
   "profile_image_url" VARCHAR(255),
   "description" VARCHAR(255),
+  "skype_id" VARCHAR(255),
   "created_at" timestamptz NOT NULL,
   "updated_at" timestamptz NOT NULL
 );
