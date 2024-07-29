@@ -13,6 +13,7 @@ CREATE TABLE "professionals" (
   "profile_image_url" VARCHAR(255),
   "description" VARCHAR(255),
   "skype_id" VARCHAR(255),
+  "pending" BOOLEAN NOT NULL,
   "created_at" timestamptz NOT NULL,
   "updated_at" timestamptz NOT NULL
 );
