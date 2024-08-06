@@ -1,6 +1,6 @@
 package com.hulkdx.findprofessional.models
 
-data class UserResponse(
+data class NormalUser(
     val email: String,
     val firstName: String,
     val lastName: String,
@@ -8,8 +8,8 @@ data class UserResponse(
     val skypeId: String?,
 )
 
-fun User.toUserResponse(): UserResponse {
-    return UserResponse(
+fun User.toUserResponse(): NormalUser {
+    return NormalUser(
         email,
         firstName,
         lastName,
