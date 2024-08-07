@@ -2,5 +2,5 @@ package com.hulkdx.findprofessional.models
 
 data class AuthResponse(
     val token: TokenResponse,
-    val user: NormalUser,
+    val user: UserResponse,
 )

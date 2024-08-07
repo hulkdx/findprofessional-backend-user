@@ -2,7 +2,7 @@ package com.hulkdx.findprofessional.utils
 
 import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.models.User
-import com.hulkdx.findprofessional.models.NormalUser
+import com.hulkdx.findprofessional.models.NormalUserResponse
 
 
 fun createUser(
@@ -37,7 +37,7 @@ fun createRegisterRequest(
     skypeId = skypeId,
 )
 
-fun RegisterRequest.toUserResponse() = NormalUser(
+fun RegisterRequest.toUserResponse() = NormalUserResponse(
     email = email,
     firstName = firstName,
     lastName = lastName,

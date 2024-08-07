@@ -4,7 +4,7 @@ import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.models.AuthResponse
 import com.hulkdx.findprofessional.models.LoginRequest
 import com.hulkdx.findprofessional.models.RefreshRequest
-import com.hulkdx.findprofessional.models.toUserResponse
+import com.hulkdx.findprofessional.utils.toNormalUserResponse
 import com.hulkdx.findprofessional.utils.R
 import com.hulkdx.findprofessional.utils.Validator
 import jakarta.validation.Valid
@@ -47,7 +47,7 @@ class AuthController(
         return try {
             val user = authService.register(body)
             val token = tokenService.createToken(user)
-            R.ok(body = AuthResponse(token, user.toUserResponse()))
+            R.ok(body = AuthResponse(token, user.toNormalUserResponse()))
         } catch (e: DataIntegrityViolationException) {
             R.conflict(emailExists)
         }
@@ -61,7 +61,7 @@ class AuthController(
         val user = authService.login(body)
         return if (user != null) {
             val token = tokenService.createToken(user)
-            R.ok(body = AuthResponse(token, user.toUserResponse()))
+            R.ok(body = AuthResponse(token, user.toNormalUserResponse()))
         } else {
             R.unauthorized()
         }

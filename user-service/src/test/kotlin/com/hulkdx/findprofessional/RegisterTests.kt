@@ -1,6 +1,7 @@
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.models.AuthResponse
+import com.hulkdx.findprofessional.models.NormalUserResponse
 import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.models.User
@@ -72,12 +73,13 @@ class RegisterTests {
         assertEquals(HttpStatus.OK, response.statusCode)
 
         val responseBody = response.body as AuthResponse
+        val userResponse = responseBody.user as NormalUserResponse
         assertEquals(token, responseBody.token)
-        assertEquals(email, responseBody.user.email)
-        assertEquals(firstName, responseBody.user.firstName)
-        assertEquals(lastName, responseBody.user.lastName)
-        assertEquals(profileImage, responseBody.user.profileImage)
-        assertEquals(skypeId, responseBody.user.skypeId)
+        assertEquals(email, userResponse.email)
+        assertEquals(firstName, userResponse.firstName)
+        assertEquals(lastName, userResponse.lastName)
+        assertEquals(profileImage, userResponse.profileImage)
+        assertEquals(skypeId, userResponse.skypeId)
     }
 
     @Test
