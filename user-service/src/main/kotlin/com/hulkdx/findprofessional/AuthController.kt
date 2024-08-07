@@ -7,6 +7,7 @@ import com.hulkdx.findprofessional.models.RefreshRequest
 import com.hulkdx.findprofessional.utils.toNormalUserResponse
 import com.hulkdx.findprofessional.utils.R
 import com.hulkdx.findprofessional.utils.Validator
+import com.hulkdx.findprofessional.utils.toUserResponse
 import jakarta.validation.Valid
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing
@@ -61,7 +62,7 @@ class AuthController(
         val user = authService.login(body)
         return if (user != null) {
             val token = tokenService.createToken(user)
-            R.ok(body = AuthResponse(token, user.toNormalUserResponse()))
+            R.ok(body = AuthResponse(token, user.toUserResponse()))
         } else {
             R.unauthorized()
         }

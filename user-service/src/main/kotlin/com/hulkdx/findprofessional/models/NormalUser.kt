@@ -14,7 +14,7 @@ data class NormalUser(
     val lastName: String,
     val profileImage: String? = null,
     val skypeId: String? = null,
-    @Id val id: Int? = null,
+    @Id override val id: Int? = null,
     @CreatedDate val createdAt: LocalDateTime? = null,
     @LastModifiedDate val updatedAt: LocalDateTime? = null,
-)
+): User

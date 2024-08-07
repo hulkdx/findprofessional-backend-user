@@ -1,7 +1,8 @@
 package com.hulkdx.findprofessional
 
-import com.hulkdx.findprofessional.models.TokenResponse
 import com.hulkdx.findprofessional.models.NormalUser
+import com.hulkdx.findprofessional.models.TokenResponse
+import com.hulkdx.findprofessional.models.User
 import com.nimbusds.jwt.JWTParser
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.springframework.security.oauth2.jwt.BadJwtException
@@ -21,10 +22,12 @@ class TokenService(
     private val jwtDecoder: ReactiveJwtDecoder,
     private val clock: Clock,
 ) {
-    fun createToken(user: NormalUser) = TokenResponse(
-        accessToken = createAccessToken(user),
-        refreshToken = createRefreshToken(user),
-    )
+    fun createToken(user: User) = when (user) {
+        is NormalUser -> TokenResponse(
+            accessToken = createAccessToken(user),
+            refreshToken = createRefreshToken(user),
+        )
+    }
 
     fun createAccessToken(user: NormalUser): String {
         return jwt {

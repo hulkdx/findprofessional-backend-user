@@ -3,6 +3,7 @@ package com.hulkdx.findprofessional
 import com.hulkdx.findprofessional.models.LoginRequest
 import com.hulkdx.findprofessional.models.RegisterRequest
 import com.hulkdx.findprofessional.models.NormalUser
+import com.hulkdx.findprofessional.models.User
 import com.hulkdx.findprofessional.models.toUser
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -19,7 +20,7 @@ class AuthService(
         return user
     }
 
-    suspend fun login(body: LoginRequest): NormalUser? {
+    suspend fun login(body: LoginRequest): User? {
         val user = userRepository.findByEmail(body.email) ?: return null
         val matches = passwordEncoder.matches(body.password, user.password)
         if (!matches) {
