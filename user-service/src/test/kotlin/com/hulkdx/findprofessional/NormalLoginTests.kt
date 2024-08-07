@@ -7,7 +7,7 @@ import com.hulkdx.findprofessional.models.AuthResponse
 import com.hulkdx.findprofessional.models.LoginRequest
 import com.hulkdx.findprofessional.models.NormalUserResponse
 import com.hulkdx.findprofessional.models.TokenResponse
-import com.hulkdx.findprofessional.models.User
+import com.hulkdx.findprofessional.models.NormalUser
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -133,7 +133,7 @@ class NormalLoginTests {
         requestEmail: String,
         requestPassword: String,
         skypeId: String
-    ): User {
+    ): NormalUser {
         val dbEmail = requestEmail
         val dbPassword = passwordEncoder.encode(requestPassword)
         val user = createUser(email = dbEmail, password = dbPassword, skypeId = skypeId)

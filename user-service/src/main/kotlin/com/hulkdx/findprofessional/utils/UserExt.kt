@@ -1,9 +1,9 @@
 package com.hulkdx.findprofessional.utils
 
 import com.hulkdx.findprofessional.models.NormalUserResponse
-import com.hulkdx.findprofessional.models.User
+import com.hulkdx.findprofessional.models.NormalUser
 
-fun User.toNormalUserResponse(): NormalUserResponse {
+fun NormalUser.toNormalUserResponse(): NormalUserResponse {
     return NormalUserResponse(
         email,
         firstName,
