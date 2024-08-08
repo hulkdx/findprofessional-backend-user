@@ -1,7 +1,7 @@
 package com.hulkdx.findprofessional.utils
 
 import com.hulkdx.findprofessional.models.RegisterRequest
-import com.hulkdx.findprofessional.models.User
+import com.hulkdx.findprofessional.models.NormalUser
 
 
 fun createUser(
@@ -10,7 +10,7 @@ fun createUser(
     password: String = "",
     firstName: String = "",
     lastName: String = "",
-) = User(
+) = NormalUser(
     id = id,
     email = email,
     password = password,

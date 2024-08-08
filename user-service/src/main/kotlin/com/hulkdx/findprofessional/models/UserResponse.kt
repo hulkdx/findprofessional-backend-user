@@ -1,19 +1,15 @@
 package com.hulkdx.findprofessional.models
 
-data class UserResponse(
-    val email: String,
-    val firstName: String,
-    val lastName: String,
-    val profileImage: String?,
-    val skypeId: String?,
-)
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 
-fun User.toUserResponse(): UserResponse {
-    return UserResponse(
-        email,
-        firstName,
-        lastName,
-        profileImage,
-        skypeId,
-    )
-}
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "type"
+)
+@JsonSubTypes(
+    JsonSubTypes.Type(value = NormalUserResponse::class, name = "normal")
+)
+sealed class UserResponse
+

@@ -5,9 +5,9 @@ package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.models.AuthResponse
 import com.hulkdx.findprofessional.models.LoginRequest
+import com.hulkdx.findprofessional.models.NormalUserResponse
 import com.hulkdx.findprofessional.models.TokenResponse
-import com.hulkdx.findprofessional.models.User
-import com.hulkdx.findprofessional.models.toUserResponse
+import com.hulkdx.findprofessional.models.NormalUser
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,7 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 @DisabledInNativeImage
-class LoginTests {
+class NormalLoginTests {
 
     private lateinit var sut: AuthController
 
@@ -67,9 +67,10 @@ class LoginTests {
         assertEquals(HttpStatus.OK, response.statusCode)
 
         val responseBody = (response.body as AuthResponse)
+        val userResponse = responseBody.user as NormalUserResponse
         assertEquals(token, responseBody.token)
-        assertEquals(requestEmail, responseBody.user.email)
-        assertEquals(skypeId, responseBody.user.skypeId)
+        assertEquals(requestEmail, userResponse.email)
+        assertEquals(skypeId, userResponse.skypeId)
     }
 
     @Test
@@ -132,7 +133,7 @@ class LoginTests {
         requestEmail: String,
         requestPassword: String,
         skypeId: String
-    ): User {
+    ): NormalUser {
         val dbEmail = requestEmail
         val dbPassword = passwordEncoder.encode(requestPassword)
         val user = createUser(email = dbEmail, password = dbPassword, skypeId = skypeId)
