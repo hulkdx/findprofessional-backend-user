@@ -81,11 +81,11 @@ dependencies {
 
     implementation("org.liquibase:liquibase-core:4.29.1")
 
-    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.6.0")
 
-    val mockitoKotlinVersion = "5.1.0"
-    val testContainersVersion = "1.19.2"
-    val coroutinesTestVersion = "1.7.3"
+    val mockitoKotlinVersion = "5.2.0"
+    val testContainersVersion = "1.20.1"
+    val coroutinesTestVersion = "1.8.1"
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter")
