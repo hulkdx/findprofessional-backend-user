@@ -52,8 +52,15 @@ jobs:
         java-version: '21'
         distribution: 'graalvm'
 
+    
+    - name: Fix junit issue with native test
+      run: echo org.gradle.jvmargs=-Dorg.gradle.native.args=--strict-image-heap >> user-service/local.properties
+
     - name: Run tests
       working-directory: user-service
       run: ./gradlew nativeTest
       env:
         prod: true
+        # issue with junit:
+        # https://github.com/oracle/graal/issues/6957
+        nativeArgs: --strict-image-heap

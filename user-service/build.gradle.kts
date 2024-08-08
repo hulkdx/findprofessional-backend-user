@@ -26,6 +26,14 @@ graalvmNative {
     metadataRepository {
         enabled.set(true)
     }
+    binaries {
+        all {
+            val nativeArgs = System.getenv("nativeArgs")
+            if (nativeArgs != null) {
+                buildArgs(nativeArgs)
+            }
+        }
+    }
 }
 
 // region integrationTest
