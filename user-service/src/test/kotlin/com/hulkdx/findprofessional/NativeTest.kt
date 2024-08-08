@@ -20,6 +20,9 @@ class NativeTest {
         @DynamicPropertySource
         @JvmStatic
         private fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
+            if (!container.isCreated()) {
+                container.start()
+            }
             registry.add("spring.r2dbc.url") { container.jdbcUrl.replace("jdbc:", "r2dbc:") }
             registry.add("spring.r2dbc.username", container::getUsername)
             registry.add("spring.r2dbc.password", container::getPassword)
