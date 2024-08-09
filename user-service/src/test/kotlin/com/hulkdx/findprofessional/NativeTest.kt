@@ -1,7 +1,9 @@
 package com.hulkdx.findprofessional
 
+import com.hulkdx.findprofessional.utils.TestRuntimeHints
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.ImportRuntimeHints
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
@@ -12,6 +14,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 @SpringBootTest
 @ActiveProfiles("native-test")
 @Testcontainers
+@ImportRuntimeHints(TestRuntimeHints::class)
 class NativeTest {
     companion object {
         @Container
