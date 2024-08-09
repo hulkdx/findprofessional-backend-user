@@ -1,1 +1,16 @@
-{}
+{
+  "resources": {
+    "includes": [
+      {
+        "pattern": "\\Qrsa.private.key\\E"
+      },
+      {
+        "pattern": "\\Qrsa.public.key\\E"
+      },
+      {
+        "pattern": "\\Qapplication-native-test.properties\\E"
+      }
+    ]
+  },
+  "bundles": []
+}
