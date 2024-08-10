@@ -1,4 +1,4 @@
-package com.hulkdx.findprofessional.models
+package com.hulkdx.findprofessional.model.response
 
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
     property = "type"
 )
 @JsonSubTypes(
-    JsonSubTypes.Type(value = NormalUserResponse::class, name = "normal")
+    JsonSubTypes.Type(value = UserResponse::class, name = "normal")
 )
-sealed class UserResponse
+sealed class UserResponseType
 

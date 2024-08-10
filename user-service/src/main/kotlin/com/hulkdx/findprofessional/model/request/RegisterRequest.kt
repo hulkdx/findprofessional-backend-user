@@ -1,5 +1,6 @@
-package com.hulkdx.findprofessional.models
+package com.hulkdx.findprofessional.model.request
 
+import com.hulkdx.findprofessional.model.User
 import jakarta.validation.constraints.Size
 
 data class RegisterRequest(
@@ -11,8 +12,8 @@ data class RegisterRequest(
     @field:Size(max = 50) val skypeId: String?,
 )
 
-fun RegisterRequest.toUser(password: String): NormalUser {
-    return NormalUser(
+fun RegisterRequest.toUser(password: String): User {
+    return User(
         email = email,
         password = password,
         firstName = firstName,

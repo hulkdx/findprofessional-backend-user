@@ -1,18 +1,18 @@
 package com.hulkdx.findprofessional.utils
 
-import com.hulkdx.findprofessional.models.NormalUserResponse
-import com.hulkdx.findprofessional.models.NormalUser
-import com.hulkdx.findprofessional.models.User
-import com.hulkdx.findprofessional.models.UserResponse
+import com.hulkdx.findprofessional.model.response.UserResponse
+import com.hulkdx.findprofessional.model.User
+import com.hulkdx.findprofessional.model.UserType
+import com.hulkdx.findprofessional.model.response.UserResponseType
 
-fun User.toUserResponse(): UserResponse {
+fun UserType.toUserResponse(): UserResponseType {
     return when (this) {
-        is NormalUser -> toNormalUserResponse()
+        is User -> toNormalUserResponse()
     }
 }
 
-fun NormalUser.toNormalUserResponse(): NormalUserResponse {
-    return NormalUserResponse(
+fun User.toNormalUserResponse(): UserResponse {
+    return UserResponse(
         email,
         firstName,
         lastName,

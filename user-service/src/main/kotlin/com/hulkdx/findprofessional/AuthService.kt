@@ -1,10 +1,10 @@
 package com.hulkdx.findprofessional
 
-import com.hulkdx.findprofessional.models.LoginRequest
-import com.hulkdx.findprofessional.models.RegisterRequest
-import com.hulkdx.findprofessional.models.NormalUser
-import com.hulkdx.findprofessional.models.User
-import com.hulkdx.findprofessional.models.toUser
+import com.hulkdx.findprofessional.model.request.LoginRequest
+import com.hulkdx.findprofessional.model.request.RegisterRequest
+import com.hulkdx.findprofessional.model.User
+import com.hulkdx.findprofessional.model.UserType
+import com.hulkdx.findprofessional.model.request.toUser
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -13,14 +13,14 @@ class AuthService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
 ) {
-    suspend fun register(body: RegisterRequest): NormalUser {
+    suspend fun register(body: RegisterRequest): User {
         val password = passwordEncoder.encode(body.password)
         val user = body.toUser(password)
         userRepository.save(user)
         return user
     }
 
-    suspend fun login(body: LoginRequest): User? {
+    suspend fun login(body: LoginRequest): UserType? {
         val user = userRepository.findByEmail(body.email) ?: return null
         val matches = passwordEncoder.matches(body.password, user.password)
         if (!matches) {

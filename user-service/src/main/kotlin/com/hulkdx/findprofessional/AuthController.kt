@@ -1,9 +1,9 @@
 package com.hulkdx.findprofessional
 
-import com.hulkdx.findprofessional.models.RegisterRequest
-import com.hulkdx.findprofessional.models.AuthResponse
-import com.hulkdx.findprofessional.models.LoginRequest
-import com.hulkdx.findprofessional.models.RefreshRequest
+import com.hulkdx.findprofessional.model.request.RegisterRequest
+import com.hulkdx.findprofessional.model.response.AuthResponse
+import com.hulkdx.findprofessional.model.request.LoginRequest
+import com.hulkdx.findprofessional.model.request.RefreshRequest
 import com.hulkdx.findprofessional.utils.toNormalUserResponse
 import com.hulkdx.findprofessional.utils.R
 import com.hulkdx.findprofessional.utils.Validator

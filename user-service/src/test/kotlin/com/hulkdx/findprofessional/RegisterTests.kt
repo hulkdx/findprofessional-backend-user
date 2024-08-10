@@ -1,9 +1,9 @@
 package com.hulkdx.findprofessional
 
-import com.hulkdx.findprofessional.models.AuthResponse
-import com.hulkdx.findprofessional.models.NormalUserResponse
-import com.hulkdx.findprofessional.models.TokenResponse
-import com.hulkdx.findprofessional.models.NormalUser
+import com.hulkdx.findprofessional.model.response.AuthResponse
+import com.hulkdx.findprofessional.model.response.UserResponse
+import com.hulkdx.findprofessional.model.response.TokenResponse
+import com.hulkdx.findprofessional.model.User
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createRegisterRequest
 import com.hulkdx.findprofessional.utils.errorMessage
@@ -72,7 +72,7 @@ class RegisterTests {
         assertEquals(HttpStatus.OK, response.statusCode)
 
         val responseBody = response.body as AuthResponse
-        val userResponse = responseBody.user as NormalUserResponse
+        val userResponse = responseBody.user as UserResponse
         assertEquals(token, responseBody.token)
         assertEquals(email, userResponse.email)
         assertEquals(firstName, userResponse.firstName)
@@ -139,7 +139,7 @@ class RegisterTests {
         // Act
         sut.register(user)
         // Assert
-        val ac = argumentCaptor<NormalUser>()
+        val ac = argumentCaptor<User>()
         verify(repository).save(ac.capture())
 
         val unexpected = user.password
