@@ -1,8 +1,8 @@
 package com.hulkdx.findprofessional
 
-import com.hulkdx.findprofessional.model.AuthResponse
-import com.hulkdx.findprofessional.model.UserResponse
-import com.hulkdx.findprofessional.model.TokenResponse
+import com.hulkdx.findprofessional.model.response.AuthResponse
+import com.hulkdx.findprofessional.model.response.UserResponse
+import com.hulkdx.findprofessional.model.response.TokenResponse
 import com.hulkdx.findprofessional.model.User
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createRegisterRequest

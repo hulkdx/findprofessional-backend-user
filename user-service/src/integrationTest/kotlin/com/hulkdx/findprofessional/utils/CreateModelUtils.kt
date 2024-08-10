@@ -1,6 +1,6 @@
 package com.hulkdx.findprofessional.utils
 
-import com.hulkdx.findprofessional.model.RegisterRequest
+import com.hulkdx.findprofessional.model.request.RegisterRequest
 import com.hulkdx.findprofessional.model.User
 
 

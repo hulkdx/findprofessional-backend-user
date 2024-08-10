@@ -1,6 +1,6 @@
 package com.hulkdx.findprofessional
 
-import com.hulkdx.findprofessional.model.RefreshRequest
+import com.hulkdx.findprofessional.model.request.RefreshRequest
 import com.hulkdx.findprofessional.model.User
 import com.hulkdx.findprofessional.utils.createJwt
 import com.hulkdx.findprofessional.utils.createUser

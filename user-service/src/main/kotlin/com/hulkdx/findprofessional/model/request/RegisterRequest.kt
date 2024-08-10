@@ -1,5 +1,6 @@
-package com.hulkdx.findprofessional.model
+package com.hulkdx.findprofessional.model.request
 
+import com.hulkdx.findprofessional.model.User
 import jakarta.validation.constraints.Size
 
 data class RegisterRequest(

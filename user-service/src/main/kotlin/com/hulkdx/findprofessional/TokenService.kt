@@ -1,7 +1,7 @@
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.model.User
-import com.hulkdx.findprofessional.model.TokenResponse
+import com.hulkdx.findprofessional.model.response.TokenResponse
 import com.hulkdx.findprofessional.model.UserType
 import com.nimbusds.jwt.JWTParser
 import kotlinx.coroutines.reactive.awaitFirstOrNull

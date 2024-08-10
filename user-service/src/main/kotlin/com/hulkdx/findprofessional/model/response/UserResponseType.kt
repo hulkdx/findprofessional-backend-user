@@ -1,4 +1,4 @@
-package com.hulkdx.findprofessional.model
+package com.hulkdx.findprofessional.model.response
 
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo

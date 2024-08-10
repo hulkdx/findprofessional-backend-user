@@ -1,10 +1,10 @@
 package com.hulkdx.findprofessional
 
-import com.hulkdx.findprofessional.model.LoginRequest
-import com.hulkdx.findprofessional.model.RegisterRequest
+import com.hulkdx.findprofessional.model.request.LoginRequest
+import com.hulkdx.findprofessional.model.request.RegisterRequest
 import com.hulkdx.findprofessional.model.User
 import com.hulkdx.findprofessional.model.UserType
-import com.hulkdx.findprofessional.model.toUser
+import com.hulkdx.findprofessional.model.request.toUser
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 

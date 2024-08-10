@@ -1,4 +1,4 @@
-package com.hulkdx.findprofessional.model
+package com.hulkdx.findprofessional.model.response
 
 data class AuthResponse(
     val token: TokenResponse,

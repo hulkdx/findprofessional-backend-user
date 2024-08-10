@@ -1,8 +1,8 @@
 package com.hulkdx.findprofessional.utils
 
-import com.hulkdx.findprofessional.model.RegisterRequest
+import com.hulkdx.findprofessional.model.request.RegisterRequest
 import com.hulkdx.findprofessional.model.User
-import com.hulkdx.findprofessional.model.UserResponse
+import com.hulkdx.findprofessional.model.response.UserResponse
 
 
 fun createUser(

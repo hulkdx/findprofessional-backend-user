@@ -3,10 +3,10 @@
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.base.IntegrationTest
-import com.hulkdx.findprofessional.model.RegisterRequest
-import com.hulkdx.findprofessional.model.AuthResponse
-import com.hulkdx.findprofessional.model.RefreshRequest
-import com.hulkdx.findprofessional.model.TokenResponse
+import com.hulkdx.findprofessional.model.request.RegisterRequest
+import com.hulkdx.findprofessional.model.response.AuthResponse
+import com.hulkdx.findprofessional.model.request.RefreshRequest
+import com.hulkdx.findprofessional.model.response.TokenResponse
 import com.hulkdx.findprofessional.utils.body
 import com.hulkdx.findprofessional.utils.createRegisterRequest
 import com.hulkdx.findprofessional.utils.response

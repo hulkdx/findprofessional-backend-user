@@ -1,9 +1,9 @@
 package com.hulkdx.findprofessional.utils
 
-import com.hulkdx.findprofessional.model.UserResponse
+import com.hulkdx.findprofessional.model.response.UserResponse
 import com.hulkdx.findprofessional.model.User
 import com.hulkdx.findprofessional.model.UserType
-import com.hulkdx.findprofessional.model.UserResponseType
+import com.hulkdx.findprofessional.model.response.UserResponseType
 
 fun UserType.toUserResponse(): UserResponseType {
     return when (this) {
