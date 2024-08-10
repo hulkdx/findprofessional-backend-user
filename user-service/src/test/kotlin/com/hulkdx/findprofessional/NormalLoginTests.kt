@@ -2,15 +2,13 @@
 
 package com.hulkdx.findprofessional
 
-
 import com.hulkdx.findprofessional.models.AuthResponse
 import com.hulkdx.findprofessional.models.LoginRequest
+import com.hulkdx.findprofessional.models.NormalUser
 import com.hulkdx.findprofessional.models.NormalUserResponse
 import com.hulkdx.findprofessional.models.TokenResponse
-import com.hulkdx.findprofessional.models.NormalUser
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createUser
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -26,7 +24,6 @@ import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 @DisabledInNativeImage
 class NormalLoginTests {
@@ -132,7 +129,7 @@ class NormalLoginTests {
     private suspend fun findByEmailReturnsValidUser(
         requestEmail: String,
         requestPassword: String,
-        skypeId: String
+        skypeId: String,
     ): NormalUser {
         val dbEmail = requestEmail
         val dbPassword = passwordEncoder.encode(requestPassword)

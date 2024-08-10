@@ -16,6 +16,10 @@ fun createUser(
     password = password,
     firstName = firstName,
     lastName = lastName,
+    profileImage = null,
+    skypeId = null,
+    createdAt = null,
+    updatedAt = null,
 )
 
 fun createRegisterRequest(

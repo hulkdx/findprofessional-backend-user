@@ -19,5 +19,7 @@ fun RegisterRequest.toUser(password: String): NormalUser {
         lastName = lastName,
         profileImage = profileImage,
         skypeId = skypeId,
+        createdAt = null,
+        updatedAt = null,
     )
 }
