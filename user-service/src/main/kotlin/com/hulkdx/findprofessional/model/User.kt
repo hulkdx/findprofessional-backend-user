@@ -1,4 +1,4 @@
-package com.hulkdx.findprofessional.models
+package com.hulkdx.findprofessional.model
 
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
 @Table("users")
-data class NormalUser(
+data class User(
     @Id val id: Int? = null,
     val professionalId: Int? = null,
     val email: String,
@@ -18,4 +18,4 @@ data class NormalUser(
     val skypeId: String?,
     @CreatedDate val createdAt: LocalDateTime?,
     @LastModifiedDate val updatedAt: LocalDateTime?,
-): User
+): UserType

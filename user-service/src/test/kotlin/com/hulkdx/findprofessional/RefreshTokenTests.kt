@@ -1,7 +1,7 @@
 package com.hulkdx.findprofessional
 
-import com.hulkdx.findprofessional.models.RefreshRequest
-import com.hulkdx.findprofessional.models.NormalUser
+import com.hulkdx.findprofessional.model.RefreshRequest
+import com.hulkdx.findprofessional.model.User
 import com.hulkdx.findprofessional.utils.createJwt
 import com.hulkdx.findprofessional.utils.createUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -48,7 +48,7 @@ class RefreshTokenTests {
         val accessToken = "accessToken"
         val refreshToken = "refreshToken"
         val userId = "1"
-        val user: NormalUser = createUser(id = userId.toInt())
+        val user: User = createUser(id = userId.toInt())
 
         tokensAreValid(accessToken, refreshToken, userId)
         findUserByIdReturns(user, userId)
@@ -67,7 +67,7 @@ class RefreshTokenTests {
         val accessToken = "accessToken"
         val refreshToken = "refreshToken"
         val userId = "1"
-        val user: NormalUser = createUser(id = userId.toInt())
+        val user: User = createUser(id = userId.toInt())
 
         refreshToken(isValid = true, refreshToken, userId)
         accessToken(isExpired = true, accessToken, userId)
@@ -183,7 +183,7 @@ class RefreshTokenTests {
             .thenReturn(true)
     }
 
-    private suspend fun findUserByIdReturns(user: NormalUser?, userId: String) {
+    private suspend fun findUserByIdReturns(user: User?, userId: String) {
         whenever(userRepository.findById(userId.toInt()))
             .thenReturn(user)
     }

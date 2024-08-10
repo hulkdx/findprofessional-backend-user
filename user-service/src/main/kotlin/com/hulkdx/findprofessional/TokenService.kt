@@ -1,8 +1,8 @@
 package com.hulkdx.findprofessional
 
-import com.hulkdx.findprofessional.models.NormalUser
-import com.hulkdx.findprofessional.models.TokenResponse
-import com.hulkdx.findprofessional.models.User
+import com.hulkdx.findprofessional.model.User
+import com.hulkdx.findprofessional.model.TokenResponse
+import com.hulkdx.findprofessional.model.UserType
 import com.nimbusds.jwt.JWTParser
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.springframework.security.oauth2.jwt.BadJwtException
@@ -22,14 +22,14 @@ class TokenService(
     private val jwtDecoder: ReactiveJwtDecoder,
     private val clock: Clock,
 ) {
-    fun createToken(user: User) = when (user) {
-        is NormalUser -> TokenResponse(
+    fun createToken(user: UserType) = when (user) {
+        is User -> TokenResponse(
             accessToken = createAccessToken(user),
             refreshToken = createRefreshToken(user),
         )
     }
 
-    fun createAccessToken(user: NormalUser): String {
+    fun createAccessToken(user: User): String {
         return jwt {
             issuer("com.hulkdx.findprofessional")
             issuedAt(Instant.now(clock))
@@ -38,7 +38,7 @@ class TokenService(
         }
     }
 
-    fun createRefreshToken(user: NormalUser): String {
+    fun createRefreshToken(user: User): String {
         return jwt {
             issuedAt(Instant.now(clock))
             expiresAt(Instant.now(clock).plus(30, ChronoUnit.DAYS))

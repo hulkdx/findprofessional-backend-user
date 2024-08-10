@@ -1,4 +1,4 @@
-package com.hulkdx.findprofessional.models
+package com.hulkdx.findprofessional.model
 
 
 data class RefreshRequest(

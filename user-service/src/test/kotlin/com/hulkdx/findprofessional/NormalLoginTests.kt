@@ -2,11 +2,11 @@
 
 package com.hulkdx.findprofessional
 
-import com.hulkdx.findprofessional.models.AuthResponse
-import com.hulkdx.findprofessional.models.LoginRequest
-import com.hulkdx.findprofessional.models.NormalUser
-import com.hulkdx.findprofessional.models.NormalUserResponse
-import com.hulkdx.findprofessional.models.TokenResponse
+import com.hulkdx.findprofessional.model.AuthResponse
+import com.hulkdx.findprofessional.model.LoginRequest
+import com.hulkdx.findprofessional.model.User
+import com.hulkdx.findprofessional.model.UserResponse
+import com.hulkdx.findprofessional.model.TokenResponse
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createUser
 import kotlinx.coroutines.test.runTest
@@ -64,7 +64,7 @@ class NormalLoginTests {
         assertEquals(HttpStatus.OK, response.statusCode)
 
         val responseBody = (response.body as AuthResponse)
-        val userResponse = responseBody.user as NormalUserResponse
+        val userResponse = responseBody.user as UserResponse
         assertEquals(token, responseBody.token)
         assertEquals(requestEmail, userResponse.email)
         assertEquals(skypeId, userResponse.skypeId)
@@ -130,7 +130,7 @@ class NormalLoginTests {
         requestEmail: String,
         requestPassword: String,
         skypeId: String,
-    ): NormalUser {
+    ): User {
         val dbEmail = requestEmail
         val dbPassword = passwordEncoder.encode(requestPassword)
         val user = createUser(email = dbEmail, password = dbPassword, skypeId = skypeId)
