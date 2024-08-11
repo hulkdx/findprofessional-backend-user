@@ -30,8 +30,6 @@ CREATE TABLE "users" (
   "updated_at" timestamptz NOT NULL
 );
 
-ALTER TABLE "users" ADD FOREIGN KEY ("professional_id") REFERENCES "professionals" ("id");
-
 CREATE TABLE "professional_review" (
   "id" BIGSERIAL PRIMARY KEY,
   "user_id" BIGINT NOT NULL,
