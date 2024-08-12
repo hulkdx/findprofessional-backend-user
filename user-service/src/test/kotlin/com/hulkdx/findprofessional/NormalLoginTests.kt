@@ -33,6 +33,7 @@ class NormalLoginTests {
     @Mock
     private lateinit var repository: UserRepository
 
+
     @Mock
     private lateinit var tokenService: TokenService
 
@@ -42,7 +43,7 @@ class NormalLoginTests {
 
     @BeforeEach
     fun setup() {
-        service = AuthService(repository, passwordEncoder)
+        service = AuthService(repository, mock{}, passwordEncoder)
         sut = AuthController(service, tokenService, mock {})
     }
 

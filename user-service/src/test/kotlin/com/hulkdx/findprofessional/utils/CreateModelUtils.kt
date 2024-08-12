@@ -6,7 +6,7 @@ import com.hulkdx.findprofessional.model.response.UserResponse
 
 
 fun createUser(
-    id: Int = 0,
+    id: Long = 0,
     email: String = "",
     password: String = "",
     firstName: String = "",

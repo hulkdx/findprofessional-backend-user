@@ -41,7 +41,7 @@ class RegisterTests {
 
     @BeforeEach
     fun setup() {
-        val service = AuthService(repository, TestPasswordEncoder())
+        val service = AuthService(repository, mock{}, TestPasswordEncoder())
         sut = AuthController(service, tokenService, mock {})
     }
 

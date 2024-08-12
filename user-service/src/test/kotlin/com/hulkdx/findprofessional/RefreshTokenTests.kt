@@ -1,10 +1,9 @@
 package com.hulkdx.findprofessional
 
-import com.hulkdx.findprofessional.model.request.RefreshRequest
 import com.hulkdx.findprofessional.model.User
+import com.hulkdx.findprofessional.model.request.RefreshRequest
 import com.hulkdx.findprofessional.utils.createJwt
 import com.hulkdx.findprofessional.utils.createUser
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -19,7 +18,6 @@ import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
 import org.springframework.http.HttpStatus
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 @DisabledInNativeImage
 class RefreshTokenTests {
@@ -48,7 +46,7 @@ class RefreshTokenTests {
         val accessToken = "accessToken"
         val refreshToken = "refreshToken"
         val userId = "1"
-        val user: User = createUser(id = userId.toInt())
+        val user: User = createUser(id = userId.toLong())
 
         tokensAreValid(accessToken, refreshToken, userId)
         findUserByIdReturns(user, userId)
@@ -67,7 +65,7 @@ class RefreshTokenTests {
         val accessToken = "accessToken"
         val refreshToken = "refreshToken"
         val userId = "1"
-        val user: User = createUser(id = userId.toInt())
+        val user: User = createUser(id = userId.toLong())
 
         refreshToken(isValid = true, refreshToken, userId)
         accessToken(isExpired = true, accessToken, userId)
@@ -115,17 +113,18 @@ class RefreshTokenTests {
 
     @Test
     @MockitoSettings(strictness = Strictness.LENIENT)
-    fun `when accessToken user id is different than refreshToken user id then unauthorized`() = runTest {
-        // Arrange
-        val refreshToken = "refreshToken"
-        mockUserId(refreshToken, 1)
-        val accessToken = "accessToken"
-        mockUserId(accessToken, 2)
-        // Act
-        val response = sut.refresh("Bearer $accessToken", RefreshRequest(refreshToken))
-        // Assert
-        assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
-    }
+    fun `when accessToken user id is different than refreshToken user id then unauthorized`() =
+        runTest {
+            // Arrange
+            val refreshToken = "refreshToken"
+            mockUserId(refreshToken, 1)
+            val accessToken = "accessToken"
+            mockUserId(accessToken, 2)
+            // Act
+            val response = sut.refresh("Bearer $accessToken", RefreshRequest(refreshToken))
+            // Assert
+            assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
+        }
 
     @Test
     fun `when tokens are valid but cannot find user in the database then unauthorized`() = runTest {
@@ -146,7 +145,7 @@ class RefreshTokenTests {
     private suspend fun tokensAreValid(
         accessToken: String,
         refreshToken: String,
-        userId: String
+        userId: String,
     ) {
         refreshToken(isValid = true, refreshToken, userId)
         accessToken(isExpired = false, accessToken, userId)
