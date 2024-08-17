@@ -5,7 +5,7 @@ import com.hulkdx.findprofessional.model.User
 
 
 fun createUser(
-    id: Int = 0,
+    id: Long = 0,
     email: String = "",
     password: String = "",
     firstName: String = "",

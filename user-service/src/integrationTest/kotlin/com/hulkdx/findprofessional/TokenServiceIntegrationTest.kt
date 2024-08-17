@@ -30,7 +30,6 @@ import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import java.time.Clock
 import java.time.Instant
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class TokenServiceIntegrationTest : IntegrationTest() {
 
     companion object {
@@ -77,7 +76,7 @@ class TokenServiceIntegrationTest : IntegrationTest() {
     @Test
     fun `createAccessToken decode tests`() = runTest {
         // Arrange
-        val userId = 123
+        val userId = 123L
         val user = createUser(email = "email", password = "password", id = userId)
         // Act
         val token = sut.createAccessToken(user)
@@ -144,7 +143,7 @@ class TokenServiceIntegrationTest : IntegrationTest() {
     @Test
     fun `refreshToken decode tests`() = runTest {
         // Arrange
-        val userId = 123
+        val userId = 123L
         val user = createUser(email = "email", password = "password", id = userId)
         // Act
         val token = sut.createRefreshToken(user)
