@@ -33,7 +33,7 @@ class AuthService(
         return user
     }
 
-    suspend fun loginPro(body: LoginRequest): UserType? {
+    private suspend fun loginPro(body: LoginRequest): UserType? {
         val user = professionalRepository.findByEmail(body.email) ?: return null
         val matches = passwordEncoder.matches(body.password, user.password)
         if (!matches) {

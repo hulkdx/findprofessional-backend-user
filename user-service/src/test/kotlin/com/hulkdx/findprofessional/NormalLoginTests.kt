@@ -32,8 +32,6 @@ class NormalLoginTests {
 
     @Mock
     private lateinit var repository: UserRepository
-
-
     @Mock
     private lateinit var tokenService: TokenService
 

@@ -22,6 +22,10 @@ tasks.processAot {
     isEnabled = System.getenv("prod").toBoolean()
 }
 
+tasks.processTestAot {
+    isEnabled = System.getenv("prod").toBoolean()
+}
+
 graalvmNative {
     metadataRepository {
         enabled.set(true)
