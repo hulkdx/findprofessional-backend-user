@@ -9,7 +9,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
     property = "type"
 )
 @JsonSubTypes(
-    JsonSubTypes.Type(value = UserResponse::class, name = "normal")
+    JsonSubTypes.Type(value = UserResponse::class, name = "normal"),
+    JsonSubTypes.Type(value = ProfessionalResponse::class, name = "pro"),
 )
 sealed class UserResponseType
 

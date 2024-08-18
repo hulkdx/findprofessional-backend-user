@@ -31,7 +31,7 @@ CREATE TABLE "users" (
   "updated_at" timestamptz NOT NULL
 );
 
-ALTER TABLE "users" ADD FOREIGN KEY ("professional_id") REFERENCES "professionals" ("id");
+ALTER TABLE "users" ADD FOREIGN KEY ("professional_id") REFERENCES "professionals" ("id") ON DELETE CASCADE;
 
 CREATE TABLE "professional_review" (
   "id" BIGSERIAL PRIMARY KEY,
