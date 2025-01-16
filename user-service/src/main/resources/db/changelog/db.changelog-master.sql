@@ -52,9 +52,7 @@ ALTER TABLE "professional_review" ADD FOREIGN KEY ("professional_id") REFERENCES
 CREATE TABLE "professional_availability" (
   "id" BIGSERIAL PRIMARY KEY,
   "professional_id" BIGINT NOT NULL,
-  "date" DATE NOT NULL,
-  "from" TIME NOT NULL,
-  "to" TIME NOT NULL,
+  "availability" TSRANGE NOT NULL,
   "created_at" timestamptz NOT NULL,
   "updated_at" timestamptz NOT NULL
 );
