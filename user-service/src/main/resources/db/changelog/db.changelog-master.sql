@@ -58,3 +58,11 @@ CREATE TABLE "professional_availability" (
 );
 
 ALTER TABLE "professional_availability" ADD FOREIGN KEY ("professional_id") REFERENCES "professionals" ("id");
+
+CREATE EXTENSION IF NOT EXISTS btree_gist;
+ALTER TABLE professional_availability
+  ADD CONSTRAINT no_overlapping_times
+  EXCLUDE USING gist (
+    professional_id WITH =,
+    availability WITH &&
+  );
