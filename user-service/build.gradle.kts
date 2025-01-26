@@ -8,14 +8,14 @@ version = "1"
 java.sourceCompatibility = javaVersion
 
 plugins {
-    val kotlinVersion = "1.9.24"
+    val kotlinVersion = "1.9.25"
 
-    id("org.springframework.boot") version "3.3.2"
-    id("io.spring.dependency-management") version "1.1.6"
+    id("org.springframework.boot") version "3.4.2"
+    id("io.spring.dependency-management") version "1.1.7"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
 
-    id("org.graalvm.buildtools.native") version "0.10.2"
+    id("org.graalvm.buildtools.native") version "0.10.4"
 }
 
 tasks.processAot {
@@ -91,7 +91,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.security:spring-security-oauth2-jose")
 
-    implementation("org.liquibase:liquibase-core:4.29.1")
+    implementation("org.liquibase:liquibase-core:4.29.2")
 
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.6.0")
 
