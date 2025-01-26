@@ -1,5 +1,6 @@
-package com.hulkdx.findprofessional
+package com.hulkdx.findprofessional.service
 
+import com.hulkdx.findprofessional.repository.UserRepository
 import com.hulkdx.findprofessional.model.response.TokenResponse
 import org.springframework.stereotype.Service
 

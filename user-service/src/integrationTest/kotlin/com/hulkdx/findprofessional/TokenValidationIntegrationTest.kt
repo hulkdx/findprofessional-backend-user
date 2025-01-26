@@ -1,6 +1,7 @@
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.base.IntegrationTest
+import com.hulkdx.findprofessional.service.TokenService
 import com.hulkdx.findprofessional.utils.createUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest

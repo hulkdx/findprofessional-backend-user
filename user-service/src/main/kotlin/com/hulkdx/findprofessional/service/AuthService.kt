@@ -1,10 +1,16 @@
-package com.hulkdx.findprofessional
+package com.hulkdx.findprofessional.service
 
+import com.hulkdx.findprofessional.model.ApiError
+import com.hulkdx.findprofessional.repository.ProRepository
+import com.hulkdx.findprofessional.repository.UserRepository
 import com.hulkdx.findprofessional.model.User
 import com.hulkdx.findprofessional.model.UserType
 import com.hulkdx.findprofessional.model.request.LoginRequest
 import com.hulkdx.findprofessional.model.request.RegisterRequest
 import com.hulkdx.findprofessional.model.request.toUser
+import com.hulkdx.findprofessional.utils.Errors.INVALID_TOKEN_TYPE
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -40,5 +46,17 @@ class AuthService(
             return null
         }
         return user
+    }
+
+    fun getAccessToken(auth: String): String? {
+        val authSplit = auth.split(" ")
+        if (authSplit.size != 2) {
+            return null
+        }
+        val (authType, accessToken) = authSplit
+        if (authType != "Bearer") {
+            return null
+        }
+        return accessToken
     }
 }

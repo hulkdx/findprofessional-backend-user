@@ -2,11 +2,15 @@
 
 package com.hulkdx.findprofessional
 
+import com.hulkdx.findprofessional.controller.AuthController
 import com.hulkdx.findprofessional.model.response.AuthResponse
 import com.hulkdx.findprofessional.model.request.LoginRequest
 import com.hulkdx.findprofessional.model.User
 import com.hulkdx.findprofessional.model.response.UserResponse
 import com.hulkdx.findprofessional.model.response.TokenResponse
+import com.hulkdx.findprofessional.repository.UserRepository
+import com.hulkdx.findprofessional.service.AuthService
+import com.hulkdx.findprofessional.service.TokenService
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createUser
 import kotlinx.coroutines.test.runTest
