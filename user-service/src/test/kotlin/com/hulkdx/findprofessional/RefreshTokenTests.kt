@@ -1,7 +1,12 @@
 package com.hulkdx.findprofessional
 
+import com.hulkdx.findprofessional.controller.AuthController
 import com.hulkdx.findprofessional.model.User
 import com.hulkdx.findprofessional.model.request.RefreshRequest
+import com.hulkdx.findprofessional.repository.UserRepository
+import com.hulkdx.findprofessional.service.AuthService
+import com.hulkdx.findprofessional.service.RefreshService
+import com.hulkdx.findprofessional.service.TokenService
 import com.hulkdx.findprofessional.utils.createJwt
 import com.hulkdx.findprofessional.utils.createUser
 import kotlinx.coroutines.test.runTest
@@ -36,7 +41,7 @@ class RefreshTokenTests {
             tokenService,
             userRepository,
         )
-        sut = AuthController(mock {}, mock {}, refreshService)
+        sut = AuthController(AuthService(mock{}, mock{}, mock{}), mock {}, refreshService)
     }
 
     @Test

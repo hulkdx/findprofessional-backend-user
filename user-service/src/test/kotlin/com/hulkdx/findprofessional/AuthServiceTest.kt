@@ -1,12 +1,13 @@
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.model.request.LoginRequest
+import com.hulkdx.findprofessional.repository.ProRepository
+import com.hulkdx.findprofessional.repository.UserRepository
+import com.hulkdx.findprofessional.service.AuthService
 import com.hulkdx.findprofessional.utils.createPro
 import com.hulkdx.findprofessional.utils.createUser
 import kotlinx.coroutines.test.runTest
-import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.*
-import org.hamcrest.MatcherAssert
 import org.hamcrest.MatcherAssert.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -15,7 +16,6 @@ import org.junit.jupiter.api.condition.DisabledInNativeImage
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.isNull
 import org.mockito.kotlin.whenever
 import org.springframework.security.crypto.password.PasswordEncoder
 

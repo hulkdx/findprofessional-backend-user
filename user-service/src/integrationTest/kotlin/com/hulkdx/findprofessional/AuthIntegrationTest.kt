@@ -7,6 +7,7 @@ import com.hulkdx.findprofessional.model.request.RegisterRequest
 import com.hulkdx.findprofessional.model.response.AuthResponse
 import com.hulkdx.findprofessional.model.request.RefreshRequest
 import com.hulkdx.findprofessional.model.response.TokenResponse
+import com.hulkdx.findprofessional.repository.UserRepository
 import com.hulkdx.findprofessional.utils.body
 import com.hulkdx.findprofessional.utils.createRegisterRequest
 import com.hulkdx.findprofessional.utils.response

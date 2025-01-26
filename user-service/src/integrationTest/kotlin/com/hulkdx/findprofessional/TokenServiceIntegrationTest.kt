@@ -1,13 +1,13 @@
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.base.IntegrationTest
+import com.hulkdx.findprofessional.service.TokenService
 import com.hulkdx.findprofessional.utils.createUser
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet
 import com.nimbusds.jose.proc.SecurityContext
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not

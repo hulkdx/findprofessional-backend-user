@@ -1,4 +1,4 @@
-package com.hulkdx.findprofessional
+package com.hulkdx.findprofessional.service
 
 import com.hulkdx.findprofessional.model.Professional
 import com.hulkdx.findprofessional.model.User
