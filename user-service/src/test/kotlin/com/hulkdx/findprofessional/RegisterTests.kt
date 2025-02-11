@@ -1,17 +1,16 @@
 package com.hulkdx.findprofessional
 
 import com.hulkdx.findprofessional.controller.AuthController
-import com.hulkdx.findprofessional.model.response.AuthResponse
-import com.hulkdx.findprofessional.model.response.UserResponse
-import com.hulkdx.findprofessional.model.response.TokenResponse
 import com.hulkdx.findprofessional.model.User
+import com.hulkdx.findprofessional.model.response.AuthResponse
+import com.hulkdx.findprofessional.model.response.TokenResponse
+import com.hulkdx.findprofessional.model.response.UserResponse
 import com.hulkdx.findprofessional.repository.UserRepository
 import com.hulkdx.findprofessional.service.AuthService
 import com.hulkdx.findprofessional.service.TokenService
 import com.hulkdx.findprofessional.utils.TestPasswordEncoder
 import com.hulkdx.findprofessional.utils.createRegisterRequest
 import com.hulkdx.findprofessional.utils.errorMessage
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
@@ -30,7 +29,6 @@ import org.mockito.kotlin.whenever
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 @DisabledInNativeImage
 class RegisterTests {
@@ -45,7 +43,7 @@ class RegisterTests {
 
     @BeforeEach
     fun setup() {
-        val service = AuthService(repository, mock{}, TestPasswordEncoder())
+        val service = AuthService(repository, mock {}, TestPasswordEncoder())
         sut = AuthController(service, tokenService, mock {})
     }
 
@@ -153,13 +151,15 @@ class RegisterTests {
 
     // region helpers
 
-    private fun createTokenSuccess() {
+    private suspend fun createTokenSuccess() {
         createTokenReturns(TokenResponse("", ""))
     }
 
-    private fun createTokenReturns(expectedBody: TokenResponse) {
+    private suspend fun createTokenReturns(expectedBody: TokenResponse) {
         whenever(tokenService.createToken(anyOrNull()))
             .thenReturn(expectedBody)
+        whenever(repository.save(any()))
+            .thenAnswer { it.getArgument(0) }
     }
 
     private suspend fun emailExists() {
