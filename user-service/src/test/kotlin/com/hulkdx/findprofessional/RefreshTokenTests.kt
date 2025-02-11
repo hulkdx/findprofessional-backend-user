@@ -73,7 +73,7 @@ class RefreshTokenTests {
         val user: User = createUser(id = userId.toLong())
 
         refreshToken(isValid = true, refreshToken, userId)
-        accessToken(isExpired = true, accessToken, userId)
+        accessToken(accessToken, userId)
         findUserByIdReturns(user, userId)
         whenever(tokenService.createToken(user))
             .thenReturn(mock {})
@@ -109,7 +109,7 @@ class RefreshTokenTests {
         val refreshToken = "some_invalid_refreshToken"
         refreshToken(isValid = false, refreshToken)
         val accessToken = "accessToken"
-        accessToken(isExpired = false, accessToken)
+        accessToken(accessToken)
         // Act
         val response = sut.refresh("Bearer $accessToken", RefreshRequest(refreshToken))
         // Assert
@@ -153,7 +153,7 @@ class RefreshTokenTests {
         userId: String,
     ) {
         refreshToken(isValid = true, refreshToken, userId)
-        accessToken(isExpired = false, accessToken, userId)
+        accessToken(accessToken, userId)
     }
 
     private suspend fun refreshToken(
@@ -169,11 +169,9 @@ class RefreshTokenTests {
     }
 
     private fun accessToken(
-        isExpired: Boolean,
         accessToken: String,
         subject: String = "subject",
     ) {
-        // even if isExpired = true it should return subject ->
         whenever(tokenService.getAccessTokenSubject(accessToken))
             .thenReturn(subject)
     }
@@ -188,7 +186,7 @@ class RefreshTokenTests {
     }
 
     private suspend fun findUserByIdReturns(user: User?, userId: String) {
-        whenever(userRepository.findById(userId.toInt()))
+        whenever(userRepository.findById(userId.toLong()))
             .thenReturn(user)
     }
 
