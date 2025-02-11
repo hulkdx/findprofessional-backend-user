@@ -2,6 +2,7 @@ package com.hulkdx.findprofessional.controller
 
 import com.hulkdx.findprofessional.model.ApiError
 import com.hulkdx.findprofessional.model.request.RegisterRequest
+import com.hulkdx.findprofessional.model.request.UserUpdateRequest
 import com.hulkdx.findprofessional.service.AuthService
 import com.hulkdx.findprofessional.service.TokenService
 import com.hulkdx.findprofessional.service.UserService
@@ -9,6 +10,7 @@ import com.hulkdx.findprofessional.utils.Errors.INVALID_TOKEN_TYPE
 import jakarta.validation.Valid
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.OK
 import org.springframework.http.ResponseEntity
@@ -32,7 +34,7 @@ class UserController(
     @PostMapping("/")
     suspend fun updateUser(
         @RequestHeader(HttpHeaders.AUTHORIZATION) auth: String,
-        @RequestBody @Valid body: RegisterRequest,
+        @RequestBody @Valid body: UserUpdateRequest,
     ): ResponseEntity<*> {
         val accessToken = authService.getAccessToken(auth)
             ?: return ResponseEntity.status(BAD_REQUEST).body(ApiError(INVALID_TOKEN_TYPE))
@@ -41,8 +43,11 @@ class UserController(
             return ResponseEntity.status(BAD_REQUEST).body(ApiError(INVALID_TOKEN_TYPE))
         }
 
-        val userId = jwt.subject
-        val updatedUser = userService.updateUser(userId.toLong(), body)
+        val userId = jwt.subject.toLongOrNull()
+            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build<Unit>()
+        val updatedUser = userService.updateUser(userId, body)
+            // It might be a professional user that tries to update user:
+            ?: return ResponseEntity.status(HttpStatus.FORBIDDEN).build<Unit>()
         return ResponseEntity.status(OK).body(updatedUser)
     }
 }

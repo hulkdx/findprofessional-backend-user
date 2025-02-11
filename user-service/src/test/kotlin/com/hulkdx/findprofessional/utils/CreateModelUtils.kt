@@ -3,7 +3,9 @@ package com.hulkdx.findprofessional.utils
 import com.hulkdx.findprofessional.model.Professional
 import com.hulkdx.findprofessional.model.User
 import com.hulkdx.findprofessional.model.request.RegisterRequest
+import com.hulkdx.findprofessional.model.request.UserUpdateRequest
 import com.hulkdx.findprofessional.model.response.UserResponse
+import jakarta.validation.constraints.Size
 import java.time.LocalDateTime
 
 
@@ -75,6 +77,13 @@ fun createRegisterRequest(
     profileImage = profileImage,
     skypeId = skypeId,
 )
+
+fun createUserUpdateRequest(
+    firstName: String = "Audra Freeman",
+    lastName: String = "Genaro McKee",
+    profileImage: String? = null,
+    skypeId: String? = null,
+) = UserUpdateRequest(firstName, lastName, profileImage, skypeId)
 
 fun RegisterRequest.toUserResponse() = UserResponse(
     email = email,

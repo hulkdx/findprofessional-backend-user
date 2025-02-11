@@ -23,8 +23,7 @@ class AuthService(
     suspend fun register(body: RegisterRequest): User {
         val password = passwordEncoder.encode(body.password)
         val user = body.toUser(password)
-        userRepository.save(user)
-        return user
+        return userRepository.save(user)
     }
 
     suspend fun login(body: LoginRequest): UserType? {

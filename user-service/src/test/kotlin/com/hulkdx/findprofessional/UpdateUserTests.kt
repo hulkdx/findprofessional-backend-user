@@ -7,8 +7,10 @@ import com.hulkdx.findprofessional.service.AuthService
 import com.hulkdx.findprofessional.service.TokenService
 import com.hulkdx.findprofessional.service.UserService
 import com.hulkdx.findprofessional.utils.createJwt
+import com.hulkdx.findprofessional.utils.createPro
 import com.hulkdx.findprofessional.utils.createRegisterRequest
 import com.hulkdx.findprofessional.utils.createUser
+import com.hulkdx.findprofessional.utils.createUserUpdateRequest
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
@@ -47,8 +49,7 @@ class UpdateUserTests {
         val user = createUser()
         val accessToken = "accessToken"
         val token = "Bearer $accessToken"
-        val request = createRegisterRequest(
-            email = "newEmail@email.com",
+        val request = createUserUpdateRequest(
             firstName = "newFirstName",
             lastName = "newLastName",
             profileImage = "newProfileImage",
@@ -64,7 +65,6 @@ class UpdateUserTests {
         // Assert
         assertThat(response.statusCode, `is`(HttpStatus.OK))
         val responseBody = response.body as UserResponse
-        assertThat(responseBody.email, `is`("newEmail@email.com"))
         assertThat(responseBody.firstName, `is`("newFirstName"))
         assertThat(responseBody.lastName, `is`("newLastName"))
         assertThat(responseBody.profileImage, `is`("newProfileImage"))
@@ -76,7 +76,7 @@ class UpdateUserTests {
         // Arrange
         val token = "BADFORMTAaccessToken"
         // Act
-        val response = sut.updateUser(token, createRegisterRequest())
+        val response = sut.updateUser(token, createUserUpdateRequest())
         // Assert
         assertThat(response.statusCode, `is`(HttpStatus.BAD_REQUEST))
     }
@@ -88,9 +88,32 @@ class UpdateUserTests {
         val token = "Bearer $accessToken"
         accessToken(isValid = false, accessToken)
         // Act
-        val response = sut.updateUser(token, createRegisterRequest())
+        val response = sut.updateUser(token, createUserUpdateRequest())
         // Assert
         assertThat(response.statusCode, `is`(HttpStatus.BAD_REQUEST))
+    }
+
+    @Test
+    fun `update user when user is a pro-user returns forbidden`() = runTest {
+        // Arrange
+        val user = createPro(id = 5)
+        val accessToken = "accessToken"
+        val token = "Bearer $accessToken"
+        val request = createUserUpdateRequest(
+            firstName = "newFirstName",
+            lastName = "newLastName",
+            profileImage = "newProfileImage",
+            skypeId = "newSkypeId"
+        )
+        val jwtMock = mock<Jwt> {}
+        whenever(tokenService.decodeJwt(accessToken)).thenReturn(jwtMock)
+        whenever(tokenService.isTokenValid(jwtMock)).thenReturn(true)
+        whenever(jwtMock.subject).thenReturn(user.id.toString())
+        whenever(userRepository.findById(user.id!!)).thenReturn(null)
+        // Act
+        val response = sut.updateUser(token, request)
+        // Assert
+        assertThat(response.statusCode, `is`(HttpStatus.FORBIDDEN))
     }
 
     private suspend fun accessToken(isValid: Boolean, accessToken: String, userId: String = "1") {
