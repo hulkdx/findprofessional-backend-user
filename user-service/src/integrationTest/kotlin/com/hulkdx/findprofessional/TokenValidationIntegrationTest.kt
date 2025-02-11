@@ -3,7 +3,6 @@ package com.hulkdx.findprofessional
 import com.hulkdx.findprofessional.base.IntegrationTest
 import com.hulkdx.findprofessional.service.TokenService
 import com.hulkdx.findprofessional.utils.createUser
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
@@ -20,7 +19,6 @@ import java.time.temporal.ChronoUnit
 import java.time.temporal.ChronoUnit.DAYS
 import java.time.temporal.ChronoUnit.HOURS
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class TokenValidationIntegrationTest : IntegrationTest() {
 
     companion object {

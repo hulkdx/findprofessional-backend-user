@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 
 
 fun createUser(
-    id: Long = 0,
+    id: Long? = 0,
     professionalId: Long? = null,
     email: String = "",
     password: String = "",
