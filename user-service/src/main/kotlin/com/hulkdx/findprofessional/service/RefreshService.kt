@@ -20,7 +20,7 @@ class RefreshService(
             return null
         }
 
-        val user = userRepository.findById(id = refreshTokenUserId.toInt()) ?: return null
+        val user = userRepository.findById(id = refreshTokenUserId.toLong()) ?: return null
         return tokenService.createToken(user)
     }
 }

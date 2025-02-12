@@ -36,8 +36,6 @@ import org.springframework.web.bind.annotation.RestController
     consumes = ["application/json"],
     produces = ["application/json"],
 )
-// EnableR2dbcAuditing: required for createdAt and updatedAt
-@EnableR2dbcAuditing
 class AuthController(
     private val authService: AuthService,
     private val tokenService: TokenService,

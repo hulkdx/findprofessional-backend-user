@@ -12,7 +12,9 @@ data class RegisterRequest(
     @field:Size(max = 50) val skypeId: String?,
 )
 
-fun RegisterRequest.toUser(password: String): User {
+fun RegisterRequest.toUser(
+    password: String,
+): User {
     return User(
         email = email,
         password = password,

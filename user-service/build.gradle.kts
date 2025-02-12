@@ -111,6 +111,7 @@ dependencies {
     testImplementation("com.fasterxml.jackson.core:jackson-annotations")
     testImplementation("com.fasterxml.jackson.core:jackson-databind")
 
+    integrationTestImplementation(sourceSets["test"].output)
     integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
     integrationTestImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
     integrationTestImplementation("org.testcontainers:postgresql:$testContainersVersion")
