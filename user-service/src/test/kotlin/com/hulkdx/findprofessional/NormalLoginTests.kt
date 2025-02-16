@@ -46,7 +46,7 @@ class NormalLoginTests {
     @BeforeEach
     fun setup() {
         service = AuthService(repository, mock{}, passwordEncoder)
-        sut = AuthController(service, tokenService, mock {})
+        sut = AuthController(service, tokenService, mock {}, mock {})
     }
 
     @Test

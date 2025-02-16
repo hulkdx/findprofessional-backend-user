@@ -4,10 +4,12 @@ import com.hulkdx.findprofessional.model.ApiError
 import com.hulkdx.findprofessional.model.request.LoginRequest
 import com.hulkdx.findprofessional.model.request.RefreshRequest
 import com.hulkdx.findprofessional.model.request.RegisterRequest
+import com.hulkdx.findprofessional.model.request.UserUpdateRequest
 import com.hulkdx.findprofessional.model.response.AuthResponse
 import com.hulkdx.findprofessional.service.AuthService
 import com.hulkdx.findprofessional.service.RefreshService
 import com.hulkdx.findprofessional.service.TokenService
+import com.hulkdx.findprofessional.service.UserService
 import com.hulkdx.findprofessional.utils.Errors.EMAIL_EXISTS
 import com.hulkdx.findprofessional.utils.Errors.EMAIL_NOT_VALID
 import com.hulkdx.findprofessional.utils.Errors.INVALID_TOKEN_TYPE
@@ -19,6 +21,7 @@ import jakarta.validation.Valid
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.CONFLICT
 import org.springframework.http.HttpStatus.OK
@@ -40,6 +43,7 @@ class AuthController(
     private val authService: AuthService,
     private val tokenService: TokenService,
     private val refreshService: RefreshService,
+    private val userService: UserService,
 ) {
 
     @PostMapping("/register")
@@ -94,5 +98,25 @@ class AuthController(
             ResponseEntity.status(OK)
                 .body(body)
         }
+    }
+
+    @PostMapping("/user")
+    suspend fun updateUser(
+        @RequestHeader(HttpHeaders.AUTHORIZATION) auth: String,
+        @RequestBody @Valid body: UserUpdateRequest,
+    ): ResponseEntity<*> {
+        val accessToken = authService.getAccessToken(auth)
+            ?: return ResponseEntity.status(BAD_REQUEST).body(ApiError(INVALID_TOKEN_TYPE))
+        val jwt = tokenService.decodeJwt(accessToken)
+        if (jwt == null || !tokenService.isTokenValid(jwt)) {
+            return ResponseEntity.status(BAD_REQUEST).body(ApiError(INVALID_TOKEN_TYPE))
+        }
+
+        val userId = jwt.subject.toLongOrNull()
+            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build<Unit>()
+        val updatedUser = userService.updateUser(userId, body)
+            // It might be a professional user that tries to update user:
+            ?: return ResponseEntity.status(HttpStatus.FORBIDDEN).build<Unit>()
+        return ResponseEntity.status(OK).body(updatedUser)
     }
 }
