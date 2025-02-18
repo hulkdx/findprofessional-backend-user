@@ -57,7 +57,7 @@ class UpdateProfileIntegrationTest : IntegrationTest() {
         val accessToken = tokenService.createAccessToken(user)
         // Act
         val response = client.post()
-            .uri("/auth/user/")
+            .uri("/auth/user")
             .header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
             .body(body)
             .isOk
