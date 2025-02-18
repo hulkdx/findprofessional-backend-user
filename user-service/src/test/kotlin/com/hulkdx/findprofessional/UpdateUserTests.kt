@@ -1,6 +1,6 @@
 package com.hulkdx.findprofessional
 
-import com.hulkdx.findprofessional.controller.UserController
+import com.hulkdx.findprofessional.controller.AuthController
 import com.hulkdx.findprofessional.model.response.UserResponse
 import com.hulkdx.findprofessional.repository.UserRepository
 import com.hulkdx.findprofessional.service.AuthService
@@ -8,7 +8,6 @@ import com.hulkdx.findprofessional.service.TokenService
 import com.hulkdx.findprofessional.service.UserService
 import com.hulkdx.findprofessional.utils.createJwt
 import com.hulkdx.findprofessional.utils.createPro
-import com.hulkdx.findprofessional.utils.createRegisterRequest
 import com.hulkdx.findprofessional.utils.createUser
 import com.hulkdx.findprofessional.utils.createUserUpdateRequest
 import kotlinx.coroutines.test.runTest
@@ -29,7 +28,7 @@ import org.springframework.security.oauth2.jwt.Jwt
 @DisabledInNativeImage
 class UpdateUserTests {
 
-    private lateinit var sut: UserController
+    private lateinit var sut: AuthController
 
     @Mock
     private lateinit var userRepository: UserRepository
@@ -40,7 +39,12 @@ class UpdateUserTests {
     @BeforeEach
     fun setup() {
         val userService = UserService(userRepository)
-        sut = UserController(AuthService(mock {}, mock {}, mock {}), tokenService, userService)
+        sut = AuthController(
+            authService = AuthService(mock {}, mock {}, mock {}),
+            tokenService = tokenService,
+            userService = userService,
+            refreshService = mock {},
+        )
     }
 
     @Test

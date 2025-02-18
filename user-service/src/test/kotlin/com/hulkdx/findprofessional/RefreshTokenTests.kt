@@ -41,7 +41,7 @@ class RefreshTokenTests {
             tokenService,
             userRepository,
         )
-        sut = AuthController(AuthService(mock{}, mock{}, mock{}), mock {}, refreshService)
+        sut = AuthController(AuthService(mock{}, mock{}, mock{}), mock {}, refreshService, mock {})
     }
 
     @Test
