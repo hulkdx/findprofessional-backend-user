@@ -33,7 +33,7 @@ spec:
       volumes:
       - name: test-volume
         hostPath:
-          path: psql_cache
+          path: /data/psql_cache
 
 ---
 apiVersion: v1
