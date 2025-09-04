@@ -80,9 +80,9 @@ CREATE TABLE bookings (
   amount_in_cents   BIGINT NOT NULL,
   currency          VARCHAR(10) NOT NULL,
   payment_intent_id VARCHAR(255),
-  idempotency_key   VARCHAR(255) UNIQUE,
-  created_at        timestamptz NOT NULL DEFAULT now(),
-  updated_at        timestamptz NOT NULL DEFAULT now()
+  idempotency_key   VARCHAR(255) UNIQUE NOT NULL,
+  created_at        timestamptz NOT NULL,
+  updated_at        timestamptz NOT NULL
 );
 
 CREATE TABLE booking_slots (
@@ -91,8 +91,8 @@ CREATE TABLE booking_slots (
   professional_id BIGINT NOT NULL REFERENCES professionals (id) ON DELETE CASCADE,
   slot            TSRANGE NOT NULL,
   status          VARCHAR(50) NOT NULL,
-  created_at      timestamptz NOT NULL DEFAULT now(),
-  updated_at      timestamptz NOT NULL DEFAULT now()
+  created_at      timestamptz NOT NULL,
+  updated_at      timestamptz NOT NULL
 );
 
 ALTER TABLE booking_slots
