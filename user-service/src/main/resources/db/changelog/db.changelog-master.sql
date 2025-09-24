@@ -80,9 +80,17 @@ CREATE TABLE bookings (
   amount_in_cents   BIGINT NOT NULL,
   currency          VARCHAR(10) NOT NULL,
   payment_intent_id VARCHAR(255),
-  idempotency_key   VARCHAR(255) UNIQUE NOT NULL,
+  idempotency_key   VARCHAR(255) NOT NULL,
   created_at        timestamptz NOT NULL,
   updated_at        timestamptz NOT NULL
+);
+
+CREATE UNIQUE INDEX unique_booking_per_user ON bookings (
+    idempotency_key,
+    user_id,
+    professional_id,
+    amount_in_cents,
+    currency
 );
 
 CREATE TABLE booking_slots (
