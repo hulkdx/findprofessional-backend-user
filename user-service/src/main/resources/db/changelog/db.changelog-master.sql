@@ -81,21 +81,3 @@ CREATE UNIQUE INDEX unique_booking_per_user ON bookings (
     amount_in_cents,
     currency
 );
-
-CREATE TABLE booking_slots (
-  id              BIGSERIAL PRIMARY KEY,
-  booking_id      BIGINT NOT NULL REFERENCES bookings (id) ON DELETE CASCADE,
-  professional_id BIGINT NOT NULL REFERENCES professionals (id) ON DELETE CASCADE,
-  slot            TSRANGE NOT NULL,
-  status          VARCHAR(50) NOT NULL,
-  created_at      timestamptz NOT NULL,
-  updated_at      timestamptz NOT NULL
-);
-
-ALTER TABLE booking_slots
-  ADD CONSTRAINT no_double_booking
-  EXCLUDE USING gist (
-    professional_id WITH =,
-    slot WITH &&
-  )
-  WHERE (status IN ('hold','pending_payment','paid'));
