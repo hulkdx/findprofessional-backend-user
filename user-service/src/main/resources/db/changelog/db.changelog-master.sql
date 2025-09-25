@@ -20,7 +20,7 @@ CREATE TABLE professionals (
 
 CREATE TABLE users (
   id              BIGSERIAL PRIMARY KEY,
-  professional_id BIGINT,
+  professional_id BIGINT REFERENCES professionals (id) ON DELETE SET NULL,
   email           VARCHAR(255) UNIQUE NOT NULL,
   password        VARCHAR(255) NOT NULL,
   first_name      VARCHAR(255) NOT NULL,
@@ -31,13 +31,10 @@ CREATE TABLE users (
   updated_at      timestamptz NOT NULL
 );
 
-ALTER TABLE users
-  ADD FOREIGN KEY (professional_id) REFERENCES professionals (id) ON DELETE CASCADE;
-
 CREATE TABLE professional_review (
   id              BIGSERIAL PRIMARY KEY,
-  user_id         BIGINT NOT NULL,
-  professional_id BIGINT NOT NULL,
+  user_id         BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+  professional_id BIGINT NOT NULL REFERENCES professionals (id) ON DELETE CASCADE,
   rate            INT NOT NULL,
   content_text    VARCHAR(255),
   created_at      timestamptz NOT NULL,
@@ -46,22 +43,14 @@ CREATE TABLE professional_review (
 
 CREATE UNIQUE INDEX ON professional_review (user_id, professional_id);
 
-ALTER TABLE professional_review
-  ADD FOREIGN KEY (user_id) REFERENCES users (id);
-
-ALTER TABLE professional_review
-  ADD FOREIGN KEY (professional_id) REFERENCES professionals (id);
-
 CREATE TABLE professional_availability (
   id              BIGSERIAL PRIMARY KEY,
-  professional_id BIGINT NOT NULL,
+  professional_id BIGINT NOT NULL REFERENCES professionals (id) ON DELETE CASCADE,
   availability    TSRANGE NOT NULL,
   created_at      timestamptz NOT NULL,
   updated_at      timestamptz NOT NULL
 );
 
-ALTER TABLE professional_availability
-  ADD FOREIGN KEY (professional_id) REFERENCES professionals (id);
 
 CREATE EXTENSION IF NOT EXISTS btree_gist;
 
