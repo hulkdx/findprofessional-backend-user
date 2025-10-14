@@ -46,6 +46,7 @@ CREATE UNIQUE INDEX ON professional_review (user_id, professional_id);
 CREATE TABLE professional_availability (
   id              BIGSERIAL PRIMARY KEY,
   professional_id BIGINT NOT NULL REFERENCES professionals (id) ON DELETE CASCADE,
+  booking_id      BIGINT REFERENCES bookings (id) ON DELETE CASCADE,
   availability    TSRANGE NOT NULL,
   created_at      timestamptz NOT NULL,
   updated_at      timestamptz NOT NULL
