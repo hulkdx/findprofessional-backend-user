@@ -46,7 +46,6 @@ CREATE UNIQUE INDEX ON professional_review (user_id, professional_id);
 CREATE TABLE professional_availability (
   id              BIGSERIAL PRIMARY KEY,
   professional_id BIGINT NOT NULL REFERENCES professionals (id) ON DELETE CASCADE,
-  booking_id      BIGINT REFERENCES bookings (id) ON DELETE CASCADE,
   availability    TSRANGE NOT NULL,
   created_at      timestamptz NOT NULL,
   updated_at      timestamptz NOT NULL
@@ -65,7 +64,6 @@ ALTER TABLE professional_availability
 CREATE TABLE bookings (
   id                BIGSERIAL PRIMARY KEY,
   user_id           BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-  professional_id   BIGINT NOT NULL REFERENCES professionals (id) ON DELETE CASCADE,
   status            VARCHAR(50) NOT NULL,
   amount_in_cents   BIGINT NOT NULL,
   currency          VARCHAR(10) NOT NULL,
@@ -75,18 +73,19 @@ CREATE TABLE bookings (
   updated_at        timestamptz NOT NULL
 );
 
-CREATE UNIQUE INDEX unique_booking_per_user ON bookings (
-    idempotency_key,
-    user_id,
-    professional_id,
-    amount_in_cents,
-    currency
-);
-
+-- Temporary table for TTL in bookings
 CREATE TABLE booking_holds (
   id                BIGSERIAL PRIMARY KEY,
   user_id           BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
   availability_id   BIGINT NOT NULL REFERENCES professional_availability (id) ON DELETE CASCADE,
   created_at        timestamptz NOT NULL,
   expires_at        timestamptz NOT NULL
+);
+
+-- Same as booking_holds for audit purposes / etc for booking
+CREATE TABLE booking_professional_availability (
+  id                BIGSERIAL PRIMARY KEY,
+  availability_id   BIGINT NOT NULL REFERENCES professional_availability (id) ON DELETE CASCADE,
+  booking_id        BIGINT NOT NULL REFERENCES bookings (id) ON DELETE CASCADE,
+  created_at        timestamptz NOT NULL
 );
