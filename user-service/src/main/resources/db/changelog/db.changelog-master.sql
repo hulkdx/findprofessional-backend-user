@@ -82,10 +82,10 @@ CREATE UNIQUE INDEX unique_booking_per_user ON bookings (
     currency
 );
 
-CREATE TABLE booking_slots (
+CREATE TABLE booking_holds (
   id                BIGSERIAL PRIMARY KEY,
-  booking_id        BIGINT NOT NULL REFERENCES bookings (id) ON DELETE CASCADE,
+  user_id           BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
   availability_id   BIGINT NOT NULL REFERENCES professional_availability (id) ON DELETE CASCADE,
   created_at        timestamptz NOT NULL,
-  updated_at        timestamptz NOT NULL
+  expires_at        timestamptz NOT NULL
 );
