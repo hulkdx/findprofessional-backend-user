@@ -1,6 +1,8 @@
 --liquibase formatted sql
 
 --changeset saba:1
+CREATE EXTENSION IF NOT EXISTS btree_gist;
+
 CREATE TABLE professionals (
   id                BIGSERIAL PRIMARY KEY,
   email             VARCHAR(255) UNIQUE NOT NULL,
@@ -38,28 +40,23 @@ CREATE TABLE professional_review (
   rate            INT NOT NULL,
   content_text    VARCHAR(255),
   created_at      timestamptz NOT NULL,
-  updated_at      timestamptz NOT NULL
-);
+  updated_at      timestamptz NOT NULL,
 
-CREATE UNIQUE INDEX ON professional_review (user_id, professional_id);
+  CONSTRAINT professional_review_user_prof_unique UNIQUE (user_id, professional_id)
+);
 
 CREATE TABLE professional_availability (
   id              BIGSERIAL PRIMARY KEY,
   professional_id BIGINT NOT NULL REFERENCES professionals (id) ON DELETE CASCADE,
   availability    TSTZRANGE NOT NULL,
   created_at      timestamptz NOT NULL,
-  updated_at      timestamptz NOT NULL
-);
+  updated_at      timestamptz NOT NULL,
 
-
-CREATE EXTENSION IF NOT EXISTS btree_gist;
-
-ALTER TABLE professional_availability
-  ADD CONSTRAINT no_overlapping_times
-  EXCLUDE USING gist (
+  CONSTRAINT no_overlapping_times EXCLUDE USING gist (
     professional_id WITH =,
     availability WITH &&
-  );
+  )
+);
 
 CREATE TABLE bookings (
   id                BIGSERIAL PRIMARY KEY,
@@ -73,19 +70,10 @@ CREATE TABLE bookings (
   updated_at        timestamptz NOT NULL
 );
 
--- Temporary table for TTL in bookings
 CREATE TABLE booking_holds (
   id                BIGSERIAL PRIMARY KEY,
   user_id           BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
   availability_id   BIGINT NOT NULL REFERENCES professional_availability (id) ON DELETE CASCADE,
   created_at        timestamptz NOT NULL,
   expires_at        timestamptz NOT NULL
-);
-
--- Same as booking_holds for audit purposes / etc for booking
-CREATE TABLE booking_professional_availability (
-  id                BIGSERIAL PRIMARY KEY,
-  availability_id   BIGINT NOT NULL REFERENCES professional_availability (id) ON DELETE CASCADE,
-  booking_id        BIGINT NOT NULL REFERENCES bookings (id) ON DELETE CASCADE,
-  created_at        timestamptz NOT NULL
 );
