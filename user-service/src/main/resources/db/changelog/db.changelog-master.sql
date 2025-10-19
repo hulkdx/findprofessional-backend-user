@@ -58,22 +58,20 @@ CREATE TABLE professional_availability (
   )
 );
 
-CREATE TABLE bookings (
-  id                BIGSERIAL PRIMARY KEY,
-  user_id           BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-  status            VARCHAR(50) NOT NULL,
-  amount_in_cents   BIGINT NOT NULL,
-  currency          VARCHAR(10) NOT NULL,
-  payment_intent_id VARCHAR(255),
-  idempotency_key   VARCHAR(255) NOT NULL,
-  created_at        timestamptz NOT NULL,
-  updated_at        timestamptz NOT NULL
-);
-
 CREATE TABLE booking_holds (
   id                BIGSERIAL PRIMARY KEY,
   user_id           BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-  availability_id   BIGINT NOT NULL REFERENCES professional_availability (id) ON DELETE CASCADE,
+  idempotency_key   VARCHAR(255) NOT NULL,
+  created_at        timestamptz NOT NULL,
+  expires_at        timestamptz NOT NULL,
+
+  CONSTRAINT booking_holds_user_ik_uk UNIQUE (user_id, idempotency_key)
+);
+
+CREATE TABLE booking_hold_items (
+  id                BIGSERIAL PRIMARY KEY,
+  hold_id           BIGINT NOT NULL REFERENCES booking_holds (id) ON DELETE CASCADE,
+  availability_id   BIGINT UNIQUE NOT NULL REFERENCES professional_availability (id) ON DELETE CASCADE,
   created_at        timestamptz NOT NULL,
   expires_at        timestamptz NOT NULL
 );
