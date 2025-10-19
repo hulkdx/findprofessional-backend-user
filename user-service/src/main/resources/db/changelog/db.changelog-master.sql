@@ -75,3 +75,5 @@ CREATE TABLE booking_hold_items (
   created_at        timestamptz NOT NULL,
   expires_at        timestamptz NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS idx_booking_holds_expires_at ON booking_holds (expires_at);
