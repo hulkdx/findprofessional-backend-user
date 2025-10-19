@@ -67,6 +67,7 @@ CREATE TABLE booking_holds (
 
   CONSTRAINT booking_holds_user_ik_uk UNIQUE (user_id, idempotency_key)
 );
+CREATE INDEX IF NOT EXISTS idx_booking_holds_expires_at ON booking_holds (expires_at);
 
 CREATE TABLE booking_hold_items (
   id                BIGSERIAL PRIMARY KEY,
@@ -76,4 +77,3 @@ CREATE TABLE booking_hold_items (
   expires_at        timestamptz NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_booking_holds_expires_at ON booking_holds (expires_at);
