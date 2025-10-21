@@ -7,7 +7,7 @@ resources:
   - ../base
 
 patches:
-  - path: user-service.yml
+  - path: user-service.yaml
 
 secretGenerator:
 - name: secrets-env
