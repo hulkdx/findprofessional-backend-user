@@ -77,3 +77,25 @@ CREATE TABLE booking_hold_items (
   expires_at        timestamptz NOT NULL
 );
 
+CREATE TABLE bookings (
+  id                       BIGSERIAL PRIMARY KEY,
+  user_id                  BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  professional_id          BIGINT NOT NULL REFERENCES professionals(id) ON DELETE CASCADE,
+  status                   VARCHAR(32) NOT NULL,
+  total_amount_cents       BIGINT NOT NULL,
+  currency                 VARCHAR(32) NOT NULL,
+  source_hold_id           BIGINT UNIQUE REFERENCES booking_holds(id) ON DELETE SET NULL,
+  stripe_payment_intent_id VARCHAR(255) UNIQUE,
+  confirmed_at             timestamptz,
+  canceled_at              timestamptz,
+  failed_at                timestamptz,
+  created_at               timestamptz NOT NULL DEFAULT now(),
+  updated_at               timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE booking_items (
+  id               BIGSERIAL PRIMARY KEY,
+  booking_id       BIGINT NOT NULL REFERENCES bookings(id) ON DELETE CASCADE,
+  availability_id  BIGINT NOT NULL REFERENCES professional_availability(id) ON DELETE RESTRICT,
+  created_at       timestamptz NOT NULL DEFAULT now()
+);
