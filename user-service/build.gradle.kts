@@ -91,7 +91,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.security:spring-security-oauth2-jose")
 
-    implementation("org.liquibase:liquibase-core:4.31.0")
+    implementation("org.liquibase:liquibase-core:5.0.1")
 
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.8.4")
 
