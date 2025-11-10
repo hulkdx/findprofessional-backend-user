@@ -5,32 +5,33 @@ CREATE EXTENSION IF NOT EXISTS btree_gist;
 
 CREATE TABLE professionals (
   id                BIGSERIAL PRIMARY KEY,
-  email             VARCHAR(255) UNIQUE NOT NULL,
-  password          VARCHAR(255) NOT NULL,
-  first_name        VARCHAR(255) NOT NULL,
-  last_name         VARCHAR(255) NOT NULL,
-  coach_type        VARCHAR(255) NOT NULL,
+  email             TEXT UNIQUE NOT NULL,
+  password          TEXT NOT NULL,
+  first_name        TEXT NOT NULL,
+  last_name         TEXT NOT NULL,
+  coach_type        TEXT NOT NULL,
   price_number      BIGINT,
-  price_currency    VARCHAR(255),
-  profile_image_url VARCHAR(255),
-  description       VARCHAR(255),
-  skype_id          VARCHAR(255),
+  price_currency    TEXT,
+  profile_image_url TEXT,
+  description       TEXT,
+  skype_id          TEXT,
   pending           BOOLEAN NOT NULL,
   created_at        timestamptz NOT NULL,
   updated_at        timestamptz NOT NULL
 );
 
 CREATE TABLE users (
-  id              BIGSERIAL PRIMARY KEY,
-  professional_id BIGINT REFERENCES professionals (id) ON DELETE SET NULL,
-  email           VARCHAR(255) UNIQUE NOT NULL,
-  password        VARCHAR(255) NOT NULL,
-  first_name      VARCHAR(255) NOT NULL,
-  last_name       VARCHAR(255) NOT NULL,
-  profile_image   VARCHAR(255),
-  skype_id        VARCHAR(255),
-  created_at      timestamptz NOT NULL,
-  updated_at      timestamptz NOT NULL
+  id                 BIGSERIAL PRIMARY KEY,
+  professional_id    BIGINT REFERENCES professionals (id) ON DELETE SET NULL,
+  email              TEXT UNIQUE NOT NULL,
+  password           TEXT NOT NULL,
+  first_name         TEXT NOT NULL,
+  last_name          TEXT NOT NULL,
+  profile_image      TEXT,
+  skype_id           TEXT,
+  stripe_customer_id BIGINT DEFAULT NULL,
+  created_at         timestamptz NOT NULL,
+  updated_at         timestamptz NOT NULL
 );
 
 CREATE TABLE professional_review (
@@ -38,7 +39,7 @@ CREATE TABLE professional_review (
   user_id         BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
   professional_id BIGINT NOT NULL REFERENCES professionals (id) ON DELETE CASCADE,
   rate            INT NOT NULL,
-  content_text    VARCHAR(255),
+  content_text    TEXT,
   created_at      timestamptz NOT NULL,
   updated_at      timestamptz NOT NULL,
 
@@ -49,6 +50,7 @@ CREATE TABLE professional_availability (
   id              BIGSERIAL PRIMARY KEY,
   professional_id BIGINT NOT NULL REFERENCES professionals (id) ON DELETE CASCADE,
   availability    TSTZRANGE NOT NULL,
+  is_active       BOOLEAN,
   created_at      timestamptz NOT NULL,
   updated_at      timestamptz NOT NULL,
 
@@ -61,7 +63,7 @@ CREATE TABLE professional_availability (
 CREATE TABLE booking_holds (
   id                BIGSERIAL PRIMARY KEY,
   user_id           BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-  idempotency_key   VARCHAR(255) NOT NULL,
+  idempotency_key   TEXT NOT NULL,
   created_at        timestamptz NOT NULL,
   expires_at        timestamptz NOT NULL,
 
@@ -81,21 +83,15 @@ CREATE TABLE bookings (
   id                       BIGSERIAL PRIMARY KEY,
   user_id                  BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   professional_id          BIGINT NOT NULL REFERENCES professionals(id) ON DELETE CASCADE,
-  status                   VARCHAR(32) NOT NULL,
+  status                   TEXT NOT NULL,
   total_amount_cents       BIGINT NOT NULL,
-  currency                 VARCHAR(32) NOT NULL,
+  currency                 TEXT NOT NULL,
   source_hold_id           BIGINT UNIQUE REFERENCES booking_holds(id) ON DELETE SET NULL,
-  stripe_payment_intent_id VARCHAR(255) UNIQUE,
+  stripe_payment_intent_id TEXT UNIQUE,
   confirmed_at             timestamptz,
   canceled_at              timestamptz,
   failed_at                timestamptz,
-  created_at               timestamptz NOT NULL DEFAULT now(),
-  updated_at               timestamptz NOT NULL DEFAULT now()
+  created_at               timestamptz NOT NULL,
+  updated_at               timestamptz NOT NULL
 );
 
-CREATE TABLE booking_items (
-  id               BIGSERIAL PRIMARY KEY,
-  booking_id       BIGINT NOT NULL REFERENCES bookings(id) ON DELETE CASCADE,
-  availability_id  BIGINT NOT NULL REFERENCES professional_availability(id) ON DELETE RESTRICT,
-  created_at       timestamptz NOT NULL DEFAULT now()
-);

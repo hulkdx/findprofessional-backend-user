@@ -1,8 +1,10 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgresdb
 spec:
+  serviceName: postgresdb
+  replicas: 1
   selector:
     matchLabels:
       app: postgresdb
@@ -11,13 +13,10 @@ spec:
       labels:
         app: postgresdb
     spec:
+      terminationGracePeriodSeconds: 120
       containers:
         - name: postgresdb
           image: postgres:15-alpine
-          resources:
-            limits:
-              memory: "128Mi"
-              cpu: "500m"
           ports:
             - containerPort: 5432
           env:
@@ -27,13 +26,21 @@ spec:
               value: postgres
             - name: POSTGRES_DB
               value: postgres
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
           volumeMounts:
-          - mountPath: /var/lib/postgresql/data
-            name: test-volume
-      volumes:
-      - name: test-volume
-        hostPath:
-          path: /data/psql_cache
+          - name: data
+            mountPath: /var/lib/postgresql/data
+      securityContext:
+        fsGroup: 999 # postgres uid in the official image
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 5Gi
 
 ---
 apiVersion: v1
