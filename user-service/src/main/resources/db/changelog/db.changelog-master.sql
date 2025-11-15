@@ -94,10 +94,3 @@ CREATE TABLE bookings (
   created_at               TIMESTAMPTZ NOT NULL,
   updated_at               TIMESTAMPTZ NOT NULL
 );
-
-CREATE TABLE stripe_webhook_events (
-  id TEXT PRIMARY KEY,
-  type TEXT,
-  payload JSONB,
-  received_at TIMESTAMPTZ
-);
