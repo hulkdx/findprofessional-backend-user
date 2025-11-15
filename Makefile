@@ -5,7 +5,9 @@ dev:
 
 .PHONY: clear-minikube-psql-cache
 clear-minikube-psql-cache:
-	minikube ssh -- "sudo rm -rf /data/psql_cache"
+	PV=$$(kubectl get pvc data-postgresdb-0 -o jsonpath='{.spec.volumeName}'); \
+	HOST=$$(kubectl get pv $$PV -o jsonpath='{.spec.hostPath.path}'); \
+	minikube ssh -- "sudo rm -rf $$HOST"
 
 .PHONY: clean
 clean:
