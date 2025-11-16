@@ -50,7 +50,7 @@ CREATE TABLE professional_availability (
   id              BIGSERIAL PRIMARY KEY,
   professional_id BIGINT NOT NULL REFERENCES professionals (id) ON DELETE CASCADE,
   availability    TSTZRANGE NOT NULL,
-  is_active       BOOLEAN,
+  is_active       BOOLEAN DEFAULT TRUE,
   created_at      TIMESTAMPTZ NOT NULL,
   updated_at      TIMESTAMPTZ NOT NULL,
 
