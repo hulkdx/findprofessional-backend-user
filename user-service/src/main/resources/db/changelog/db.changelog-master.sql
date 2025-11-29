@@ -71,6 +71,7 @@ CREATE TABLE bookings (
   confirmed_at             TIMESTAMPTZ,
   canceled_at              TIMESTAMPTZ,
   failed_at                TIMESTAMPTZ,
+  payment_expires_at       TIMESTAMPTZ,
   created_at               TIMESTAMPTZ NOT NULL,
   updated_at               TIMESTAMPTZ NOT NULL
 );
