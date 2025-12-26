@@ -28,7 +28,6 @@ CREATE TABLE users (
   first_name         TEXT NOT NULL,
   last_name          TEXT NOT NULL,
   profile_image      TEXT,
-  skype_id           TEXT,
   stripe_customer_id TEXT DEFAULT NULL,
   created_at         TIMESTAMPTZ NOT NULL,
   updated_at         TIMESTAMPTZ NOT NULL
