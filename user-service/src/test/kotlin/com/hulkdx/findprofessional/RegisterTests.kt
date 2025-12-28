@@ -55,7 +55,6 @@ class RegisterTests {
         val firstName = "Saba"
         val lastName = "Jaf"
         val profileImage = "some_url"
-        val skypeId = "some skypeId"
 
         val request = createRegisterRequest(
             email = email,
@@ -63,7 +62,6 @@ class RegisterTests {
             firstName = firstName,
             lastName = lastName,
             profileImage = profileImage,
-            skypeId = skypeId,
         )
         val token = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
         createTokenReturns(token)
@@ -80,7 +78,6 @@ class RegisterTests {
         assertEquals(firstName, userResponse.firstName)
         assertEquals(lastName, userResponse.lastName)
         assertEquals(profileImage, userResponse.profileImage)
-        assertEquals(skypeId, userResponse.skypeId)
     }
 
     @Test

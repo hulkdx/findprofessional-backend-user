@@ -9,5 +9,4 @@ data class ProfessionalResponse(
     val priceCurrency: String? = null,
     val profileImageUrl: String? = null,
     val description: String? = null,
-    val skypeId: String? = null,
 ) : UserResponseType()

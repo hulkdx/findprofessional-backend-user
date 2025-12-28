@@ -56,9 +56,8 @@ class NormalLoginTests {
         val requestPassword = "1234abdcx"
         val request = LoginRequest(requestEmail, requestPassword)
         val token = TokenResponse(accessToken = "accessToken", refreshToken = "refreshToken")
-        val skypeId = "some skype id"
 
-        findByEmailReturnsValidUser(requestEmail, requestPassword, skypeId)
+        findByEmailReturnsValidUser(requestEmail, requestPassword)
         createTokenReturns(token)
         // Act
         val response = sut.login(request)
@@ -70,7 +69,6 @@ class NormalLoginTests {
         val userResponse = responseBody.user as UserResponse
         assertEquals(token, responseBody.token)
         assertEquals(requestEmail, userResponse.email)
-        assertEquals(skypeId, userResponse.skypeId)
     }
 
     @Test
@@ -132,11 +130,10 @@ class NormalLoginTests {
     private suspend fun findByEmailReturnsValidUser(
         requestEmail: String,
         requestPassword: String,
-        skypeId: String,
     ): User {
         val dbEmail = requestEmail
         val dbPassword = passwordEncoder.encode(requestPassword)
-        val user = createUser(email = dbEmail, password = dbPassword, skypeId = skypeId)
+        val user = createUser(email = dbEmail, password = dbPassword)
         whenever(repository.findByEmail(requestEmail))
             .thenReturn(user)
         return user

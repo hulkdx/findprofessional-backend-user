@@ -19,7 +19,6 @@ fun User.toNormalUserResponse() = UserResponse(
     firstName = firstName,
     lastName = lastName,
     profileImage = profileImage,
-    skypeId = skypeId,
 )
 
 private fun Professional.toProUserResponse() = ProfessionalResponse(
@@ -31,5 +30,4 @@ private fun Professional.toProUserResponse() = ProfessionalResponse(
     priceCurrency = priceCurrency,
     profileImageUrl = profileImageUrl,
     description = description,
-    skypeId = skypeId,
 )

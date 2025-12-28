@@ -16,7 +16,6 @@ fun createUser(
     password: String = "",
     firstName: String = "",
     lastName: String = "",
-    skypeId: String? = null,
 ) = User(
     id = id,
     professionalId = professionalId,
@@ -24,7 +23,6 @@ fun createUser(
     password = password,
     firstName = firstName,
     lastName = lastName,
-    skypeId = skypeId,
     createdAt = null,
     updatedAt = null,
     profileImage = null,
@@ -41,7 +39,6 @@ fun createPro(
     priceCurrency: String? = null,
     profileImageUrl: String? = null,
     description: String? = null,
-    skypeId: String? = null,
     pending: Boolean = false,
     createdAt: LocalDateTime? = LocalDateTime.now(),
     updatedAt: LocalDateTime? = LocalDateTime.now(),
@@ -56,7 +53,6 @@ fun createPro(
     priceCurrency = priceCurrency,
     profileImageUrl = profileImageUrl,
     description = description,
-    skypeId = skypeId,
     pending = pending,
     createdAt = createdAt,
     updatedAt = updatedAt,
@@ -68,27 +64,23 @@ fun createRegisterRequest(
     firstName: String = "Audra Freeman",
     lastName: String = "Genaro McKee",
     profileImage: String? = null,
-    skypeId: String? = null,
 ) = RegisterRequest(
     email = email,
     password = password,
     firstName = firstName,
     lastName = lastName,
     profileImage = profileImage,
-    skypeId = skypeId,
 )
 
 fun createUserUpdateRequest(
     firstName: String = "Audra Freeman",
     lastName: String = "Genaro McKee",
     profileImage: String? = null,
-    skypeId: String? = null,
-) = UserUpdateRequest(firstName, lastName, profileImage, skypeId)
+) = UserUpdateRequest(firstName, lastName, profileImage)
 
 fun RegisterRequest.toUserResponse() = UserResponse(
     email = email,
     firstName = firstName,
     lastName = lastName,
     profileImage = profileImage,
-    skypeId = skypeId,
 )
