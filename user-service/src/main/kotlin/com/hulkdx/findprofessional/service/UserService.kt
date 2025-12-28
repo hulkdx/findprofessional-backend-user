@@ -23,9 +23,6 @@ class UserService(
         if (body.profileImage != null) {
             updatedUser = updatedUser.copy(profileImage = body.profileImage)
         }
-        if (body.skypeId != null) {
-            updatedUser = updatedUser.copy(skypeId = body.skypeId)
-        }
         userRepository.save(updatedUser)
         return updatedUser.toNormalUserResponse()
     }

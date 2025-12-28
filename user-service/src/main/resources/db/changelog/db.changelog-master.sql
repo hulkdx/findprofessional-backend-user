@@ -14,7 +14,8 @@ CREATE TABLE professionals (
   price_currency    TEXT,
   profile_image_url TEXT,
   description       TEXT,
-  skype_id          TEXT,
+  session_platform  TEXT,
+  session_link      TEXT,
   pending           BOOLEAN NOT NULL,
   created_at        TIMESTAMPTZ NOT NULL,
   updated_at        TIMESTAMPTZ NOT NULL

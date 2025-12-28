@@ -9,7 +9,6 @@ data class RegisterRequest(
     @field:Size(max = 50) val firstName: String,
     @field:Size(max = 50) val lastName: String,
     @field:Size(max = 50) val profileImage: String?,
-    @field:Size(max = 50) val skypeId: String?,
 )
 
 fun RegisterRequest.toUser(
@@ -21,7 +20,6 @@ fun RegisterRequest.toUser(
         firstName = firstName,
         lastName = lastName,
         profileImage = profileImage,
-        skypeId = skypeId,
         createdAt = null,
         updatedAt = null,
     )

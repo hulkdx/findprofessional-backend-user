@@ -5,5 +5,4 @@ data class UserResponse(
     val firstName: String,
     val lastName: String,
     val profileImage: String?,
-    val skypeId: String?,
 ): UserResponseType()

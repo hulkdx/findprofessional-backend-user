@@ -52,7 +52,6 @@ class UpdateProfileIntegrationTest : IntegrationTest() {
             firstName = "updated first name",
             lastName = "updated last name",
             profileImage = "updated profile image",
-            skypeId = "updated skype id",
         )
         val accessToken = tokenService.createAccessToken(user)
         // Act
@@ -66,7 +65,6 @@ class UpdateProfileIntegrationTest : IntegrationTest() {
         assertEquals(response.firstName, "updated first name")
         assertEquals(response.lastName, "updated last name")
         assertEquals(response.profileImage, "updated profile image")
-        assertEquals(response.skypeId, "updated skype id")
     }
 
 }

@@ -6,5 +6,4 @@ data class UserUpdateRequest(
     @field:Size(max = 50) val firstName: String?,
     @field:Size(max = 50) val lastName: String?,
     @field:Size(max = 50) val profileImage: String?,
-    @field:Size(max = 50) val skypeId: String?,
 )
