@@ -15,7 +15,6 @@ data class User(
     val firstName: String,
     val lastName: String,
     val profileImage: String?,
-    val skypeId: String?,
     @CreatedDate val createdAt: LocalDateTime?,
     @LastModifiedDate val updatedAt: LocalDateTime?,
 ): UserType

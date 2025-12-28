@@ -57,7 +57,6 @@ class UpdateUserTests {
             firstName = "newFirstName",
             lastName = "newLastName",
             profileImage = "newProfileImage",
-            skypeId = "newSkypeId"
         )
         val jwtMock = mock<Jwt> {}
         whenever(tokenService.decodeJwt(accessToken)).thenReturn(jwtMock)
@@ -72,7 +71,6 @@ class UpdateUserTests {
         assertThat(responseBody.firstName, `is`("newFirstName"))
         assertThat(responseBody.lastName, `is`("newLastName"))
         assertThat(responseBody.profileImage, `is`("newProfileImage"))
-        assertThat(responseBody.skypeId, `is`("newSkypeId"))
     }
 
     @Test
@@ -107,7 +105,6 @@ class UpdateUserTests {
             firstName = "newFirstName",
             lastName = "newLastName",
             profileImage = "newProfileImage",
-            skypeId = "newSkypeId"
         )
         val jwtMock = mock<Jwt> {}
         whenever(tokenService.decodeJwt(accessToken)).thenReturn(jwtMock)
