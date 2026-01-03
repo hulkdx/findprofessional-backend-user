@@ -69,9 +69,12 @@ CREATE TABLE bookings (
   currency                 TEXT NOT NULL,
   stripe_payment_intent_id TEXT UNIQUE,
   confirmed_at             TIMESTAMPTZ,
+  completed_at             TIMESTAMPTZ,
   canceled_at              TIMESTAMPTZ,
   failed_at                TIMESTAMPTZ,
   payment_expires_at       TIMESTAMPTZ,
+  scheduled_start_at       TIMESTAMPTZ,
+  scheduled_end_at         TIMESTAMPTZ,
   created_at               TIMESTAMPTZ NOT NULL,
   updated_at               TIMESTAMPTZ NOT NULL
 );
