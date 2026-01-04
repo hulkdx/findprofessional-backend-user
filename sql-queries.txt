@@ -1,0 +1,2 @@
+No SQL query strings found in Java/Kotlin sources.
+Search patterns included SQL keywords, @Query, createQuery, JdbcTemplate, and native query annotations.

@@ -46,11 +46,14 @@ CREATE TABLE professional_review (
   CONSTRAINT professional_review_user_prof_unique UNIQUE (user_id, professional_id)
 );
 
+CREATE INDEX IF NOT EXISTS idx_professional_review_prof_id_created_at_desc
+  ON professional_review (professional_id, created_at DESC);
+
+
 CREATE TABLE professional_availability (
   id              BIGSERIAL PRIMARY KEY,
   professional_id BIGINT NOT NULL REFERENCES professionals (id) ON DELETE CASCADE,
   availability    TSTZRANGE NOT NULL,
-  is_active       BOOLEAN DEFAULT TRUE,
   created_at      TIMESTAMPTZ NOT NULL,
   updated_at      TIMESTAMPTZ NOT NULL,
 
@@ -78,6 +81,22 @@ CREATE TABLE bookings (
   created_at               TIMESTAMPTZ NOT NULL,
   updated_at               TIMESTAMPTZ NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS idx_bookings_pending_expires_at
+  ON bookings (payment_expires_at)
+  WHERE status = 'pending' AND payment_expires_at IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS idx_bookings_confirmed_due_by_end
+  ON bookings (scheduled_end_at)
+  WHERE status = 'confirmed'
+    AND completed_at IS NULL
+    AND scheduled_end_at IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS idx_bookings_user_start_desc
+  ON bookings (user_id, scheduled_start_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_bookings_pro_start_desc
+  ON bookings (professional_id, scheduled_start_at DESC);
 
 CREATE TABLE booking_items (
   id                BIGSERIAL PRIMARY KEY,
