@@ -71,6 +71,8 @@ CREATE TABLE bookings (
   total_amount_cents       BIGINT NOT NULL,
   currency                 TEXT NOT NULL,
   stripe_payment_intent_id TEXT UNIQUE,
+  session_platform         TEXT NULL,
+  session_link             TEXT NULL,
   confirmed_at             TIMESTAMPTZ,
   completed_at             TIMESTAMPTZ,
   canceled_at              TIMESTAMPTZ,
