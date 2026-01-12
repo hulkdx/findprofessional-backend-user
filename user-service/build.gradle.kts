@@ -97,7 +97,7 @@ dependencies {
 
     val mockitoKotlinVersion = "5.2.0"
     val testContainersVersion = "1.21.4"
-    val coroutinesTestVersion = "1.10.1"
+    val coroutinesTestVersion = "1.10.2"
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter")
