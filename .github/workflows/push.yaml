@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 env:
-  DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_USER }}/ff-user:v1
+  DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_USER }}/ff-user:${{ github.sha }}
 
 jobs:
   deploy:
@@ -31,7 +31,7 @@ jobs:
         java-version: 19
         cache: 'gradle'
 
-    - name: build
+    - name: build image
       working-directory: user-service
       run: |
         ./gradlew bootBuildImage --imageName ${DOCKER_IMAGE_NAME}
@@ -48,22 +48,36 @@ jobs:
         docker login --username ${{ secrets.DOCKER_USER }} --password-stdin <<< ${{ secrets.DOCKER_API_KEY }} &> /dev/null
         docker push ${DOCKER_IMAGE_NAME} &> /dev/null
 
-    - name: config credential
+    # - name: config credential aws
+    #   run: |
+    #     mkdir ~/.aws
+    #     base64 --decode <<< ${{ secrets.AWS_CRED }} > ~/.aws/credentials
+    #     base64 --decode <<< ${{ secrets.AWS_CONFIG }} > ~/.aws/config
+    #     aws eks update-kubeconfig --name findprofessional_cluster &> /dev/null
+
+    - name: install digital ocean cli
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DO_TOKEN }}
+
+    - name: kubeconfig (DOKS)
       run: |
-        mkdir ~/.aws
-        base64 --decode <<< ${{ secrets.AWS_CRED }} > ~/.aws/credentials
-        base64 --decode <<< ${{ secrets.AWS_CONFIG }} > ~/.aws/config
-        base64 --decode <<< ${{ secrets.RSA_PRIVATE_KEY }} > deploy/prod/rsa.private.key
-        base64 --decode <<< ${{ secrets.RSA_PUBLIC_KEY }} > deploy/prod/rsa.public.key
-        aws eks update-kubeconfig --name findprofessional_cluster &> /dev/null
+        doctl kubernetes cluster kubeconfig save ${{ secrets.DO_CLUSTER_NAME }} --expiry-seconds 600
 
     - name: prod deploy
       run: |
+        base64 --decode <<< ${{ secrets.RSA_PRIVATE_KEY }} > deploy/prod/rsa.private.key
+        base64 --decode <<< ${{ secrets.RSA_PUBLIC_KEY }} > deploy/prod/rsa.public.key
+
         echo postgres_username=${{ secrets.postgres_username }} >> ./deploy/prod/.env
         echo postgres_password=${{ secrets.postgres_password }} >> ./deploy/prod/.env
         echo postgres_url=${{ secrets.postgres_url }} >> ./deploy/prod/.env
-        echo r2dbc_postgres_password=${{ secrets.r2dbc_postgres_password }} >> ./deploy/prod/.env
+        
+        # echo r2dbc_postgres_password=${{ secrets.r2dbc_postgres_password }} >> ./deploy/prod/.env
+        echo r2dbc_postgres_password=${{ secrets.postgres_password }} >> ./deploy/prod/.env
+        
         kubectl apply -k deploy/prod
+        kubectl set image deployment/prod-user-service user-service=${DOCKER_IMAGE_NAME}
 
     - name: cleanup
       if: always()
