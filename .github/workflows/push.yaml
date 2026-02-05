@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 env:
-  DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_USER }}/ff-user:${{ github.sha }}
+  DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_USER }}/ff-user:v1
 
 jobs:
   deploy:
@@ -77,7 +77,6 @@ jobs:
         echo r2dbc_postgres_password=${{ secrets.postgres_password }} >> ./deploy/prod/.env
         
         kubectl apply -k deploy/prod
-        kubectl set image deployment/prod-user-service user-service=${DOCKER_IMAGE_NAME}
 
     - name: cleanup
       if: always()
