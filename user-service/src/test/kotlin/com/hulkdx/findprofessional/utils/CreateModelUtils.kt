@@ -4,7 +4,7 @@ import com.hulkdx.findprofessional.model.Professional
 import com.hulkdx.findprofessional.model.User
 import com.hulkdx.findprofessional.model.request.RegisterRequest
 import com.hulkdx.findprofessional.model.request.UserUpdateRequest
-import java.time.LocalDateTime
+import java.time.Instant
 
 
 fun createUser(
@@ -37,8 +37,8 @@ fun createPro(
     firstName = "",
     lastName = "",
     coachType = "",
-    createdAt = LocalDateTime.now(),
-    updatedAt = LocalDateTime.now(),
+    createdAt = Instant.now(),
+    updatedAt = Instant.now(),
 )
 
 fun createRegisterRequest(
