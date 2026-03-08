@@ -1,5 +1,7 @@
 package com.hulkdx.findprofessional.config
 
+import com.hulkdx.findprofessional.config.converter.InstantToOffsetDateTimeConverter
+import com.hulkdx.findprofessional.config.converter.OffsetDateTimeToInstantConverter
 import liquibase.changelog.ChangeLogHistoryServiceFactory
 import liquibase.changelog.FastCheckService
 import liquibase.changelog.visitor.ValidatingVisitorGeneratorFactory
@@ -17,6 +19,8 @@ class RuntimeHints : RuntimeHintsRegistrar {
         listOf(
             ArrayList::class.java,
             SimpleDriverDataSource::class.java,
+            OffsetDateTimeToInstantConverter::class.java,
+            InstantToOffsetDateTimeConverter::class.java,
         ).forEach {
             hints.reflection().registerType(it, *MemberCategory.values())
         }
