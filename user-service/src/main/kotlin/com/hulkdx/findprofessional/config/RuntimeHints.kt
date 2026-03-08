@@ -2,6 +2,12 @@ package com.hulkdx.findprofessional.config
 
 import com.hulkdx.findprofessional.config.converter.InstantToOffsetDateTimeConverter
 import com.hulkdx.findprofessional.config.converter.OffsetDateTimeToInstantConverter
+import com.hulkdx.findprofessional.model.ApiError
+import com.hulkdx.findprofessional.model.response.AuthResponse
+import com.hulkdx.findprofessional.model.response.ProfessionalResponse
+import com.hulkdx.findprofessional.model.response.TokenResponse
+import com.hulkdx.findprofessional.model.response.UserResponse
+import com.hulkdx.findprofessional.model.response.UserResponseType
 import liquibase.changelog.ChangeLogHistoryServiceFactory
 import liquibase.changelog.FastCheckService
 import liquibase.changelog.visitor.ValidatingVisitorGeneratorFactory
@@ -21,6 +27,12 @@ class RuntimeHints : RuntimeHintsRegistrar {
             SimpleDriverDataSource::class.java,
             OffsetDateTimeToInstantConverter::class.java,
             InstantToOffsetDateTimeConverter::class.java,
+            ApiError::class.java,
+            AuthResponse::class.java,
+            TokenResponse::class.java,
+            UserResponseType::class.java,
+            UserResponse::class.java,
+            ProfessionalResponse::class.java,
         ).forEach {
             hints.reflection().registerType(it, *MemberCategory.values())
         }
