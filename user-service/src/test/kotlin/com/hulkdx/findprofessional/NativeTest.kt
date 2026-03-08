@@ -15,7 +15,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 class NativeTest {
     companion object {
         @Container
-        private val container = PostgreSQLContainer("postgres:17-alpine")
+        private val container = PostgreSQLContainer("postgres:17.9-alpine")
 
         @DynamicPropertySource
         @JvmStatic
