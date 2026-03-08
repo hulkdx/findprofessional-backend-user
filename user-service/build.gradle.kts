@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 val javaVersion = JavaVersion.VERSION_17
+val testContainersVersion = "1.21.4"
 
 group = "com.hulkdx"
 version = "1"
@@ -16,6 +17,12 @@ plugins {
     kotlin("plugin.spring") version kotlinVersion
 
     id("org.graalvm.buildtools.native") version "0.10.4"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.testcontainers:testcontainers-bom:$testContainersVersion")
+    }
 }
 
 tasks.processAot {
@@ -96,7 +103,6 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.8.13")
 
     val mockitoKotlinVersion = "5.2.0"
-    val testContainersVersion = "1.21.4"
     val coroutinesTestVersion = "1.10.1"
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -105,17 +111,17 @@ dependencies {
     testImplementation("org.hamcrest:hamcrest-core")
     testImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTestVersion")
-    testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
-    testImplementation("org.testcontainers:postgresql:$testContainersVersion")
-    testImplementation("org.testcontainers:r2dbc:$testContainersVersion")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.testcontainers:r2dbc")
     testImplementation("com.fasterxml.jackson.core:jackson-annotations")
     testImplementation("com.fasterxml.jackson.core:jackson-databind")
 
     integrationTestImplementation(sourceSets["test"].output)
     integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
-    integrationTestImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
-    integrationTestImplementation("org.testcontainers:postgresql:$testContainersVersion")
-    integrationTestImplementation("org.testcontainers:r2dbc:$testContainersVersion")
+    integrationTestImplementation("org.testcontainers:junit-jupiter")
+    integrationTestImplementation("org.testcontainers:postgresql")
+    integrationTestImplementation("org.testcontainers:r2dbc")
     integrationTestImplementation("org.junit.jupiter:junit-jupiter")
     integrationTestImplementation("org.mockito:mockito-junit-jupiter")
     integrationTestImplementation("org.mockito:mockito-inline:$mockitoKotlinVersion")
