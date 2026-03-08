@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.relational.core.mapping.Table
 import java.time.Instant
+import java.time.OffsetDateTime
 
 @Table("users")
 data class User(
@@ -15,6 +16,6 @@ data class User(
     val firstName: String,
     val lastName: String,
     val profileImage: String?,
-    @CreatedDate val createdAt: Instant?,
-    @LastModifiedDate val updatedAt: Instant?,
+    @CreatedDate val createdAt: OffsetDateTime?,
+    @LastModifiedDate val updatedAt: OffsetDateTime?,
 ): UserType

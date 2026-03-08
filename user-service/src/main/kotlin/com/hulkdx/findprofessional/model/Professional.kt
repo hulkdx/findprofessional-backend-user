@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.relational.core.mapping.Table
 import java.time.Instant
+import java.time.OffsetDateTime
 
 @Table(name = "professionals")
 data class Professional(
@@ -21,6 +22,6 @@ data class Professional(
     val sessionPlatform: String? = null,
     val sessionLink: String? = null,
     val pending: Boolean = false,
-    @CreatedDate val createdAt: Instant?,
-    @LastModifiedDate val updatedAt: Instant?,
+    @CreatedDate val createdAt: OffsetDateTime?,
+    @LastModifiedDate val updatedAt: OffsetDateTime?,
 ): UserType

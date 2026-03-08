@@ -1,7 +1,5 @@
 package com.hulkdx.findprofessional.config
 
-import com.hulkdx.findprofessional.config.converter.InstantToOffsetDateTimeConverter
-import com.hulkdx.findprofessional.config.converter.OffsetDateTimeToInstantConverter
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet
@@ -9,9 +7,7 @@ import com.nimbusds.jose.proc.SecurityContext
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.data.r2dbc.convert.R2dbcCustomConversions
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing
-import org.springframework.data.r2dbc.dialect.PostgresDialect
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -37,15 +33,6 @@ class AppConfiguration {
     @Bean
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
-    }
-
-    @Bean
-    fun r2dbcCustomConversions(): R2dbcCustomConversions {
-        return R2dbcCustomConversions.of(
-            PostgresDialect.INSTANCE,
-            OffsetDateTimeToInstantConverter,
-            InstantToOffsetDateTimeConverter,
-        )
     }
 
     @Bean
