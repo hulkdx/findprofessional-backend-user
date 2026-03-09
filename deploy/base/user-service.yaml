@@ -14,6 +14,7 @@ spec:
       containers:
         - name: user-service
           image: hulkdx/ff-user:v1
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           envFrom:
