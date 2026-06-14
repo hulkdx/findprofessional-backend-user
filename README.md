@@ -13,6 +13,12 @@ Requirements
 - Java 19
 
 To start development, run `make dev`
+
+## API docs
+
+- Swagger UI is available at `/swagger-ui.html` 
+- OpenAPI JSON is available at `/v3/api-docs`
+
 ## Deployment
 ### Production
 - Using [GraalVM Native Image](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#native-image)
@@ -28,4 +34,3 @@ sudo ln -s $HOME/.docker/run/docker.sock /var/run/docker.sock
 
 ## TODO
 - Currently all SQL migrations happen in this project for all microservices with `liquibase`, research how to do it properly.
-- Host swagger docs to some url

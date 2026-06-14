@@ -6,6 +6,8 @@ import com.hulkdx.findprofessional.model.request.RefreshRequest
 import com.hulkdx.findprofessional.model.request.RegisterRequest
 import com.hulkdx.findprofessional.model.request.UserUpdateRequest
 import com.hulkdx.findprofessional.model.response.AuthResponse
+import com.hulkdx.findprofessional.model.response.TokenResponse
+import com.hulkdx.findprofessional.model.response.UserResponse
 import com.hulkdx.findprofessional.service.AuthService
 import com.hulkdx.findprofessional.service.RefreshService
 import com.hulkdx.findprofessional.service.TokenService
@@ -17,9 +19,16 @@ import com.hulkdx.findprofessional.utils.Errors.PASSWORD_NOT_VALID
 import com.hulkdx.findprofessional.utils.Validator
 import com.hulkdx.findprofessional.utils.toNormalUserResponse
 import com.hulkdx.findprofessional.utils.toUserResponse
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.dao.DataIntegrityViolationException
-import org.springframework.data.r2dbc.config.EnableR2dbcAuditing
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.BAD_REQUEST
@@ -39,6 +48,7 @@ import org.springframework.web.bind.annotation.RestController
     consumes = ["application/json"],
     produces = ["application/json"],
 )
+@Tag(name = "Authentication")
 class AuthController(
     private val authService: AuthService,
     private val tokenService: TokenService,
@@ -46,6 +56,26 @@ class AuthController(
     private val userService: UserService,
 ) {
 
+    @Operation(summary = "Register a normal user")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "User registered",
+                content = [Content(schema = Schema(implementation = AuthResponse::class))]
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Invalid email or password",
+                content = [Content(schema = Schema(implementation = ApiError::class))]
+            ),
+            ApiResponse(
+                responseCode = "409",
+                description = "Email already exists",
+                content = [Content(schema = Schema(implementation = ApiError::class))]
+            ),
+        ]
+    )
     @PostMapping("/register")
     suspend fun register(@RequestBody @Valid body: RegisterRequest): ResponseEntity<*> {
         if (!Validator.isEmailValid(body.email)) {
@@ -67,6 +97,26 @@ class AuthController(
         }
     }
 
+    @Operation(summary = "Log in with email and password")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Login successful",
+                content = [Content(schema = Schema(implementation = AuthResponse::class))]
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Invalid email",
+                content = [Content(schema = Schema(implementation = ApiError::class))]
+            ),
+            ApiResponse(
+                responseCode = "401",
+                description = "Invalid credentials",
+                content = [Content()]
+            ),
+        ]
+    )
     @PostMapping("/login")
     suspend fun login(@RequestBody @Valid body: LoginRequest): ResponseEntity<*> {
         if (!Validator.isEmailValid(body.email)) {
@@ -83,8 +133,32 @@ class AuthController(
         }
     }
 
+    @Operation(
+        summary = "Refresh an access token",
+        security = [SecurityRequirement(name = "bearerAuth")]
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Token refreshed",
+                content = [Content(schema = Schema(implementation = TokenResponse::class))]
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Invalid authorization header",
+                content = [Content(schema = Schema(implementation = ApiError::class))]
+            ),
+            ApiResponse(
+                responseCode = "401",
+                description = "Invalid refresh token",
+                content = [Content()]
+            ),
+        ]
+    )
     @PostMapping("/refresh")
     suspend fun refresh(
+        @Parameter(hidden = true)
         @RequestHeader(HttpHeaders.AUTHORIZATION) auth: String,
         @RequestBody @Valid request: RefreshRequest,
     ): ResponseEntity<*> {
@@ -100,8 +174,37 @@ class AuthController(
         }
     }
 
+    @Operation(
+        summary = "Update the current normal user profile",
+        security = [SecurityRequirement(name = "bearerAuth")]
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "User updated",
+                content = [Content(schema = Schema(implementation = UserResponse::class))]
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Invalid token",
+                content = [Content(schema = Schema(implementation = ApiError::class))]
+            ),
+            ApiResponse(
+                responseCode = "403",
+                description = "Professional users cannot update this profile",
+                content = [Content()]
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "User not found",
+                content = [Content()]
+            ),
+        ]
+    )
     @PostMapping("/user")
     suspend fun updateUser(
+        @Parameter(hidden = true)
         @RequestHeader(HttpHeaders.AUTHORIZATION) auth: String,
         @RequestBody @Valid body: UserUpdateRequest,
     ): ResponseEntity<*> {
