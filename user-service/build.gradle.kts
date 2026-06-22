@@ -10,7 +10,7 @@ java.sourceCompatibility = javaVersion
 plugins {
     val kotlinVersion = "2.1.10"
 
-    id("org.springframework.boot") version "3.4.2"
+    id("org.springframework.boot") version "4.0.1"
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
@@ -97,7 +97,7 @@ dependencies {
 
     val mockitoKotlinVersion = "5.2.0"
     val testContainersVersion = "1.21.4"
-    val coroutinesTestVersion = "1.10.1"
+    val coroutinesTestVersion = "1.10.2"
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter")
